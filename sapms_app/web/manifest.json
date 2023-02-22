@@ -1,6 +1,6 @@
 {
-    "name": "sapms_app",
-    "short_name": "sapms_app",
+    "name": "project",
+    "short_name": "project",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
