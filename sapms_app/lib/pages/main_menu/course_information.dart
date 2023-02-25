@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/main_menu/widgets/appbar.dart';
-import 'package:project/pages/main_menu/widgets/navbar.dart';
+import 'package:project/pages/drawers/drawer.dart';
+
 
 class CourseInformation extends StatefulWidget {
   const CourseInformation({super.key});
@@ -58,6 +58,7 @@ class _CourseInformationState extends State<CourseInformation> {
           ],
         ),
       ),
+      drawer:const DrawerMenu(),
     );
   }
 }
