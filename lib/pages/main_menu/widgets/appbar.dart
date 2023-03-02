@@ -6,7 +6,7 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
       elevation: 0,
       backgroundColor: Colors.white,
       leading: Image.asset('assets/images/Logo.png', fit: BoxFit.contain),

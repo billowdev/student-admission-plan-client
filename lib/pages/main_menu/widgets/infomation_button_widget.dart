@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:project/pages/main_menu/course_information.dart';
 
-class CourseInformationButtonWidget extends StatelessWidget {
-  const CourseInformationButtonWidget({Key? key}) : super(key: key);
+class InformationButtonWidget extends StatelessWidget {
+  final String buttonText; // new parameter for button text
+  final StatefulWidget RouteScreen; // new parameter for button text
+  const InformationButtonWidget({Key? key, required this.buttonText, required this.RouteScreen})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +23,11 @@ class CourseInformationButtonWidget extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const CourseInformation()));
+                  builder: (context) =>  RouteScreen));
         },
-        child: const Text(
-          'ข้อมูลหลักสูตร',
-          style: TextStyle(
+        child: Text(
+          buttonText,
+          style: const TextStyle(
               fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
           textAlign: TextAlign.center,
         ),
