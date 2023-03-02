@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:project/pages/main_menu/course_information.dart';
 import 'package:project/pages/main_menu/major_information.dart';
 
-class DrawerMenu extends StatefulWidget {
-  const DrawerMenu({super.key});
+class DrawerMenuWidget extends StatefulWidget {
+  const DrawerMenuWidget({super.key});
 
   @override
-  _DrawerMenuState createState() => _DrawerMenuState();
+  _DrawerMenuWidgetState createState() => _DrawerMenuWidgetState();
 }
 
-class _DrawerMenuState extends State<DrawerMenu> {
+class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
   int _selectedIndex = 0;
 
   void _onItemTap(int index) {
