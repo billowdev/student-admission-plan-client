@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/main_menu/course_information.dart';
+import 'package:project/pages/course/course_page.dart';
 import 'package:project/pages/main_menu/major_information.dart';
 
 class DrawerMenuWidget extends StatefulWidget {
@@ -25,58 +25,12 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       const DrawerHeader(
         child: Text('เมนู'),
       ),
-      ListTile(
-        title: const Text('คุณสมบัตินักศึกษาตามหลักสูตร'),
-        selected: _selectedIndex == 0,
-        selectedTileColor: Colors.green[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0), // Set rounded corners
-          side: const BorderSide(color: Colors.green, width: 0.1),
-        ),
-        onTap: () {
-          _onItemTap(0);
-        },
-      ),
-      ListTile(
-        title: const Text('แผนการรับนักศึกษา'),
-        selected: _selectedIndex == 1,
-        selectedTileColor: Colors.green[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0), // Set rounded corners
-          side: const BorderSide(color: Colors.green, width: 0.1),
-        ),
-        onTap: () {
-          _onItemTap(1);
-        },
-      ),
-      ListTile(
-        title: const Text('แผนการรับนักศึกษาประเภทโควตา'),
-        selected: _selectedIndex == 2,
-        selectedTileColor: Colors.green[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0), // Set rounded corners
-          side: const BorderSide(color: Colors.green, width: 0.05),
-        ),
-        onTap: () {
-          _onItemTap(2);
-        },
-      ),
-      ListTile(
-        title: const Text('ข้อมูลหลักสตร'),
-        selected: _selectedIndex == 3,
-        selectedTileColor: Colors.green[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0), // Set rounded corners
-          side: const BorderSide(color: Colors.green, width: 0.1),
-        ),
-        onTap: () {
-          Navigator.pop(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CourseInformation()));
-          _onItemTap(3);
-        },
-      ),
+      DrawerListTileButton(textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร'),
+      DrawerListTileButton(textPage: 'แผนการรับนักศึกษา'),
+      DrawerListTileButton(textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร'),
+      DrawerListTileButton(textPage: 'แผนการรับนักศึกษาประเภทโควตา'),
+      DrawerListTileButton(textPage: 'ข้อมูลหลักสตร'),
+      DrawerListTileButton(textPage: 'ข้อมูลคณะ'),
       ListTile(
         title: const Text('ข้อมูลคณะ'),
         selected: _selectedIndex == 4,
@@ -107,3 +61,35 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
     ]));
   }
 }
+
+class DrawerListTileButton extends StatelessWidget {
+  final String textPage;
+  // final bool? selectedIndexBool;
+  // final int? onTapIndex;
+  const DrawerListTileButton({
+    super.key,
+    required this.textPage,
+    // required this.selectedIndexBool,
+    // required this.onTapIndex
+  });
+
+  set _selectedIndex(int _selectedIndex) {}
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(textPage),
+      // selected: selectedIndexBool,
+      selectedTileColor: Colors.green[100],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0), // Set rounded corners
+        side: const BorderSide(color: Colors.green, width: 0.1),
+      ),
+      onTap: () {
+        // this._selectedIndex = onTapIndex;
+      },
+    );
+  }
+}
+
+class Number {}

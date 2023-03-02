@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/main_menu/course_information.dart';
+import 'package:project/pages/course/course_page.dart';
 import 'package:project/pages/main_menu/major_information.dart';
 import 'package:project/pages/main_menu/widgets/appbar.dart';
 
@@ -78,12 +78,12 @@ class _MainMenuState extends State<MainMenu> {
                   children: const [
                     InformationButtonWidget(
                       buttonText: 'ข้อมูลสาขา',
-                      RouteScreen: const CourseInformation(),
+                      RouteScreen: const CoursePage(),
                     ),
 
                     InformationButtonWidget(
                       buttonText: 'คุณสมบัตินักศึกษา\nตามหลักสูตร',
-                      RouteScreen: const CourseInformation(),
+                      RouteScreen: const CoursePage(),
                     ),
 // ข้อมูลหลักสูตร
 // ข้อมูลคณะ

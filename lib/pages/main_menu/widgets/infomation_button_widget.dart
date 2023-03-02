@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/main_menu/course_information.dart';
+import 'package:project/pages/course/course_page.dart';
 
 class InformationButtonWidget extends StatelessWidget {
   final String buttonText; // new parameter for button text
