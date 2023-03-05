@@ -8,15 +8,14 @@ import 'package:project/ui/course/models/course.model.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
-class EditCourseDetailScreen extends StatefulWidget {
-  final CoursePayload detail;
-  const EditCourseDetailScreen({super.key, required this.detail});
+class AddCourseScreen extends StatefulWidget {
+  const AddCourseScreen({super.key});
 
   @override
-  _EditCourseDetailScreenState createState() => _EditCourseDetailScreenState();
+  _AddCourseScreenState createState() => _AddCourseScreenState();
 }
 
-class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
+class _AddCourseScreenState extends State<AddCourseScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _major;
   late String _degree;
@@ -30,15 +29,11 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _major = widget.detail.major!;
-    _degree = widget.detail.degree!;
-    _faculty = widget.detail.faculty!;
-    _qualification = widget.detail.qualification!;
   }
 
-  Future<void> _updateCourse() async {
+  Future<void> _createCourse() async {
     if (_formKey.currentState!.validate()) {
-      final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+      final url = Uri.http(apiUrl, "/courses/create");
       var data = {
         'major': _major,
         'degree': _degree,
@@ -66,24 +61,6 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     }
   }
 
-  Future<void> _deleteCourse() async {
-    final url = Uri.http(apiUrl, "/courses/delete/${widget.detail.id}");
-    final header = {'Content-Type': 'application/json'};
-    final response = await client.delete(url, headers: header);
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('ลบข้อมูลสำเร็จ'),
-        backgroundColor: Colors.green,
-      ));
-      Navigator.pushReplacementNamed(context, '/all-course');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to delete course.'),
-        backgroundColor: Colors.red,
-      ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -106,7 +83,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _major,
+                          initialValue: "",
                           onChanged: (value) {
                             _major = value;
                           },
@@ -126,7 +103,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _degree,
+                          initialValue: "",
                           onChanged: (value) {
                             _degree = value;
                           },
@@ -146,7 +123,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _faculty,
+                          initialValue: "",
                           onChanged: (value) {
                             _faculty = value;
                           },
@@ -166,7 +143,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _qualification,
+                          initialValue: "",
                           onChanged: (value) {
                             _qualification = value;
                           },
@@ -179,24 +156,8 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           maxLines: 5,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
-                              onPressed: _deleteCourse,
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                primary: Colors.white,
-                              ),
-                              child: Text('ลบ'),
-                            ),
-                            TextButton(
-                              onPressed: _updateCourse,
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                primary: Colors.white,
-                              ),
-                              child: Text('แก้ไข'),
-                            ),
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
@@ -207,6 +168,15 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                               ),
                               child: Text('ยกเลิก'),
                             ),
+                            TextButton(
+                              onPressed: _createCourse,
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                primary: Colors.white,
+                              ),
+                              child: Text('เพิ่ม'),
+                            ),
+                            SizedBox(width: 10),
                           ],
                         )
                       ])))),

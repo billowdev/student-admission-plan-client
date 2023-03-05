@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:project/ui/authentication/models/user.model.dart';
 
 class AuthService {
-  final String baseUrl = dotenv.env['API_URL'].toString();
+  static String baseUrl = dotenv.env['API_URL'].toString();
 
   Future<UserLogin> loginService(String username, String password) async {
     final urlLogin = Uri.http(baseUrl, '/users/login');
@@ -20,7 +20,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final res = UserLogin.fromJson(jsonDecode(response.body));
-
+      
       return res;
     } else {
       return UserLogin.fromJson(jsonDecode(response.body));

@@ -34,9 +34,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarWidget(
-          txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'
-        ),
+        appBar: AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
         body: SingleChildScrollView(
           child: DataTable(
             showCheckboxColumn: false,
