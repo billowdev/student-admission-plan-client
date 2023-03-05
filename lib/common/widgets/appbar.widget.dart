@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project/pages/authentication/login.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final txtTitle;
-  const AppBarWidget({Key? key, required this.txtTitle})
-      : super(key: key);
+  const AppBarWidget({Key? key, required this.txtTitle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(

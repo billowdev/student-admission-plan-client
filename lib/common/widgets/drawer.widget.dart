@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/course/course_page.dart';
+import 'package:project/pages/course/all_course_page.dart';
+import 'package:project/pages/course/course_detail_page.dart';
 import 'package:project/pages/main_menu/home.dart';
 import 'package:project/pages/main_menu/mainmenu.dart';
 
@@ -30,10 +31,10 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       DrawerListTileButton(
           textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', RouteScreen: HomePage()),
       DrawerListTileButton(
-          textPage: 'แผนการรับนักศึกษา', RouteScreen: CoursePage()),
+          textPage: 'แผนการรับนักศึกษา', RouteScreen: AllCoursePage()),
       DrawerListTileButton(
         textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร',
-        RouteScreen: CoursePage(),
+        RouteScreen: AllCoursePage(),
       ),
       // DrawerListTileButton(
       //   textPage: 'แผนการรับนักศึกษาประเภทโควตา',
@@ -68,7 +69,7 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
             side: const BorderSide(color: Colors.green, width: 0.1)),
         onTap: () {
           Navigator.pop(context,
-              MaterialPageRoute(builder: (context) => const CoursePage()));
+              MaterialPageRoute(builder: (context) => const AllCoursePage()));
           _onItemTap(5);
         },
       )

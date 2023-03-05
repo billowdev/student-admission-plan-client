@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
-import 'package:project/pages/course/course_page.dart';
+import 'package:project/pages/course/all_course_page.dart';
 import 'package:project/pages/main_menu/widgets/appbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets/infomation_button_widget.dart';
 
@@ -13,9 +14,25 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  late String role;
+
+  Future<String?> _getRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('role');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getRole().then((value) => setState(() {
+          role = value ?? 'user';
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: Center(
@@ -50,20 +67,17 @@ class _MainMenuState extends State<MainMenu> {
                 child: GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  children: const [
+                  children: [
                     InformationButtonWidget(
-                      buttonText: 'ข้อมูลสาขา',
-                      RouteScreen: const CoursePage(),
+                      buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
+                      routeScreen: const AllCoursePage(),
                     ),
 
                     InformationButtonWidget(
-                      buttonText: 'คุณสมบัตินักศึกษา\nตามหลักสูตร',
-                      RouteScreen: const CoursePage(),
+                      buttonText: role,
+                      routeScreen: const AllCoursePage(),
                     ),
-                    InformationButtonWidget(
-                      buttonText: 'ข้อมูลหลักสูตร',
-                      RouteScreen: const CoursePage(),
-                    ),
+
 // ข้อมูลหลักสูตร
 // ข้อมูลคณะ
 // แผนการรับนักศึกษาประเภทโควตา
@@ -75,7 +89,7 @@ class _MainMenuState extends State<MainMenu> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

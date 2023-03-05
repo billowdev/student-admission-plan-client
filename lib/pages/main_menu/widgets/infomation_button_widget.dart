@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/course/course_page.dart';
 
 class InformationButtonWidget extends StatelessWidget {
   final String buttonText; // new parameter for button text
-  final StatefulWidget RouteScreen; // new parameter for button text
-  const InformationButtonWidget({Key? key, required this.buttonText, required this.RouteScreen})
+  final StatefulWidget routeScreen; // new parameter for button text
+  const InformationButtonWidget(
+      {Key? key, required this.buttonText, required this.routeScreen})
       : super(key: key);
 
   @override
@@ -21,9 +21,7 @@ class InformationButtonWidget extends StatelessWidget {
         ),
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>  RouteScreen));
+              context, MaterialPageRoute(builder: (context) => routeScreen));
         },
         child: Text(
           buttonText,
