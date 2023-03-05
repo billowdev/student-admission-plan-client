@@ -8,6 +8,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/authentication/login_ui.dart';
+import 'package:project/ui/course/add_course_ui.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,61 +38,109 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
       child: Scaffold(
         appBar: AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
         body: SingleChildScrollView(
-          child: DataTable(
-            showCheckboxColumn: false,
-            sortAscending: true,
-            columns: const <DataColumn>[
-              DataColumn(
-                label: IgnorePointer(
-                  ignoring: true,
-                  child: Text(
-                    'สาขา',
+          child: Column(
+            children: [
+              DataTable(
+                showCheckboxColumn: false,
+                sortAscending: true,
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: IgnorePointer(
+                      ignoring: true,
+                      child: Text(
+                        'สาขา',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                      label: Text(
+                    'คณะ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Colors.green,
                     ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                  label: Text(
-                'คณะ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.green,
-                ),
-              )),
-              DataColumn(
-                  label: Text(
-                'หลักสูตร',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.green,
-                ),
-              )),
-            ],
-            rows: course.map((data) {
-              return DataRow(
-                cells: <DataCell>[
-                  DataCell(Text("${data.major}")),
-                  DataCell(Text("${data.faculty}")),
-                  DataCell(Text("${data.degree}")),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'หลักสูตร',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.green,
+                    ),
+                  )),
                 ],
-                selected: false, // Add this line to remove the borders
-                onSelectChanged: (isSelected) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CourseDetailScreen(
-                              detail: data,
-                            )),
+                rows: course.map((data) {
+                  return DataRow(
+                    cells: <DataCell>[
+                      DataCell(Text("${data.major}")),
+                      DataCell(Text("${data.faculty}")),
+                      DataCell(Text("${data.degree}")),
+                    ],
+                    selected: false, // Add this line to remove the borders
+                    onSelectChanged: (isSelected) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CourseDetailScreen(
+                                  detail: data,
+                                )),
+                      );
+                    },
                   );
-                },
-              );
-            }).toList(),
+                }).toList(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddCourseScreen(),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      primary: Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.add),
+                        SizedBox(
+                            width: 2), // Add some space between icon and text
+                        Text('เพิ่ม'),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.brown,
+                      primary: Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.arrow_back_ios_new),
+                        SizedBox(
+                            width: 5), // Add some space between icon and text
+                        Text('กลับ'),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
         ),
         drawer: DrawerMenuWidget(),

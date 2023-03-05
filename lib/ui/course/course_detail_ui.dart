@@ -45,52 +45,93 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         child: Scaffold(
       appBar: const AppBarWidget(txtTitle: 'รายละเอียดข้อมูลหลักสูตร'),
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: RichText(
-                  text: const TextSpan(
-                text: "รายละเอียด",
-                style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontFamily: 'PrintAble4U',
-                    fontWeight: FontWeight.bold),
-              )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Table(
-                children: [
-                  _buildTableRow('ชื่อหลักสูตร', _major.toString()),
-                  _buildTableRow('หลักสูตร', _degree.toString()),
-                  _buildTableRow('คณะ', _faculty.toString()),
-                  _buildTableRow('รายละเอียด', _qualification.toString()),
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: RichText(
+                    text: const TextSpan(
+                  text: "รายละเอียด",
+                  style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontFamily: 'PrintAble4U',
+                      fontWeight: FontWeight.bold),
+                )),
               ),
-            ),
-            Visibility(
-              visible: token.isNotEmpty,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditCourseDetailScreen(detail: widget.detail),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Table(
+                  children: [
+                    _buildTableRow('ชื่อหลักสูตร', _major.toString()),
+                    _buildTableRow('หลักสูตร', _degree.toString()),
+                    _buildTableRow('คณะ', _faculty.toString()),
+                    _buildTableRow('รายละเอียด', _qualification.toString()),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: token.isNotEmpty,
+                child: SizedBox(
+                  width: 80, // adjust the width to your desired size
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditCourseDetailScreen(detail: widget.detail),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      primary: Colors.white,
                     ),
-                  );
-                },
-                backgroundColor: Colors.green,
-                child: Icon(Icons.edit),
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit),
+                        SizedBox(
+                            width: 5), // Add some space between icon and text
+                        Text('แก้ไข'),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
       drawer: const DrawerMenuWidget(),
+
+//  Visibility(
+//               visible: token.isNotEmpty,
+//               child: TextButton(
+//                 onPressed: () {
+//                   Navigator.push(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) =>
+//                           EditCourseDetailScreen(detail: widget.detail),
+//                     ),
+//                   );
+//                 },
+//                 style: TextButton.styleFrom(
+//                   backgroundColor: Colors.green,
+//                   primary: Colors.white,
+//                 ),
+//                 child: Row(
+//                   children: [
+//                     Icon(Icons.arrow_back_ios_new),
+//                     SizedBox(width: 5), // Add some space between icon and text
+//                     Text('แก้ไข'),
+//                   ],
+//                 ),
+//               ),
+//             ),
 
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {
