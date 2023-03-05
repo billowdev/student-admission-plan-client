@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project/pages/course/course_page.dart';
+import 'package:project/pages/main_menu/major_information.dart';
 import 'package:project/pages/main_menu/widgets/appbar.dart';
-import 'widgets/faculty_information_button_widget.dart';
-import 'widgets/major_information_button_widget.dart';
-import 'widgets/receiving_plan_quota_button_widget.dart';
-import 'widgets/recieving_plan_button_widget.dart';
-import 'widgets/student_qualification_button_widget.dart';
-import 'widgets/course_information_button_widget.dart';
+
+import 'widgets/infomation_button_widget.dart';
+
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -76,12 +75,19 @@ class _MainMenuState extends State<MainMenu> {
                   crossAxisCount: 2,
                   shrinkWrap: true,
                   children: const [
-                    MajorInformationButtonWidget(),
-                    StudentQualificationButtonWidget(),
-                    CourseInformationButtonWidget(),
-                    ReceivingPlanQuotaButtonWidget(),
-                    FacultyInformationButtonWidget(),
-                    ReceivingPlanButtonWidget(),
+                    InformationButtonWidget(
+                      buttonText: 'ข้อมูลสาขา',
+                      RouteScreen: const CoursePage(),
+                    ),
+
+                    InformationButtonWidget(
+                      buttonText: 'คุณสมบัตินักศึกษา\nตามหลักสูตร',
+                      RouteScreen: const CoursePage(),
+                    ),
+// ข้อมูลหลักสูตร
+// ข้อมูลคณะ
+// แผนการรับนักศึกษาประเภทโควตา
+// แผนการรับนักศึกษาทั้งหมด
                   ],
                 ),
               ),
