@@ -36,35 +36,65 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     _qualification = widget.detail.qualification!;
   }
 
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    ));
+  }
+
+  void _navigateToAllCourse() {
+    Navigator.pushReplacementNamed(context, '/all-course');
+  }
+
   Future<void> _updateCourse() async {
     if (_formKey.currentState!.validate()) {
-      final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
-      var data = {
-        'major': _major,
-        'degree': _degree,
-        'faculty': _faculty,
-        'qualification': _qualification,
-      };
-      final header = {'Content-Type': 'application/json'};
-      final response =
-          await client.patch(url, headers: header, body: jsonEncode(data));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('อัปเดตข้อมูลสำเร็จ'),
-          backgroundColor: Colors.green,
-        ));
-        // Navigator.pop(context);
-        Navigator.pushReplacementNamed(context, '/all-course');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to update course.'),
-          backgroundColor: Colors.red,
-        ));
+      try {
+        final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+        final fdata = {
+          'major': _major,
+          'degree': _degree,
+          'faculty': _faculty,
+          'qualification': _qualification,
+        };
+        final header = {'Content-Type': 'application/json'};
+        await client.patch(url, headers: header, body: jsonEncode(fdata));
+        _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
+        _navigateToAllCourse();
+      } catch (e) {
+        _showSnackBar('Failed to update course.', Colors.red);
       }
     }
   }
+  // Future<void> _updateCourse() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+  //     var data = {
+  //       'major': _major,
+  //       'degree': _degree,
+  //       'faculty': _faculty,
+  //       'qualification': _qualification,
+  //     };
+  //     final header = {'Content-Type': 'application/json'};
+  //     final response =
+  //         await client.patch(url, headers: header, body: jsonEncode(data));
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text('อัปเดตข้อมูลสำเร็จ'),
+  //         backgroundColor: Colors.green,
+  //       ));
+  //       // Navigator.pop(context);
+  //       Navigator.pushReplacementNamed(context, '/all-course');
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text('Failed to update course.'),
+  //         backgroundColor: Colors.red,
+  //       ));
+  //     }
+  //   }
+  // }
 
   Future<void> _deleteCourse() async {
     final url = Uri.http(apiUrl, "/courses/delete/${widget.detail.id}");
@@ -187,7 +217,15 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                                 backgroundColor: Colors.red,
                                 primary: Colors.white,
                               ),
-                              child: Text('ลบ'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete),
+                                  SizedBox(
+                                      width:
+                                          5), // Add some space between icon and text
+                                  Text('ลบ'),
+                                ],
+                              ),
                             ),
                             TextButton(
                               onPressed: _updateCourse,
@@ -195,7 +233,15 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                                 backgroundColor: Colors.green,
                                 primary: Colors.white,
                               ),
-                              child: Text('แก้ไข'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit),
+                                  SizedBox(
+                                      width:
+                                          5), // Add some space between icon and text
+                                  Text('แก้ไข'),
+                                ],
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
@@ -205,7 +251,15 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                                 backgroundColor: Colors.brown,
                                 primary: Colors.white,
                               ),
-                              child: Text('ยกเลิก'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.cancel),
+                                  SizedBox(
+                                      width:
+                                          5), // Add some space between icon and text
+                                  Text('ยกเลิก'),
+                                ],
+                              ),
                             ),
                           ],
                         )

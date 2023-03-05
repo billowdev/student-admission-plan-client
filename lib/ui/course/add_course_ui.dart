@@ -32,32 +32,48 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   }
 
   Future<void> _createCourse() async {
-    if (_formKey.currentState!.validate()) {
-      final url = Uri.http(apiUrl, "/courses/create");
-      var data = {
-        'major': _major,
-        'degree': _degree,
-        'faculty': _faculty,
-        'qualification': _qualification,
-      };
-      final header = {'Content-Type': 'application/json'};
-      final response =
-          await client.patch(url, headers: header, body: jsonEncode(data));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('อัปเดตข้อมูลสำเร็จ'),
-          backgroundColor: Colors.green,
-        ));
-        // Navigator.pop(context);
+    final url = Uri.http(apiUrl, "/courses/create");
+    final data = {
+      'major': _major,
+      'degree': _degree,
+      'faculty': _faculty,
+      'qualification': _qualification,
+    };
+    final header = {'Content-Type': 'application/json'};
+
+    try {
+      final response =
+          await client.post(url, headers: header, body: jsonEncode(data));
+
+      if (response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('เพิ่มข้อมูลสำเร็จ'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.pushReplacementNamed(context, '/all-course');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to update course.'),
-          backgroundColor: Colors.red,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update course.'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred while creating the course.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
