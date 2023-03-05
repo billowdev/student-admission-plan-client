@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/authentication/login.dart';
-import 'package:project/pages/course/all_course_page.dart';
-import 'package:project/pages/course/course_detail_page.dart';
-import 'package:project/pages/main_menu/home.dart';
-import 'package:project/pages/main_menu/mainmenu.dart';
+
+import 'package:project/ui/course/all_course_ui.dart';
+import 'package:project/ui/main_menu/main_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../ui/authentication/login_ui.dart';
 
 class DrawerMenuWidget extends StatefulWidget {
   const DrawerMenuWidget({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DrawerMenuWidgetState createState() => _DrawerMenuWidgetState();
 }
 
 class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
-  int _selectedIndex = 0;
   String token = "";
   String nameUser = "";
 
@@ -35,14 +35,12 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
           token = value ?? "";
         }));
     _getNameUserFromToken().then((value) => setState(() {
-          nameUser = value.toString();
+          nameUser = value ?? "";
         }));
   }
 
   void _onItemTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() {});
   }
 
   _logout() async {
@@ -50,6 +48,10 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
     await prefs.remove('token');
     await prefs.remove('name-user');
     await prefs.remove('role');
+    await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('ออกจากระบบเรียบร้อย'),
+      backgroundColor: Colors.green,
+    ));
   }
 
   @override
@@ -63,29 +65,28 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       ),
       DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
       DrawerListTileButton(
-          textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', routeScreen: HomePage()),
+          textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', routeScreen: MainMenu()),
       DrawerListTileButton(
-          textPage: 'แผนการรับนักศึกษา', routeScreen: AllCoursePage()),
+          textPage: 'แผนการรับนักศึกษา', routeScreen: AllCourseScreen()),
 // Show Logout button if token is not empty
 
-      if (token != "")
-        DrawerListTileButton(
-            textPage: 'ออกจากระบบ',
-            routeScreen: MainMenu(),
-            onTap: () async {
-              _logout();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/', (Route<dynamic> route) => false);
-            }),
-      if (token == "")
+      if (token.isNotEmpty)
+        ListTile(
+          title: const Text('ออกจากระบบ'),
+          onTap: () async {
+            _logout();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()));
+          },
+        ),
+
+      if (token.isEmpty)
         DrawerListTileButton(
             textPage: 'เข้าสู่ระบบ',
             routeScreen: MainMenu(),
             onTap: () async {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => LoginScreen()));
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              //     '/login', (Route<dynamic> route) => false);
             }),
     ]));
   }
