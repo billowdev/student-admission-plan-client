@@ -35,51 +35,59 @@ class _handleLoginScreenState extends State<LoginScreen> {
     return decodedToken['name'] as String;
   }
 
+  void navigateToHomeScreen(
+      BuildContext context, SharedPreferences prefs, String role) {
+    prefs.setString('role', role);
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    ));
+  }
+
   _handleLogin() async {
-    setState(() {
-      _isLoading = true;
-    });
     final prefs = await SharedPreferences.getInstance();
     final urlLogin = Uri.http(apiUrl, '/users/login');
     final header = {'Content-Type': 'application/json'};
-    UserLogin data = await _authService.loginService(
-        _usernameController.text, _passwordController.text);
-    final token = data.token as String;
-    final role = _getRoleFromToken(token);
-    final nameUser = _getNameUserFromToken(token);
-    if (token != "") {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('เข้าสู่ระบบสำเร็จ'),
-        backgroundColor: Colors.green,
-      ));
 
-      prefs.setString('token', token);
-      prefs.setString('name-user', nameUser);
-      // Navigate to the home screen
-      if (role == 'user') {
-        prefs.setString('role', role);
-        Navigator.pushReplacementNamed(context, '/home');
-      } else if (role == 'admin') {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('role', role);
-        Navigator.pushReplacementNamed(context, '/home');
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      UserLogin data = await _authService.loginService(
+          _usernameController.text, _passwordController.text);
+
+      final token = data.token as String;
+      final role = _getRoleFromToken(token);
+      final nameUser = _getNameUserFromToken(token);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (token.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('เข้าสู่ระบบสำเร็จ'),
+          backgroundColor: Colors.green,
+        ));
+
+        prefs.setString('token', token);
+        prefs.setString('name-user', nameUser);
+
+        navigateToHomeScreen(context, prefs, role);
+      } else {
+        showErrorMessage(context, 'เข้าสู่ระบบไม่สำเร็จ ชื่อผู้ใช้ไม่ถูกต้อง');
       }
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text('เข้าสู่ระบบไม่สำเร็จ ชื่อผู้ใช้ไม่ถูกต้อง'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      showErrorMessage(context, 'ไม่สามารถเข้าสู่ระบบได้');
     }
   }
 

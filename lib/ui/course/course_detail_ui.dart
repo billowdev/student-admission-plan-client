@@ -52,7 +52,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               padding: const EdgeInsets.all(20.0),
               child: RichText(
                   text: const TextSpan(
-                text: 'สาขาวิทยาการคอมพิวเตอร์',
+                text: "รายละเอียด",
                 style: TextStyle(
                     fontSize: 22,
                     color: Colors.black,
@@ -70,32 +70,49 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   _buildTableRow('รายละเอียด', _qualification.toString()),
                 ],
               ),
+            ),
+            Visibility(
+              visible: token.isNotEmpty,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditCourseDetailScreen(detail: widget.detail),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.green,
+                child: Icon(Icons.edit),
+              ),
             )
           ],
         ),
       ),
       drawer: const DrawerMenuWidget(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (token.isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    EditCourseDetailScreen(detail: widget.detail),
-              ),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
-          }
-        },
-        child: Icon(Icons.edit),
-      ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     if (token.isNotEmpty) {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) =>
+      //               EditCourseDetailScreen(detail: widget.detail),
+      //         ),
+      //       );
+      //     } else {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => const LoginScreen(),
+      //         ),
+      //       );
+      //     }
+      //   },
+      //   child: Icon(Icons.edit),
+      // ),
     ));
   }
 
