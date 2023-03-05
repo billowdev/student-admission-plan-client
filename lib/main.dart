@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/pages/authentication/login.dart';
-import 'package:project/pages/course/all_course_page.dart';
-import 'package:project/pages/main_menu/mainmenu.dart';
+import 'ui/authentication/login_ui.dart';
+import 'ui/course/all_course_ui.dart';
+import 'ui/main_menu/main_menu_ui.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');

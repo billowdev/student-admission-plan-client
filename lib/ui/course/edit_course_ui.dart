@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/pages/course/all_course_page.dart';
-import 'package:project/pages/course/course_detail_page.dart';
-import 'package:project/pages/course/models/course.model.dart';
+import 'package:project/ui/course/all_course_ui.dart';
+import 'package:project/ui/course/course_detail_ui.dart';
+import 'package:project/ui/course/models/course.model.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 

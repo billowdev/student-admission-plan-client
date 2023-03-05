@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/authentication/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String txtTitle;
@@ -15,7 +13,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       leading: Image.asset('assets/images/Logo.png', fit: BoxFit.contain),
       title: Text(
         txtTitle,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black,
             fontSize: 24,
             fontFamily: 'PrintAble4U',
@@ -49,5 +47,5 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

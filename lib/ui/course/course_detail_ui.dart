@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/pages/course/models/course.model.dart';
+import 'package:project/ui/course/models/course.model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
-import 'edit_course_page.dart';
+import '../authentication/login_ui.dart';
+import 'edit_course_ui.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final CoursePayload detail;
@@ -18,6 +20,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   late String _faculty;
   late String _qualification;
   static String apiUrl = dotenv.env['API_URL'].toString();
+  late String token;
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 
   @override
   void initState() {
@@ -26,15 +33,17 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     _degree = widget.detail.degree!;
     _faculty = widget.detail.faculty!;
     _qualification = widget.detail.qualification!;
+
+    _getToken().then((value) => setState(() {
+          token = value ?? "";
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(
-        txtTitle: 'รายละเอียดข้อมูลหลักสูตร'
-      ),
+      appBar: const AppBarWidget(txtTitle: 'รายละเอียดข้อมูลหลักสูตร'),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -68,12 +77,22 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       drawer: const DrawerMenuWidget(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditCourseDetailScreen(detail: widget.detail),
-            ),
-          );
+          if (token.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    EditCourseDetailScreen(detail: widget.detail),
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          }
         },
         child: Icon(Icons.edit),
       ),
