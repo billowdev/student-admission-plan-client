@@ -7,19 +7,20 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
+import 'package:project/common/widgets/drawer.widget.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
 
 import 'course_detail_page.dart';
 
-class AllCoursePage extends StatefulWidget {
-  const AllCoursePage({super.key});
+class AllCourseScreen extends StatefulWidget {
+  const AllCourseScreen({super.key});
 
   @override
-  State<AllCoursePage> createState() => _AllCoursePageState();
+  State<AllCourseScreen> createState() => _AllCourseScreenState();
 }
 
-class _AllCoursePageState extends State<AllCoursePage> {
+class _AllCourseScreenState extends State<AllCourseScreen> {
   static String apiUrl = dotenv.env['API_URL'].toString();
 
   @override
@@ -34,7 +35,7 @@ class _AllCoursePageState extends State<AllCoursePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBarWidget(
-          txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด',
+          txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'
         ),
         body: SingleChildScrollView(
           child: DataTable(
@@ -85,7 +86,7 @@ class _AllCoursePageState extends State<AllCoursePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CourseDetailPage(
+                        builder: (context) => CourseDetailScreen(
                               detail: data,
                             )),
                   );
@@ -94,6 +95,7 @@ class _AllCoursePageState extends State<AllCoursePage> {
             }).toList(),
           ),
         ),
+        drawer: DrawerMenuWidget(),
       ),
     );
   }

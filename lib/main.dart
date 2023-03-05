@@ -30,8 +30,8 @@ class StudentAdmssionPlanAppication extends StatelessWidget {
         '/': (context) => MainMenu(), // The login page route
         // ignore: prefer_const_constructors
         '/home': (context) => MainMenu(), // The home page route
-        '/all-course': (context) => AllCoursePage(), // The home page route
-        '/login': (context) => LoginPage(), // The home page route
+        '/all-course': (context) => AllCourseScreen(), // The home page route
+        '/login': (context) => LoginScreen(), // The home page route
       },
     );
   }

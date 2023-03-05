@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
+import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/pages/course/all_course_page.dart';
-import 'package:project/pages/main_menu/widgets/appbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets/infomation_button_widget.dart';
@@ -14,7 +14,7 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  late String role;
+  late String role = "";
 
   Future<String?> _getRole() async {
     final prefs = await SharedPreferences.getInstance();
@@ -70,12 +70,12 @@ class _MainMenuState extends State<MainMenu> {
                   children: [
                     InformationButtonWidget(
                       buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
-                      routeScreen: const AllCoursePage(),
+                      routeScreen: const AllCourseScreen(),
                     ),
 
                     InformationButtonWidget(
                       buttonText: role,
-                      routeScreen: const AllCoursePage(),
+                      routeScreen: const AllCourseScreen(),
                     ),
 
 // ข้อมูลหลักสูตร
@@ -89,6 +89,7 @@ class _MainMenuState extends State<MainMenu> {
           ],
         ),
       ),
+      drawer: DrawerMenuWidget(),
     ));
   }
 }

@@ -8,15 +8,15 @@ import 'package:project/pages/course/models/course.model.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
-class EditCourseDetailPage extends StatefulWidget {
+class EditCourseDetailScreen extends StatefulWidget {
   final CoursePayload detail;
-  const EditCourseDetailPage({super.key, required this.detail});
+  const EditCourseDetailScreen({super.key, required this.detail});
 
   @override
-  _EditCourseDetailPageState createState() => _EditCourseDetailPageState();
+  _EditCourseDetailScreenState createState() => _EditCourseDetailScreenState();
 }
 
-class _EditCourseDetailPageState extends State<EditCourseDetailPage> {
+class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _major;
   late String _degree;
@@ -88,7 +88,9 @@ class _EditCourseDetailPageState extends State<EditCourseDetailPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'แก้ไขข้อมูลหลักสูตร'),
+      appBar: const AppBarWidget(
+        txtTitle: 'แก้ไขข้อมูลหลักสูตร'
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: Container(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project/pages/authentication/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final txtTitle;
+  final String txtTitle;
+
   const AppBarWidget({Key? key, required this.txtTitle}) : super(key: key);
 
   @override
@@ -21,18 +23,27 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         textAlign: TextAlign.center,
       ),
       actions: [
+        // ElevatedButton(
+        //     onPressed: () {},
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.white,
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(50),
+        //           side: const BorderSide(color: Colors.green, width: 1)),
+        //     ),
+        //     child: const Text('menu', style: TextStyle(color: Colors.green)))
         ElevatedButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  side: const BorderSide(color: Colors.green, width: 1)),
-            ),
-            child: const Text('Login', style: TextStyle(color: Colors.green)))
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+                side: const BorderSide(color: Colors.green, width: 1)),
+          ),
+          child: const Text('menu', style: TextStyle(color: Colors.green)),
+        ),
       ],
     );
   }

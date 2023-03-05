@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/common/widgets/appbar.widget.dart';
+import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -22,11 +23,13 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   String _getRoleFromToken(String token) {
-    // Parse the JWT token and retrieve the role field
-    // You can use a package like jwt_decoder to parse the JWT token
-    // Example code:
     final decodedToken = JwtDecoder.decode(token);
     return decodedToken['role'] as String;
+  }
+
+  String _getNameUserFromToken(String token) {
+    final decodedToken = JwtDecoder.decode(token);
+    return decodedToken['name'] as String;
   }
 
   _login() async {
@@ -44,18 +47,21 @@ class _LoginPageState extends State<LoginPage> {
         }));
 
     if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
       final data = jsonDecode(response.body);
       final token = data['token'] as String;
       final role = _getRoleFromToken(token);
+      final nameUser = _getNameUserFromToken(token);
       // Do something with the token, like storing it in SharedPreferences
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('เข้าสู่ระบบสำเร็จ'),
         backgroundColor: Colors.green,
       ));
 
+      prefs.setString('token', token);
+      prefs.setString('name-user', nameUser);
       // Navigate to the home screen
       if (role == 'user') {
-        final prefs = await SharedPreferences.getInstance();
         prefs.setString('role', role);
         Navigator.pushReplacementNamed(context, '/home');
       } else if (role == 'admin') {
@@ -160,6 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
       ),
+      drawer: DrawerMenuWidget(),
     );
   }
 }
