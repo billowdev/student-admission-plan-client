@@ -5,14 +5,14 @@ import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 import 'edit_course_page.dart';
 
-class CourseDetailPage extends StatefulWidget {
+class CourseDetailScreen extends StatefulWidget {
   final CoursePayload detail;
-  const CourseDetailPage({super.key, required this.detail});
+  const CourseDetailScreen({super.key, required this.detail});
   @override
-  State<CourseDetailPage> createState() => _CourseDetailPageState();
+  State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailPageState extends State<CourseDetailPage> {
+class _CourseDetailScreenState extends State<CourseDetailScreen> {
   late String _major;
   late String _degree;
   late String _faculty;
@@ -32,7 +32,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'รายละเอียดข้อมูลหลักสูตร'),
+      appBar: const AppBarWidget(
+        txtTitle: 'รายละเอียดข้อมูลหลักสูตร'
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -69,7 +71,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EditCourseDetailPage(detail: widget.detail),
+              builder: (context) => EditCourseDetailScreen(detail: widget.detail),
             ),
           );
         },
