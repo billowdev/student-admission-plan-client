@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/pages/course/course_page.dart';
-import 'package:project/pages/main_menu/major_information.dart';
 import 'package:project/pages/main_menu/widgets/appbar.dart';
 
 import 'widgets/infomation_button_widget.dart';
-
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -17,30 +16,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0,
-      backgroundColor: Colors.white,
-      leading: Image.asset('assets/images/Logo.png', fit: BoxFit.contain),
-      title: const Text(
-        'มหาวิทยาลัยราชภัฏสกลนคร',
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontFamily: 'PrintAble4U',
-            fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-      actions: [
-        ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  side: const BorderSide(color: Colors.green, width: 1)),
-            ),
-            child: const Text('Login', style: TextStyle(color: Colors.green)))
-      ],
-    ),
+      appBar: AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -84,6 +60,10 @@ class _MainMenuState extends State<MainMenu> {
                       buttonText: 'คุณสมบัตินักศึกษา\nตามหลักสูตร',
                       RouteScreen: const CoursePage(),
                     ),
+                    InformationButtonWidget(
+                      buttonText: 'ข้อมูลหลักสูตร',
+                      RouteScreen: const CoursePage(),
+                    ),
 // ข้อมูลหลักสูตร
 // ข้อมูลคณะ
 // แผนการรับนักศึกษาประเภทโควตา
@@ -97,4 +77,32 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   }
+}
+
+PreferredSizeWidget _appBarWideget() {
+  return AppBar(
+    elevation: 0,
+    backgroundColor: Colors.white,
+    leading: Image.asset('assets/images/Logo.png', fit: BoxFit.contain),
+    title: const Text(
+      'ระบบจัดการแผนการรับนักศึกษา',
+      style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          fontFamily: 'PrintAble4U',
+          fontWeight: FontWeight.bold),
+      textAlign: TextAlign.center,
+    ),
+    actions: [
+      ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+                side: const BorderSide(color: Colors.green, width: 1)),
+          ),
+          child: const Text('Login', style: TextStyle(color: Colors.green)))
+    ],
+  );
 }
