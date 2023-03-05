@@ -33,7 +33,7 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
+      appBar: AppBarWidget(txtTitle: 'ระบบจัดการแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
