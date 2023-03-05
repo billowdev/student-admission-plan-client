@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/authentication/models/user.model.dart';
+import 'package:project/ui/authentication/services/authentication.service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -12,10 +14,11 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _handleLoginScreenState createState() => _handleLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _handleLoginScreenState extends State<LoginScreen> {
+  AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -32,27 +35,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return decodedToken['name'] as String;
   }
 
-  _login() async {
+  _handleLogin() async {
     setState(() {
       _isLoading = true;
     });
+    final prefs = await SharedPreferences.getInstance();
     final urlLogin = Uri.http(apiUrl, '/users/login');
     final header = {'Content-Type': 'application/json'};
-
-    final response = await http.post(urlLogin,
-        headers: header,
-        body: jsonEncode({
-          'username': _usernameController.text,
-          'password': _passwordController.text,
-        }));
-
-    if (response.statusCode == 200) {
-      final prefs = await SharedPreferences.getInstance();
-      final data = jsonDecode(response.body);
-      final token = data['token'] as String;
-      final role = _getRoleFromToken(token);
-      final nameUser = _getNameUserFromToken(token);
-      // Do something with the token, like storing it in SharedPreferences
+    UserLogin data = await _authService.loginService(
+        _usernameController.text, _passwordController.text);
+    final token = data.token as String;
+    final role = _getRoleFromToken(token);
+    final nameUser = _getNameUserFromToken(token);
+    if (token != "") {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('เข้าสู่ระบบสำเร็จ'),
         backgroundColor: Colors.green,
@@ -70,8 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacementNamed(context, '/home');
       }
     } else {
-      // Show an error message
-      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -88,10 +81,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     }
-
-    // setState(() {
-    //   _isLoading = false;
-    // });
   }
 
   @override
@@ -123,11 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: TextFormField(
                           controller: _usernameController,
                           decoration: const InputDecoration(
-                            labelText: 'Username',
+                            labelText: 'ชื่อผู้ใช้',
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
+                              return 'กรุณากรอกชื่อผู้ใช้';
                             }
                             return null;
                           },
@@ -142,11 +131,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passwordController,
                           obscureText: true,
                           decoration: const InputDecoration(
-                            labelText: 'Password',
+                            labelText: 'รหัสผ่าน',
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return 'กรุณากรอกรหัสผ่าน';
                             }
                             return null;
                           },
@@ -154,12 +143,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 20.0),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green, // background
+                        ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            _login();
+                            _handleLogin();
                           }
                         },
-                        child: const Text('Login'),
+                        child: const Text('เข้าสู่ระบบ',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/pages/course/all_course_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'widgets/infomation_button_widget.dart';
+import '../../common/widgets/infomation_button_widget.dart';
+import '../course/all_course_ui.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -72,16 +72,6 @@ class _MainMenuState extends State<MainMenu> {
                       buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
                       routeScreen: const AllCourseScreen(),
                     ),
-
-                    InformationButtonWidget(
-                      buttonText: role,
-                      routeScreen: const AllCourseScreen(),
-                    ),
-
-// ข้อมูลหลักสูตร
-// ข้อมูลคณะ
-// แผนการรับนักศึกษาประเภทโควตา
-// แผนการรับนักศึกษาทั้งหมด
                   ],
                 ),
               ),

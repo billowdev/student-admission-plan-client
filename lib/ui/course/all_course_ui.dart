@@ -11,7 +11,7 @@ import 'package:project/common/widgets/drawer.widget.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
 
-import 'course_detail_page.dart';
+import 'course_detail_ui.dart';
 
 class AllCourseScreen extends StatefulWidget {
   const AllCourseScreen({super.key});
