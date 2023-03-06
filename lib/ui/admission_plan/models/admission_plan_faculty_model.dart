@@ -1,15 +1,15 @@
-class AdmissionPlanModel {
+class AdmssionPlanFacultyModel {
   String? message;
-  List<AdmissionPlanPayload>? payload;
+  List<AdmssionPlanFacultyPayload>? payload;
 
-  AdmissionPlanModel({this.message, this.payload});
+  AdmssionPlanFacultyModel({this.message, this.payload});
 
-  AdmissionPlanModel.fromJson(Map<String, dynamic> json) {
+  AdmssionPlanFacultyModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['payload'] != null) {
-      payload = <AdmissionPlanPayload>[];
+      payload = <AdmssionPlanFacultyPayload>[];
       json['payload'].forEach((v) {
-        payload!.add(new AdmissionPlanPayload.fromJson(v));
+        payload!.add(new AdmssionPlanFacultyPayload.fromJson(v));
       });
     }
   }
@@ -24,7 +24,7 @@ class AdmissionPlanModel {
   }
 }
 
-class AdmissionPlanPayload {
+class AdmssionPlanFacultyPayload {
   String? id;
   bool? quotaStatus;
   String? quotaSpecificSubject;
@@ -40,17 +40,12 @@ class AdmissionPlanPayload {
   int? cooperationQty;
   int? year;
   int? studyGroup;
+  String? courseId;
   String? createdAt;
   String? updatedAt;
-  String? courseId;
-  String? courseMajor;
-  String? courseDegree;
-  String? courseDetail;
-  String? courseFaculty;
-  String? courseCreatedAt;
-  String? courseUpdatedAt;
+  Course? course;
 
-  AdmissionPlanPayload(
+  AdmssionPlanFacultyPayload(
       {this.id,
       this.quotaStatus,
       this.quotaSpecificSubject,
@@ -69,14 +64,9 @@ class AdmissionPlanPayload {
       this.courseId,
       this.createdAt,
       this.updatedAt,
-      this.courseMajor,
-      this.courseDegree,
-      this.courseDetail,
-      this.courseFaculty,
-      this.courseCreatedAt,
-      this.courseUpdatedAt});
+      this.course});
 
-  AdmissionPlanPayload.fromJson(Map<String, dynamic> json) {
+  AdmssionPlanFacultyPayload.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     quotaStatus = json['quotaStatus'];
     quotaSpecificSubject = json['quotaSpecificSubject'];
@@ -96,12 +86,8 @@ class AdmissionPlanPayload {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     courseId = json['CourseId'];
-    courseMajor = json['Course.major'];
-    courseDegree = json['Course.degree'];
-    courseDetail = json['Course.detail'];
-    courseFaculty = json['Course.faculty'];
-    courseCreatedAt = json['Course.created_at'];
-    courseUpdatedAt = json['Course.updated_at'];
+    course =
+        json['Course'] != null ? new Course.fromJson(json['Course']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -125,12 +111,46 @@ class AdmissionPlanPayload {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['CourseId'] = this.courseId;
-    data['Course.major'] = this.courseMajor;
-    data['Course.degree'] = this.courseDegree;
-    data['Course.detail'] = this.courseDetail;
-    data['Course.faculty'] = this.courseFaculty;
-    data['Course.created_at'] = this.courseCreatedAt;
-    data['Course.updated_at'] = this.courseUpdatedAt;
+    if (this.course != null) {
+      data['Course'] = this.course!.toJson();
+    }
+    return data;
+  }
+}
+
+class Course {
+  String? major;
+  String? degree;
+  String? detail;
+  String? faculty;
+  String? createdAt;
+  String? updatedAt;
+
+  Course(
+      {this.major,
+      this.degree,
+      this.detail,
+      this.faculty,
+      this.createdAt,
+      this.updatedAt});
+
+  Course.fromJson(Map<String, dynamic> json) {
+    major = json['major'];
+    degree = json['degree'];
+    detail = json['detail'];
+    faculty = json['faculty'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['major'] = this.major;
+    data['degree'] = this.degree;
+    data['detail'] = this.detail;
+    data['faculty'] = this.faculty;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

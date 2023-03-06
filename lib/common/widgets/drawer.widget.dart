@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/admission_plan/admission_plan_menu_ui.dart';
 
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/main_menu/main_menu_ui.dart';
@@ -66,9 +67,13 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       ),
       const DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
       const DrawerListTileButton(
-          textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', routeScreen: MainMenu()),
+          textPage: 'ข้อมูลหลักสูตรทั้งหมด', routeScreen: AllCourseScreen()),
+      // const DrawerListTileButton(
+      //     textPage: 'ข้อมูลหลักสูตรทั้งหมด', routeScreen: AllCourseScreen()),
+
       const DrawerListTileButton(
-          textPage: 'แผนการรับนักศึกษา', routeScreen: AllCourseScreen()),
+          textPage: 'ข้อมูลแผนการรับนักศึกษาคณะต่าง ๆ',
+          routeScreen: AdmissionPlanMenuScreen()),
 // Show Logout button if token is not empty
 
       if (token.isNotEmpty)

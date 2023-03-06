@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/admission_plan/faculty/admission_plan_faculty_ui.dart';
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/course/course_detail_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,12 +43,16 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
         child: Column(children: [
           FacultyWidget(
               facultyName: 'คณะวิทยาศาสตร์และเทคโนโลยี',
-              logoPath: 'assets/images/sci.jpg',
-              routeScreen: "/all-course"),
+              logoPath: 'assets/images/logo_sci.jpg',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะวิทยาศาสตร์และเทคโนโลยี',
+              )),
           FacultyWidget(
-              facultyName: 'คณะครุศาสตร์',
-              logoPath: 'assets/images/edu.png',
-              routeScreen: "/all-course"),
+              facultyName: 'คณะมนุษยศาสตร์และสังคมศาสตร์',
+              logoPath: 'assets/images/logo_lumanities.png',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะมนุษยศาสตร์และสังคมศาสตร์',
+              )),
         ]),
       ),
       drawer: DrawerMenuWidget(),
@@ -86,7 +91,7 @@ PreferredSizeWidget _appBarWideget() {
 class FacultyWidget extends StatelessWidget {
   final String facultyName;
   final String logoPath;
-  final String routeScreen;
+  final StatefulWidget routeScreen;
   const FacultyWidget(
       {super.key,
       required this.facultyName,
@@ -120,7 +125,10 @@ class FacultyWidget extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Navigator.pushReplacementNamed(context, routeScreen);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => routeScreen),
+            );
           },
         ),
       ),
