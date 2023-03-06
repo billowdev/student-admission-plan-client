@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/ui/course/models/course.model.dart';
 
 import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';

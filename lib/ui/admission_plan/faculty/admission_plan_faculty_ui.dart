@@ -14,7 +14,9 @@ import 'admission_plan_course_ui.dart';
 
 class AdmissionPlanFaculty extends StatefulWidget {
   final String facultyFilter;
-  const AdmissionPlanFaculty({super.key, required this.facultyFilter});
+  final String yearFilter;
+  const AdmissionPlanFaculty(
+      {super.key, required this.facultyFilter, required this.yearFilter});
   @override
   State<AdmissionPlanFaculty> createState() => _AdmissionPlanFacultyState();
 }
@@ -33,10 +35,12 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
   }
 
   _getAdmissionPlan() async {
-    // var queryParam = {"faculty": "science"};
+    var queryParam = {"year": widget.yearFilter.toString()};
     // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
-    final url = Uri.http(apiUrl,
-        '/admission-plans/get-by-faculty/${widget.facultyFilter.toString()}');
+    final url = Uri.http(
+        apiUrl,
+        '/admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
+        queryParam);
 
     // final url = Uri.http('localhost:5000', '/courses/get-all');
     final response = await http.get(url);
