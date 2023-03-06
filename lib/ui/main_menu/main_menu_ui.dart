@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/admission_plan/admission_plan_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/widgets/infomation_button_widget.dart';
@@ -71,6 +72,10 @@ class _MainMenuState extends State<MainMenu> {
                     InformationButtonWidget(
                       buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
                       routeScreen: const AllCourseScreen(),
+                    ),
+                    InformationButtonWidget(
+                      buttonText: 'แผนการรับนักศึกษาภาคปกติ',
+                      routeScreen: const AdmissionPlanMenuScreen(),
                     ),
                   ],
                 ),

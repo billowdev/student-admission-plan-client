@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:project/ui/authentication/models/user.model.dart';
+import 'package:project/ui/auth/models/user.model.dart';
 
 class AuthService {
   static String baseUrl = dotenv.env['API_URL'].toString();

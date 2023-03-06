@@ -1,19 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/authentication/login_ui.dart';
 import 'package:project/ui/course/add_course_ui.dart';
-import '../../common/services/auth_service.dart';
+import '../../common/utils/local_storage_util.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
-
 import 'course_detail_ui.dart';
 
 class AllCourseScreen extends StatefulWidget {
@@ -26,14 +20,30 @@ class AllCourseScreen extends StatefulWidget {
 class _AllCourseScreenState extends State<AllCourseScreen> {
   static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
-  final AuthService _authService = AuthService();
+
   @override
   void initState() {
     super.initState();
+
     _getCourses();
-    _authService.getToken().then((value) => setState(() {
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
+  }
+
+  _getCourses() async {
+    // var queryParam = {"major": "science"};
+    // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
+    final url = Uri.http(apiUrl, '/courses/get-all');
+
+    // final url = Uri.http('localhost:5000', '/courses/get-all');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+      setState(() {
+        course = courseData.payload!;
+      });
+    }
   }
 
   List<CoursePayload> course = [];
@@ -43,9 +53,10 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
       child: Scaffold(
         appBar: AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
         body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              DataTable(
+             SingleChildScrollView(scrollDirection: Axis.horizontal,child:  DataTable(
                 showCheckboxColumn: false,
                 sortAscending: true,
                 columns: const <DataColumn>[
@@ -100,7 +111,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                     },
                   );
                 }).toList(),
-              ),
+              ),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -158,20 +169,5 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
         drawer: DrawerMenuWidget(),
       ),
     );
-  }
-
-  _getCourses() async {
-    // var queryParam = {"major": "science"};
-    // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
-    final url = Uri.http(apiUrl, '/courses/get-all');
-
-    // final url = Uri.http('localhost:5000', '/courses/get-all');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
-      setState(() {
-        course = courseData.payload!;
-      });
-    }
   }
 }

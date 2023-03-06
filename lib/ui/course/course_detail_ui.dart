@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/common/services/auth_service.dart';
 import 'package:project/ui/course/models/course.model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
-import '../authentication/login_ui.dart';
 import 'edit_course_ui.dart';
 
 class CourseDetailScreen extends StatefulWidget {
@@ -19,20 +17,19 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   late String _major;
   late String _degree;
   late String _faculty;
-  late String _qualification;
+  late String _detail;
   static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
-  final AuthService _authService = AuthService();
-
+  // final AuthService _authService = AuthService();
+  // final TokenBloc _tokenBloc = TokenBloc(); // create an instance of TokenBloc
   @override
   void initState() {
     super.initState();
     _major = widget.detail.major!;
     _degree = widget.detail.degree!;
     _faculty = widget.detail.faculty!;
-    _qualification = widget.detail.qualification!;
-
-    _authService.getToken().then((value) => setState(() {
+    _detail = widget.detail.detail!;
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
   }
@@ -66,7 +63,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     _buildTableRow('ชื่อหลักสูตร', _major.toString()),
                     _buildTableRow('หลักสูตร', _degree.toString()),
                     _buildTableRow('คณะ', _faculty.toString()),
-                    _buildTableRow('รายละเอียด', _qualification.toString()),
+                    _buildTableRow('รายละเอียด', _detail.toString()),
                   ],
                 ),
               ),

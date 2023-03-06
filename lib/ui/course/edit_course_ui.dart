@@ -21,7 +21,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   late String _major;
   late String _degree;
   late String _faculty;
-  late String _qualification;
+  late String _detail;
   static String baseUrl = dotenv.env['API_URL'].toString();
 
   // get http => null;
@@ -33,7 +33,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     _major = widget.detail.major!;
     _degree = widget.detail.degree!;
     _faculty = widget.detail.faculty!;
-    _qualification = widget.detail.qualification!;
+    _detail = widget.detail.detail!;
   }
 
   void _showSnackBar(String message, Color color) {
@@ -55,7 +55,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
           'major': _major,
           'degree': _degree,
           'faculty': _faculty,
-          'qualification': _qualification,
+          'detail': _detail,
         };
         final header = {'Content-Type': 'application/json'};
         await client.patch(url, headers: header, body: jsonEncode(fdata));
@@ -73,7 +73,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   //       'major': _major,
   //       'degree': _degree,
   //       'faculty': _faculty,
-  //       'qualification': _qualification,
+  //       'detail': _detail,
   //     };
   //     final header = {'Content-Type': 'application/json'};
   //     final response =
@@ -196,9 +196,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _qualification,
+                          initialValue: _detail,
                           onChanged: (value) {
-                            _qualification = value;
+                            _detail = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {

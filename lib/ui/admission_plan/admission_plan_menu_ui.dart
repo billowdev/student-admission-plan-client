@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/all_course_ui.dart';
+import 'package:project/ui/course/course_detail_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/widgets/infomation_button_widget.dart';
@@ -34,51 +35,20 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
+      appBar: const AppBarWidget(txtTitle: 'แผนการรับนักศึกษาภาคปกติ'),
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: RichText(
-                  text: const TextSpan(
-                text: 'เมนูหลัก',
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontFamily: 'PrintAble4U',
-                    fontWeight: FontWeight.bold),
-              )),
-            ),
-
-            // Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [Major_Information(), Student_Qualification()]),
-            // Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [Course_Information(), Receiving_Plan_Quota()]),
-            // Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [Faculty_Information(), Receiving_Plan()]),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  children: [
-                    InformationButtonWidget(
-                      buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
-                      routeScreen: const AllCourseScreen(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(children: [
+          FacultyWidget(
+              facultyName: 'คณะวิทยาศาสตร์และเทคโนโลยี',
+              logoPath: 'assets/images/sci.jpg',
+              routeScreen: "/all-course"),
+          FacultyWidget(
+              facultyName: 'คณะครุศาสตร์',
+              logoPath: 'assets/images/edu.png',
+              routeScreen: "/all-course"),
+        ]),
       ),
       drawer: DrawerMenuWidget(),
     ));
@@ -111,4 +81,49 @@ PreferredSizeWidget _appBarWideget() {
           child: const Text('Login', style: TextStyle(color: Colors.green)))
     ],
   );
+}
+
+class FacultyWidget extends StatelessWidget {
+  final String facultyName;
+  final String logoPath;
+  final String routeScreen;
+  const FacultyWidget(
+      {super.key,
+      required this.facultyName,
+      required this.logoPath,
+      required this.routeScreen});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.green,
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Center(
+        child: ListTile(
+          leading: Image.asset(
+            logoPath,
+            height: 50,
+          ),
+          title: Text(
+            facultyName,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, routeScreen);
+          },
+        ),
+      ),
+    );
+  }
 }

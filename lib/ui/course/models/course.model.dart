@@ -28,7 +28,7 @@ class CoursePayload {
   String? id;
   String? major;
   String? degree;
-  String? qualification;
+  String? detail;
   String? faculty;
   String? createdAt;
   String? updatedAt;
@@ -37,7 +37,7 @@ class CoursePayload {
       {this.id,
       this.major,
       this.degree,
-      this.qualification,
+      this.detail,
       this.faculty,
       this.createdAt,
       this.updatedAt});
@@ -46,7 +46,7 @@ class CoursePayload {
     id = json['id'];
     major = json['major'];
     degree = json['degree'];
-    qualification = json['qualification'];
+    detail = json['detail'];
     faculty = json['faculty'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -57,7 +57,7 @@ class CoursePayload {
     data['id'] = this.id;
     data['major'] = this.major;
     data['degree'] = this.degree;
-    data['qualification'] = this.qualification;
+    data['detail'] = this.detail;
     data['faculty'] = this.faculty;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

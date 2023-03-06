@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'ui/authentication/login_ui.dart';
+import 'ui/auth/login_ui.dart';
 import 'ui/course/all_course_ui.dart';
 import 'ui/main_menu/main_menu_ui.dart';
 

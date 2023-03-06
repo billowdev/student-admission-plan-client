@@ -4,7 +4,7 @@ import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/main_menu/main_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../ui/authentication/login_ui.dart';
+import '../../ui/auth/login_ui.dart';
 
 class DrawerMenuWidget extends StatefulWidget {
   const DrawerMenuWidget({super.key});

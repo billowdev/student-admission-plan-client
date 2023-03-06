@@ -5,10 +5,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/authentication/models/user.model.dart';
-import 'package:project/ui/authentication/services/authentication.service.dart';
+import 'package:project/ui/auth/models/user.model.dart';
+import 'package:project/ui/auth/services/auth.service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+
+import '../../common/utils/local_storage_util.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -36,8 +38,8 @@ class _handleLoginScreenState extends State<LoginScreen> {
   }
 
   void navigateToHomeScreen(
-      BuildContext context, SharedPreferences prefs, String role) {
-    prefs.setString('role', role);
+      BuildContext context,  String role) {
+    LocalStorageUtil.setItem('token', role);
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -49,7 +51,6 @@ class _handleLoginScreenState extends State<LoginScreen> {
   }
 
   _handleLogin() async {
-    final prefs = await SharedPreferences.getInstance();
     final urlLogin = Uri.http(apiUrl, '/users/login');
     final header = {'Content-Type': 'application/json'};
 
@@ -75,10 +76,10 @@ class _handleLoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ));
 
-        prefs.setString('token', token);
-        prefs.setString('name-user', nameUser);
+         LocalStorageUtil.setItem('name-user', nameUser);
+         LocalStorageUtil.setItem('token', token);
 
-        navigateToHomeScreen(context, prefs, role);
+        navigateToHomeScreen(context, role);
       } else {
         showErrorMessage(context, 'เข้าสู่ระบบไม่สำเร็จ ชื่อผู้ใช้ไม่ถูกต้อง');
       }
