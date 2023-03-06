@@ -53,6 +53,30 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
               routeScreen: AdmissionPlanFaculty(
                 facultyFilter: 'คณะมนุษยศาสตร์และสังคมศาสตร์',
               )),
+          FacultyWidget(
+              facultyName: 'คณะเทคโนโลยีอุตสาหกรรม',
+              logoPath: 'assets/images/logo_industrial.png',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะเทคโนโลยีอุตสาหกรรม',
+              )),
+          FacultyWidget(
+              facultyName: 'คณะครุศาสตร์',
+              logoPath: 'assets/images/logo_edu.png',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะครุศาสตร์',
+              )),
+          const FacultyWidget(
+              facultyName: 'คณะเทคโนโลยีเกษตร ',
+              logoPath: 'assets/images/logo_iacuc.jpg',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะเทคโนโลยีเกษตร ',
+              )),
+          const FacultyWidget(
+              facultyName: 'คณะวิทยาการจัดการ ',
+              logoPath: 'assets/images/logo_fms.jpg',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะวิทยาการจัดการ ',
+              )),
         ]),
       ),
       drawer: DrawerMenuWidget(),
@@ -64,7 +88,12 @@ PreferredSizeWidget _appBarWideget() {
   return AppBar(
     elevation: 0,
     backgroundColor: Colors.white,
-    leading: Image.asset('assets/images/Logo.png', fit: BoxFit.contain),
+    leading: Image.asset(
+      'assets/images/Logo.png',
+      fit: BoxFit.contain,
+      // width: 50,
+      // height: 50,
+    ),
     title: const Text(
       'ระบบจัดการแผนการรับนักศึกษา',
       style: TextStyle(
@@ -114,7 +143,8 @@ class FacultyWidget extends StatelessWidget {
         child: ListTile(
           leading: Image.asset(
             logoPath,
-            height: 50,
+            height: 80,
+            width: 80,
           ),
           title: Text(
             facultyName,
