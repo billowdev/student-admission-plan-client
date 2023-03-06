@@ -39,6 +39,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
       List<int> yearList = List<int>.from(resp['payload']);
       List<String> stringList =
           yearList.map((year) => year.toString()).toList();
+      _yearList.sort((a, b) => b.compareTo(a));
       return stringList;
     } else {
       return [];
