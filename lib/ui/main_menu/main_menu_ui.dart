@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/admission_plan_menu_ui.dart';
+import 'package:project/ui/auth/login_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/infomation_button_widget.dart';
 import '../course/all_course_ui.dart';
 
@@ -23,9 +25,14 @@ class _MainMenuState extends State<MainMenu> {
     return prefs.getString('role');
   }
 
+  late String token = "";
   @override
   void initState() {
     super.initState();
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          token = value ?? "";
+        }));
+
     _getRole().then((value) => setState(() {
           role = value ?? 'user';
         }));
@@ -44,7 +51,7 @@ class _MainMenuState extends State<MainMenu> {
             MainMenuWidget(
               menuName: 'ข้อมูลหลักสูตรทั้งหมด',
               routeScreen: const AllCourseScreen(),
-              leadingIcon: Icon(Icons.bookmark),
+              leadingIcon: Icon(Icons.edit_document),
             ),
             MainMenuWidget(
               menuName: 'แผนการรับนักศึกษาภาคปกติ',
@@ -57,16 +64,6 @@ class _MainMenuState extends State<MainMenu> {
               leadingIcon: Icon(Icons.bookmark),
             ),
             MainMenuWidget(
-              menuName: 'แผนการรับนักศึกษาภาคปกติ',
-              routeScreen: const AdmissionPlanMenuScreen(),
-              leadingIcon: Icon(Icons.bookmark),
-            ),
-            MainMenuWidget(
-              menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
-              routeScreen: const AdmissionPlanMenuScreen(),
-              leadingIcon: Icon(Icons.bookmark),
-            ),
-            MainMenuWidget(
               menuName: 'รอบโควตาปีการศึกษา $_latestYear',
               routeScreen: const AdmissionPlanMenuScreen(),
               leadingIcon: Icon(Icons.bookmark),
@@ -74,13 +71,13 @@ class _MainMenuState extends State<MainMenu> {
             MainMenuWidget(
               menuName: 'ผู้รับผิดชอบโควตา',
               routeScreen: const AdmissionPlanMenuScreen(),
-              leadingIcon: Icon(Icons.bookmark),
+              leadingIcon: Icon(Icons.supervisor_account),
             ),
             MainMenuWidget(
               menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
               routeScreen: const AdmissionPlanMenuScreen(),
-              leadingIcon: Icon(Icons.bookmark),
-            )
+              leadingIcon: Icon(Icons.summarize),
+            ),
           ],
         ),
       ),
