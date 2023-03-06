@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project/common/services/auth_service.dart';
 import 'package:project/ui/course/models/course.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/widgets/appbar.widget.dart';
@@ -20,11 +21,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   late String _faculty;
   late String _qualification;
   static String apiUrl = dotenv.env['API_URL'].toString();
-  late String token;
-  Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
+  late String token = "";
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -34,7 +32,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     _faculty = widget.detail.faculty!;
     _qualification = widget.detail.qualification!;
 
-    _getToken().then((value) => setState(() {
+    _authService.getToken().then((value) => setState(() {
           token = value ?? "";
         }));
   }
@@ -72,88 +70,63 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   ],
                 ),
               ),
-              Visibility(
-                visible: token.isNotEmpty,
-                child: SizedBox(
-                  width: 80, // adjust the width to your desired size
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditCourseDetailScreen(detail: widget.detail),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Visibility(
+                    visible: token.isNotEmpty,
+                    child: SizedBox(
+                      width: 80, // adjust the width to your desired size
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditCourseDetailScreen(detail: widget.detail),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          primary: Colors.white,
                         ),
-                      );
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit),
+                            SizedBox(
+                                width:
+                                    5), // Add some space between icon and text
+                            Text('แก้ไข'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.brown,
                       primary: Colors.white,
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.edit),
+                        Icon(Icons.arrow_back_ios_new_sharp),
                         SizedBox(
                             width: 5), // Add some space between icon and text
-                        Text('แก้ไข'),
+                        Text('กลับ'),
                       ],
                     ),
                   ),
-                ),
-              ),
+                ],
+              )
             ],
           ),
         ),
       ),
       drawer: const DrawerMenuWidget(),
-
-//  Visibility(
-//               visible: token.isNotEmpty,
-//               child: TextButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) =>
-//                           EditCourseDetailScreen(detail: widget.detail),
-//                     ),
-//                   );
-//                 },
-//                 style: TextButton.styleFrom(
-//                   backgroundColor: Colors.green,
-//                   primary: Colors.white,
-//                 ),
-//                 child: Row(
-//                   children: [
-//                     Icon(Icons.arrow_back_ios_new),
-//                     SizedBox(width: 5), // Add some space between icon and text
-//                     Text('แก้ไข'),
-//                   ],
-//                 ),
-//               ),
-//             ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     if (token.isNotEmpty) {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) =>
-      //               EditCourseDetailScreen(detail: widget.detail),
-      //         ),
-      //       );
-      //     } else {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => const LoginScreen(),
-      //         ),
-      //       );
-      //     }
-      //   },
-      //   child: Icon(Icons.edit),
-      // ),
     ));
   }
 

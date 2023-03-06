@@ -172,8 +172,24 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                           maxLines: 5,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            TextButton(
+                              onPressed: _createCourse,
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                primary: Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add),
+                                  SizedBox(
+                                      width:
+                                          5), // Add some space between icon and text
+                                  Text('เพิ่ม'),
+                                ],
+                              ),
+                            ),
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
@@ -182,19 +198,18 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                                 backgroundColor: Colors.brown,
                                 primary: Colors.white,
                               ),
-                              child: Text('ยกเลิก'),
-                            ),
-                            TextButton(
-                              onPressed: _createCourse,
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                primary: Colors.white,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.cancel),
+                                  SizedBox(
+                                      width:
+                                          5), // Add some space between icon and text
+                                  Text('ยกเลิก'),
+                                ],
                               ),
-                              child: Text('เพิ่ม'),
                             ),
-                            SizedBox(width: 10),
                           ],
-                        )
+                        ),
                       ])))),
       drawer: DrawerMenuWidget(),
     ));

@@ -10,6 +10,7 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/authentication/login_ui.dart';
 import 'package:project/ui/course/add_course_ui.dart';
+import '../../common/services/auth_service.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,11 +25,15 @@ class AllCourseScreen extends StatefulWidget {
 
 class _AllCourseScreenState extends State<AllCourseScreen> {
   static String apiUrl = dotenv.env['API_URL'].toString();
-
+  late String token = "";
+  final AuthService _authService = AuthService();
   @override
   void initState() {
     super.initState();
     _getCourses();
+    _authService.getToken().then((value) => setState(() {
+          token = value ?? "";
+        }));
   }
 
   List<CoursePayload> course = [];
@@ -99,26 +104,33 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddCourseScreen(),
+                  Visibility(
+                    visible: token.isNotEmpty,
+                    child: SizedBox(
+                      width: 80, // adjust the width to your desired size
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddCourseScreen(),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          primary: Colors.white,
                         ),
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      primary: Colors.white,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.add),
-                        SizedBox(
-                            width: 2), // Add some space between icon and text
-                        Text('เพิ่ม'),
-                      ],
+                        child: Row(
+                          children: [
+                            Icon(Icons.add),
+                            SizedBox(
+                                width:
+                                    2), // Add some space between icon and text
+                            Text('เพิ่ม'),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   TextButton(

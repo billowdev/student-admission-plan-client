@@ -22,7 +22,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   late String _degree;
   late String _faculty;
   late String _qualification;
-  static String apiUrl = dotenv.env['API_URL'].toString();
+  static String baseUrl = dotenv.env['API_URL'].toString();
 
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
@@ -50,7 +50,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   Future<void> _updateCourse() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+        final url = Uri.http(baseUrl, "/courses/update/${widget.detail.id}");
         final fdata = {
           'major': _major,
           'degree': _degree,
@@ -68,7 +68,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   }
   // Future<void> _updateCourse() async {
   //   if (_formKey.currentState!.validate()) {
-  //     final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+  //     final url = Uri.http(baseUrl, "/courses/update/${widget.detail.id}");
   //     var data = {
   //       'major': _major,
   //       'degree': _degree,
@@ -97,7 +97,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   // }
 
   Future<void> _deleteCourse() async {
-    final url = Uri.http(apiUrl, "/courses/delete/${widget.detail.id}");
+    final url = Uri.http(baseUrl, "/courses/delete/${widget.detail.id}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {
@@ -128,9 +128,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
+                        const Text(
                           'ชื่อหลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -148,9 +148,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'หลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -168,9 +168,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'คณะ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -188,9 +188,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'รายละเอียด',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -219,11 +219,11 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.delete),
-                                  SizedBox(
+                                  const Icon(Icons.delete),
+                                  const SizedBox(
                                       width:
                                           5), // Add some space between icon and text
-                                  Text('ลบ'),
+                                  const Text('ลบ'),
                                 ],
                               ),
                             ),
@@ -235,11 +235,11 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.edit),
-                                  SizedBox(
+                                  const Icon(Icons.edit),
+                                  const SizedBox(
                                       width:
                                           5), // Add some space between icon and text
-                                  Text('แก้ไข'),
+                                  const Text('แก้ไข'),
                                 ],
                               ),
                             ),

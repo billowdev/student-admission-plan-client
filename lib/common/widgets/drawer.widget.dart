@@ -39,16 +39,17 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
         }));
   }
 
-  void _onItemTap(int index) {
-    setState(() {});
-  }
+  // void _onItemTap(int index) {
+  //   setState(() {});
+  // }
 
-  _logout() async {
+  Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     await prefs.remove('name-user');
     await prefs.remove('role');
-    await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('ออกจากระบบเรียบร้อย'),
       backgroundColor: Colors.green,
     ));
@@ -63,10 +64,10 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
             ? const Text('ยังไม่ได้เข้าสู่ระบบ')
             : Text('สวัสดีคุณ$nameUser'),
       ),
-      DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
-      DrawerListTileButton(
+      const DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
+      const DrawerListTileButton(
           textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', routeScreen: MainMenu()),
-      DrawerListTileButton(
+      const DrawerListTileButton(
           textPage: 'แผนการรับนักศึกษา', routeScreen: AllCourseScreen()),
 // Show Logout button if token is not empty
 
@@ -83,10 +84,10 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       if (token.isEmpty)
         DrawerListTileButton(
             textPage: 'เข้าสู่ระบบ',
-            routeScreen: MainMenu(),
+            routeScreen: const MainMenu(),
             onTap: () async {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             }),
     ]));
   }
@@ -105,7 +106,7 @@ class DrawerListTileButton extends StatelessWidget {
     this.onTap,
   });
 
-  set _selectedIndex(int _selectedIndex) {}
+  // set _selectedIndex(int selectedIndex) {}
 
   @override
   Widget build(BuildContext context) {
