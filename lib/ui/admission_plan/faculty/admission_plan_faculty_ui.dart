@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/common/widgets/search_bar.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
 import '../../../common/utils/local_storage_util.dart';
 import '../models/admission_plan_faculty_model.dart';
@@ -54,6 +55,21 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
     }
   }
 
+  // _searchAdmissionPlan(String keyword) async {
+  //   var queryParam = {"year": widget.yearFilter.toString(), "keyword": keyword};
+  //   var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
+  //   final url = Uri.http(apiUrl,
+  //       '/ap/get-by-faculty/${widget.facultyFilter.toString()}', queryParam);
+  //   final response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     AdmssionPlanFacultyModel resp =
+  //         AdmssionPlanFacultyModel.fromJson(jsonDecode(response.body));
+  //     setState(() {
+  //       admssionPlanData = resp.payload!;
+  //     });
+  //   }
+  // }
+
   List<AdmssionPlanFacultyPayload> admssionPlanData = [];
   @override
   Widget build(BuildContext context) {
@@ -64,6 +80,13 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
+              // SearchBar(onTextChanged: (value) {
+              //   if (value != "") {
+              //     _searchAdmissionPlan(value);
+              //   } else {
+              //     _getAdmissionPlan();
+              //   }
+              // }),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(

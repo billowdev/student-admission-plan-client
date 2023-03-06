@@ -6,6 +6,7 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
 import '../../common/utils/local_storage_util.dart';
+import '../../common/widgets/search_bar.widget.dart';
 import './models/course.model.dart';
 import 'package:http/http.dart' as http;
 import 'course_detail_ui.dart';
@@ -20,7 +21,7 @@ class AllCourseScreen extends StatefulWidget {
 class _AllCourseScreenState extends State<AllCourseScreen> {
   static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
-
+  List<CoursePayload> course = [];
   @override
   void initState() {
     super.initState();
@@ -32,11 +33,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
   }
 
   _getCourses() async {
-    // var queryParam = {"major": "science"};
-    // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
     final url = Uri.http(apiUrl, '/courses/get-all');
-
-    // final url = Uri.http('localhost:5000', '/courses/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
@@ -46,7 +43,20 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
     }
   }
 
-  List<CoursePayload> course = [];
+  _getCoursesKeyword(String? keyword) async {
+    final queryParam = {"keyword": keyword};
+    Uri url = Uri.http(apiUrl, '/courses/get-all', queryParam);
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+
+      setState(() {
+        course = courseData.payload!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,62 +66,74 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-             SingleChildScrollView(scrollDirection: Axis.horizontal,child:  DataTable(
-                showCheckboxColumn: false,
-                sortAscending: true,
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: IgnorePointer(
-                      ignoring: true,
-                      child: Text(
-                        'สาขา',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.green,
+              SearchBar(
+                onTextChanged: (String value) {
+                  if (value != "") {
+                    _getCoursesKeyword(value);
+                  } else {
+                    _getCourses();
+                  }
+                },
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  showCheckboxColumn: false,
+                  sortAscending: true,
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: IgnorePointer(
+                        ignoring: true,
+                        child: Text(
+                          'สาขา',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  DataColumn(
-                      label: Text(
-                    'คณะ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.green,
-                    ),
-                  )),
-                  DataColumn(
-                      label: Text(
-                    'หลักสูตร',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.green,
-                    ),
-                  )),
-                ],
-                rows: course.map((data) {
-                  return DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text("${data.major}")),
-                      DataCell(Text("${data.faculty}")),
-                      DataCell(Text("${data.degree}")),
-                    ],
-                    selected: false, // Add this line to remove the borders
-                    onSelectChanged: (isSelected) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CourseDetailScreen(
-                                  detail: data,
-                                )),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),),
+                    DataColumn(
+                        label: Text(
+                      'คณะ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.green,
+                      ),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'หลักสูตร',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.green,
+                      ),
+                    )),
+                  ],
+                  rows: course.map((data) {
+                    return DataRow(
+                      cells: <DataCell>[
+                        DataCell(Text("${data.major}")),
+                        DataCell(Text("${data.faculty}")),
+                        DataCell(Text("${data.degree}")),
+                      ],
+                      selected: false, // Add this line to remove the borders
+                      onSelectChanged: (isSelected) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CourseDetailScreen(
+                                    detail: data,
+                                  )),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
