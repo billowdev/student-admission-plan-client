@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
@@ -19,7 +19,7 @@ class AllCourseScreen extends StatefulWidget {
 }
 
 class _AllCourseScreenState extends State<AllCourseScreen> {
-  static String apiUrl = dotenv.env['API_URL'].toString();
+
   late String token = "";
   List<CoursePayload> course = [];
   @override
@@ -33,7 +33,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
   }
 
   _getCourses() async {
-    final url = Uri.http(apiUrl, '/courses/get-all');
+    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
@@ -45,7 +45,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
 
   _getCoursesKeyword(String? keyword) async {
     final queryParam = {"keyword": keyword};
-    Uri url = Uri.http(apiUrl, '/courses/get-all', queryParam);
+    Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -61,7 +61,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
+        appBar: const AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -146,16 +146,16 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddCourseScreen(),
+                              builder: (context) => const AddCourseScreen(),
                             ),
                           );
                         },
                         style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
                           backgroundColor: Colors.green,
-                          primary: Colors.white,
                         ),
                         child: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.add),
                             SizedBox(
                                 width:
@@ -171,11 +171,11 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                       Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
                       backgroundColor: Colors.brown,
-                      primary: Colors.white,
                     ),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.arrow_back_ios_new),
                         SizedBox(
                             width: 5), // Add some space between icon and text
@@ -188,7 +188,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
             ],
           ),
         ),
-        drawer: DrawerMenuWidget(),
+        drawer: const DrawerMenuWidget(),
       ),
     );
   }

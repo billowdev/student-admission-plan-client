@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/faculty/admission_plan_faculty_ui.dart';
 import 'package:project/ui/admission_plan/services/admission_plan_service.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:core';
+
+import '../../common/constants/constants.dart';
 
 class AdmissionPlanMenuScreen extends StatefulWidget {
   const AdmissionPlanMenuScreen({super.key});
@@ -22,16 +22,15 @@ class AdmissionPlanMenuScreen extends StatefulWidget {
 class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
   late String role = "";
   final AdmissionPlanService _admissionPlanService = AdmissionPlanService();
-  static String baseUrl = dotenv.env['API_URL'].toString();
   final int currentYear = DateTime.now().year;
-  String _selectedYear = "2564";
+  String _selectedYear = "2565";
 
-  late List<String> _existsYear;
+  // late List<String> _existsYear;
   late List<String> _yearList = List.generate(
-      (currentYear + 543 + 1) - 2564, (index) => (2564 + index).toString());
+      (currentYear + 543) - 2565, (index) => (2565 + index).toString());
 
   Future<List<String>> _getExistsYear() async {
-    final url = Uri.http(baseUrl, '/admission-plans/get-exists-year');
+    final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -40,6 +39,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
       List<String> stringList =
           yearList.map((year) => year.toString()).toList();
       _yearList.sort((a, b) => b.compareTo(a));
+      _selectedYear = stringList[0];
       return stringList;
     } else {
       return [];
@@ -48,6 +48,13 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
 
   void _loadYearList() async {
     _yearList = await _getExistsYear();
+  }
+
+  @override
+  void dispose() {
+    _yearList.clear();
+
+    super.dispose();
   }
 
   @override
@@ -129,6 +136,25 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
                 facultyFilter: 'คณะวิทยาการจัดการ ',
                 yearFilter: _selectedYear,
               )),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.brown,
+              ),
+              child: Row(
+                children: const [
+                  Icon(Icons.arrow_back_ios_new),
+                  SizedBox(
+                      width: 5), // Add some space between icon and text
+                  Text('กลับ'),
+                ],
+              ),
+            ),
+          )
         ]),
       ),
       drawer: const DrawerMenuWidget(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project/ui/admission_plan/faculty/admission_plan_edit_detail_ui.dart';
 
 import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';
@@ -7,7 +8,7 @@ import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
 
 class AdmissionPlanFacultyDetail extends StatefulWidget {
-  final AdmssionPlanFacultyPayload detail;
+  final AdmissionPlanFacultyPayload detail;
   final String major;
   final String degree;
   final String faculty;
@@ -24,12 +25,11 @@ class AdmissionPlanFacultyDetail extends StatefulWidget {
 
 class AdmissionPlanFacultyDetailState
     extends State<AdmissionPlanFacultyDetail> {
-  late String? _id;
   late String _quotaStatus;
-  late String? _quotaSpecificSubject;
-  late int? _quotaQty;
-  late String? _quotaDetail;
-
+  late String _quotaSpecificSubject;
+  late int _quotaQty;
+  late String _quotaDetail;
+  late int _sumQty;
   late String _directStatus;
   late String _directSpecificSubject;
   late int _directQty;
@@ -55,7 +55,6 @@ class AdmissionPlanFacultyDetailState
   void initState() {
     super.initState();
     // _major = widget.detail.major!;
-    _id = widget.detail.id!;
     // ========================== quota ==========================
     if (widget.detail.quotaStatus == true) {
       _quotaStatus = "รับ";
@@ -127,20 +126,24 @@ class AdmissionPlanFacultyDetailState
       _cooperationDetail = "-";
     }
 
-    if (widget.detail.year != "") {
-      _year = widget.detail.year!;
-    } else {
-      _year = 0;
-    }
-    // _studyGroup = widget.detail.studyGroup!;
+    _year = widget.detail.year!;
+    // if (widget.detail.year != "") {
+    // _year = widget.detail.year!;
+    // } else {
+    //   _year = 0;
+    // }
 
-    if (widget.major != null) {
-      _major = widget.major;
-    } else {
-      _major = "";
-    }
+    _studyGroup = widget.detail.studyGroup!;
+    _major = widget.major;
+
+    // if (widget.major != null) {
+    // } else {
+    //   _major = "";
+    // }
     _degree = widget.degree;
     _faculty = widget.faculty;
+
+    _sumQty = _quotaQty + _cooperationQty + _directQty;
 
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
@@ -154,142 +157,159 @@ class AdmissionPlanFacultyDetailState
       appBar: const AppBarWidget(txtTitle: 'รายละเอียดแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Center(
-                          child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                      )),
-                      Table(
-                        children: [
-                          _buildTableRow('ชื่อหลักสูตร', _major.toString()),
-                          _buildTableRow('หลักสูตร', _degree.toString()),
-                          _buildTableRow('คณะ', _faculty.toString()),
-                        ],
+        child: Column(
+          children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      Center(
-                          child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "รอบที่ 1 รอบโควตา",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                      )),
-                      Table(
-                        children: [
-                          _buildTableRow('สถานะ', _quotaStatus.toString()),
-                          _buildTableRow(
-                              'วิชาเฉพาะ', _quotaSpecificSubject.toString()),
-                          _buildTableRow('จำนวนที่รับ', _quotaQty.toString()),
-                          _buildTableRow('รายละเอียด', _quotaDetail.toString()),
-                        ],
-                      ),
-                      Center(
-                          child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "รอบที่ 2 รอบรับตรง",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                      )),
-                      Table(
-                        children: [
-                          _buildTableRow('สถานะ', _directStatus.toString()),
-                          _buildTableRow(
-                              'วิชาเฉพาะ', _directSpecificSubject.toString()),
-                          _buildTableRow('จำนวนที่รับ', _directQty.toString()),
-                          _buildTableRow(
-                              'รายละเอียด', _directDetail.toString()),
-                        ],
-                      ),
-                      Center(
-                          child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(
-                          "รอบที่ 3 ความร่วมมือกับ รร.",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                      )),
-                      Table(
-                        children: [
-                          _buildTableRow('สถานะ', _directStatus.toString()),
-                          _buildTableRow('วิชาเฉพาะ',
-                              _cooperationSpecificSubject.toString()),
-                          _buildTableRow(
-                              'จำนวนที่รับ', _cooperationQty.toString()),
-                          _buildTableRow(
-                              'รายละเอียด', _cooperationDetail.toString()),
-                        ],
-                      ),
-                    ],
-                  )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Visibility(
-                    visible: token.isNotEmpty,
-                    child: SizedBox(
-                      width: 80, // adjust the width to your desired size
-                      child: TextButton(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => AdmissionPlanFacultyDetail(
-                          //         detail: widget.detail),
-                          //   ),
-                          // );
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          primary: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(
-                                width:
-                                    5), // Add some space between icon and text
-                            Text('แก้ไข'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.brown,
-                      primary: Colors.white,
-                    ),
-                    child: Row(
+                    )),
+                    Table(
                       children: [
-                        Icon(Icons.arrow_back_ios_new_sharp),
-                        SizedBox(
-                            width: 5), // Add some space between icon and text
-                        Text('กลับ'),
+                        _buildTableRow('ชื่อหลักสูตร', _major.toString()),
+                        _buildTableRow('หลักสูตร', _degree.toString()),
+                        _buildTableRow('คณะ', _faculty.toString()),
                       ],
                     ),
+                    const Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        "รอบที่ 1 รอบโควตา",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    )),
+                    Table(
+                      children: [
+                        _buildTableRow('สถานะ', _quotaStatus.toString()),
+                        _buildTableRow(
+                            'วิชาเฉพาะ', _quotaSpecificSubject.toString()),
+                        _buildTableRow('จำนวนที่รับ', _quotaQty.toString()),
+                        _buildTableRow('รายละเอียด', _quotaDetail.toString()),
+                      ],
+                    ),
+                    const Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        "รอบที่ 2 รอบรับตรง",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    )),
+                    Table(
+                      children: [
+                        _buildTableRow('สถานะ', _directStatus.toString()),
+                        _buildTableRow(
+                            'วิชาเฉพาะ', _directSpecificSubject.toString()),
+                        _buildTableRow('จำนวนที่รับ', _directQty.toString()),
+                        _buildTableRow(
+                            'รายละเอียด', _directDetail.toString()),
+                      ],
+                    ),
+                    const Center(
+                        child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        "รอบที่ 3 ความร่วมมือกับ รร.",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    )),
+                    Table(
+                      children: [
+                        _buildTableRow(
+                            'สถานะ', _cooperationStatus.toString()),
+                        _buildTableRow('วิชาเฉพาะ',
+                            _cooperationSpecificSubject.toString()),
+                        _buildTableRow(
+                            'จำนวนที่รับ', _cooperationQty.toString()),
+                        _buildTableRow(
+                            'รายละเอียด', _cooperationDetail.toString()),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                    ),
+                    Table(
+                      children: [
+                        _buildTableRow(
+                            'จำนวนหมู่เรียน', _studyGroup.toString()),
+                        _buildTableRow(
+                            'จำนวนที่รับทั้งหมด', _sumQty.toString())
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                    ),
+                  ],
+                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Visibility(
+                  visible: token.isNotEmpty,
+                  child: SizedBox(
+                    width: 80, // adjust the width to your desired size
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditAdmissionPlanDetailScreen(
+                                    detail: widget.detail),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.edit),
+                          SizedBox(
+                              width:
+                                  5), // Add some space between icon and text
+                          Text('แก้ไข'),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
-              )
-            ],
-          ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.arrow_back_ios_new_sharp),
+                      SizedBox(
+                          width: 5), // Add some space between icon and text
+                      Text('กลับ'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8),
+            ),
+          ],
         ),
       ),
       drawer: const DrawerMenuWidget(),

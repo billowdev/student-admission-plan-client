@@ -1,30 +1,30 @@
 class AdmssionPlanFacultyModel {
   String? message;
-  List<AdmssionPlanFacultyPayload>? payload;
+  List<AdmissionPlanFacultyPayload>? payload;
 
   AdmssionPlanFacultyModel({this.message, this.payload});
 
   AdmssionPlanFacultyModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['payload'] != null) {
-      payload = <AdmssionPlanFacultyPayload>[];
+      payload = <AdmissionPlanFacultyPayload>[];
       json['payload'].forEach((v) {
-        payload!.add(new AdmssionPlanFacultyPayload.fromJson(v));
+        payload!.add(new AdmissionPlanFacultyPayload.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.payload != null) {
-      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (payload != null) {
+      data['payload'] = payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class AdmssionPlanFacultyPayload {
+class AdmissionPlanFacultyPayload {
   String? id;
   bool? quotaStatus;
   String? quotaSpecificSubject;
@@ -45,7 +45,7 @@ class AdmssionPlanFacultyPayload {
   String? updatedAt;
   Course? course;
 
-  AdmssionPlanFacultyPayload(
+  AdmissionPlanFacultyPayload(
       {this.id,
       this.quotaStatus,
       this.quotaSpecificSubject,
@@ -66,7 +66,7 @@ class AdmssionPlanFacultyPayload {
       this.updatedAt,
       this.course});
 
-  AdmssionPlanFacultyPayload.fromJson(Map<String, dynamic> json) {
+  AdmissionPlanFacultyPayload.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     quotaStatus = json['quotaStatus'];
     quotaSpecificSubject = json['quotaSpecificSubject'];
@@ -91,28 +91,28 @@ class AdmssionPlanFacultyPayload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['quotaStatus'] = this.quotaStatus;
-    data['quotaSpecificSubject'] = this.quotaSpecificSubject;
-    data['quotaQty'] = this.quotaQty;
-    data['quotaDetail'] = this.quotaDetail;
-    data['directStatus'] = this.directStatus;
-    data['directSpecificSubject'] = this.directSpecificSubject;
-    data['directDetail'] = this.directDetail;
-    data['directQty'] = this.directQty;
-    data['cooperationStatus'] = this.cooperationStatus;
-    data['cooperationSpecificSubject'] = this.cooperationSpecificSubject;
-    data['cooperationDetail'] = this.cooperationDetail;
-    data['cooperationQty'] = this.cooperationQty;
-    data['year'] = this.year;
-    data['studyGroup'] = this.studyGroup;
-    data['courseId'] = this.courseId;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['CourseId'] = this.courseId;
-    if (this.course != null) {
-      data['Course'] = this.course!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['quotaStatus'] = quotaStatus;
+    data['quotaSpecificSubject'] = quotaSpecificSubject;
+    data['quotaQty'] = quotaQty;
+    data['quotaDetail'] = quotaDetail;
+    data['directStatus'] = directStatus;
+    data['directSpecificSubject'] = directSpecificSubject;
+    data['directDetail'] = directDetail;
+    data['directQty'] = directQty;
+    data['cooperationStatus'] = cooperationStatus;
+    data['cooperationSpecificSubject'] = cooperationSpecificSubject;
+    data['cooperationDetail'] = cooperationDetail;
+    data['cooperationQty'] = cooperationQty;
+    data['year'] = year;
+    data['studyGroup'] = studyGroup;
+    data['courseId'] = courseId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['CourseId'] = courseId;
+    if (course != null) {
+      data['Course'] = course!.toJson();
     }
     return data;
   }
@@ -144,13 +144,13 @@ class Course {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['major'] = this.major;
-    data['degree'] = this.degree;
-    data['detail'] = this.detail;
-    data['faculty'] = this.faculty;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['major'] = major;
+    data['degree'] = degree;
+    data['detail'] = detail;
+    data['faculty'] = faculty;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

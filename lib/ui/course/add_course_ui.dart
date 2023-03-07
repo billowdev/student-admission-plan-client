@@ -2,9 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/ui/course/all_course_ui.dart';
-import 'package:project/ui/course/course_detail_ui.dart';
-import 'package:project/ui/course/models/course.model.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
@@ -20,7 +17,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   late String _major;
   late String _degree;
   late String _faculty;
-  late String _qualification;
+  late String _detail;
   static String apiUrl = dotenv.env['API_URL'].toString();
 
   // get http => null;
@@ -36,12 +33,12 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
       return;
     }
 
-    final url = Uri.http(apiUrl, "/courses/create");
+    final url = Uri.http(apiUrl, "/api/v1/courses/create");
     final data = {
       'major': _major,
       'degree': _degree,
       'faculty': _faculty,
-      'qualification': _qualification,
+      'detail': _detail,
     };
     final header = {'Content-Type': 'application/json'};
 
@@ -50,26 +47,25 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
           await client.post(url, headers: header, body: jsonEncode(data));
 
       if (response.statusCode == 201) {
-        final responseData = json.decode(response.body);
-
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('เพิ่มข้อมูลสำเร็จ'),
             backgroundColor: Colors.green,
           ),
         );
         Navigator.pushReplacementNamed(context, '/all-course');
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update course.'),
+          const SnackBar(
+            content: Text('Failed to create course.'),
             backgroundColor: Colors.red,
           ),
         );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('An error occurred while creating the course.'),
           backgroundColor: Colors.red,
         ),
@@ -91,9 +87,9 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
+                        const Text(
                           'ชื่อหลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -111,9 +107,9 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'หลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -131,9 +127,9 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'คณะ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -151,9 +147,9 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'รายละเอียด',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -161,7 +157,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                         TextFormField(
                           initialValue: "",
                           onChanged: (value) {
-                            _qualification = value;
+                            _detail = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -177,11 +173,10 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                             TextButton(
                               onPressed: _createCourse,
                               style: TextButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                primary: Colors.white,
+                                foregroundColor: Colors.white, backgroundColor: Colors.green,
                               ),
                               child: Row(
-                                children: [
+                                children: const [
                                   Icon(Icons.add),
                                   SizedBox(
                                       width:
@@ -195,11 +190,11 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                                 Navigator.of(context).pop();
                               },
                               style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 backgroundColor: Colors.brown,
-                                primary: Colors.white,
                               ),
                               child: Row(
-                                children: [
+                                children: const [
                                   Icon(Icons.cancel),
                                   SizedBox(
                                       width:
@@ -211,7 +206,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                           ],
                         ),
                       ])))),
-      drawer: DrawerMenuWidget(),
+      drawer: const DrawerMenuWidget(),
     ));
   }
 }

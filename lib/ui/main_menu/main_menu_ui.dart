@@ -18,7 +18,7 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   late String role = "";
-  late String _latestYear = "2566";
+  late final String _latestYear = "2566";
 
   Future<String?> _getRole() async {
     final prefs = await SharedPreferences.getInstance();
@@ -42,46 +42,46 @@ class _MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBarWidget(txtTitle: 'ระบบจัดการแผนการรับนักศึกษา'),
+      appBar: const AppBarWidget(txtTitle: 'ระบบจัดการแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           children: <Widget>[
-            MainMenuWidget(
+            const MainMenuWidget(
               menuName: 'ข้อมูลหลักสูตรทั้งหมด',
-              routeScreen: const AllCourseScreen(),
+              routeScreen: AllCourseScreen(),
               leadingIcon: Icon(Icons.edit_document),
             ),
-            MainMenuWidget(
+            const MainMenuWidget(
               menuName: 'แผนการรับนักศึกษาภาคปกติ',
-              routeScreen: const AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(),
               leadingIcon: Icon(Icons.bookmark),
             ),
-            MainMenuWidget(
+            const MainMenuWidget(
               menuName: 'ภาคพิเศษ(กศ.ป.)',
-              routeScreen: const AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(),
               leadingIcon: Icon(Icons.bookmark),
             ),
             MainMenuWidget(
               menuName: 'รอบโควตาปีการศึกษา $_latestYear',
               routeScreen: const AdmissionPlanMenuScreen(),
-              leadingIcon: Icon(Icons.bookmark),
+              leadingIcon: const Icon(Icons.bookmark),
             ),
-            MainMenuWidget(
+            const MainMenuWidget(
               menuName: 'ผู้รับผิดชอบโควตา',
-              routeScreen: const AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(),
               leadingIcon: Icon(Icons.supervisor_account),
             ),
-            MainMenuWidget(
+            const MainMenuWidget(
               menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
-              routeScreen: const AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(),
               leadingIcon: Icon(Icons.summarize),
             ),
           ],
         ),
       ),
-      drawer: DrawerMenuWidget(),
+      drawer: const DrawerMenuWidget(),
     ));
   }
 }

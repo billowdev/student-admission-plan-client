@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatefulWidget {
   final Function(String) onTextChanged;
 
-  SearchBar({required this.onTextChanged});
+  const SearchBar({super.key, required this.onTextChanged});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SearchBarState createState() => _SearchBarState();
 }
 
@@ -35,7 +36,7 @@ class _SearchBarState extends State<SearchBar> {
       child: TextField(
         controller: _controller,
         onChanged: widget.onTextChanged,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Search',
           prefixIcon: Icon(Icons.search),
           border: InputBorder.none,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/ui/course/models/course.model.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
@@ -18,7 +17,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   late String _degree;
   late String _faculty;
   late String _detail;
-  static String apiUrl = dotenv.env['API_URL'].toString();
+  // static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
   // final AuthService _authService = AuthService();
   // final TokenBloc _tokenBloc = TokenBloc(); // create an instance of TokenBloc
@@ -41,86 +40,83 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       appBar: const AppBarWidget(txtTitle: 'รายละเอียดข้อมูลหลักสูตร'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: RichText(
-                    text: const TextSpan(
-                  text: "รายละเอียด",
-                  style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontFamily: 'PrintAble4U',
-                      fontWeight: FontWeight.bold),
-                )),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Table(
-                  children: [
-                    _buildTableRow('ชื่อหลักสูตร', _major.toString()),
-                    _buildTableRow('หลักสูตร', _degree.toString()),
-                    _buildTableRow('คณะ', _faculty.toString()),
-                    _buildTableRow('รายละเอียด', _detail.toString()),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: RichText(
+                  text: const TextSpan(
+                text: "รายละเอียด",
+                style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+                    fontFamily: 'PrintAble4U',
+                    fontWeight: FontWeight.bold),
+              )),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Table(
                 children: [
-                  Visibility(
-                    visible: token.isNotEmpty,
-                    child: SizedBox(
-                      width: 80, // adjust the width to your desired size
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditCourseDetailScreen(detail: widget.detail),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          primary: Colors.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(
-                                width:
-                                    5), // Add some space between icon and text
-                            Text('แก้ไข'),
-                          ],
-                        ),
+                  _buildTableRow('ชื่อหลักสูตร', _major.toString()),
+                  _buildTableRow('หลักสูตร', _degree.toString()),
+                  _buildTableRow('คณะ', _faculty.toString()),
+                  _buildTableRow('รายละเอียด', _detail.toString()),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Visibility(
+                  visible: token.isNotEmpty,
+                  child: SizedBox(
+                    width: 80, // adjust the width to your desired size
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditCourseDetailScreen(detail: widget.detail),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: Colors.green,
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.edit),
+                          SizedBox(
+                              width:
+                                  5), // Add some space between icon and text
+                          Text('แก้ไข'),
+                        ],
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.brown,
-                      primary: Colors.white,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.arrow_back_ios_new_sharp),
-                        SizedBox(
-                            width: 5), // Add some space between icon and text
-                        Text('กลับ'),
-                      ],
-                    ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white, backgroundColor: Colors.brown,
                   ),
-                ],
-              )
-            ],
-          ),
+                  child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Icon(Icons.arrow_back_ios_new_sharp),
+                      const SizedBox(
+                          width: 5), // Add some space between icon and text
+                      const Text('กลับ'),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
       drawer: const DrawerMenuWidget(),

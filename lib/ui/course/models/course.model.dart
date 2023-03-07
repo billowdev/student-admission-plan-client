@@ -9,16 +9,16 @@ class CourseModel {
     if (json['payload'] != null) {
       payload = <CoursePayload>[];
       json['payload'].forEach((v) {
-        payload!.add(new CoursePayload.fromJson(v));
+        payload!.add(CoursePayload.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.payload != null) {
-      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (payload != null) {
+      data['payload'] = payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -53,14 +53,14 @@ class CoursePayload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['major'] = this.major;
-    data['degree'] = this.degree;
-    data['detail'] = this.detail;
-    data['faculty'] = this.faculty;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['major'] = major;
+    data['degree'] = degree;
+    data['detail'] = detail;
+    data['faculty'] = faculty;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

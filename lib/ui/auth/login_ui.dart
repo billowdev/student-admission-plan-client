@@ -7,7 +7,6 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/auth/models/user.model.dart';
 import 'package:project/ui/auth/services/auth.service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../../common/utils/local_storage_util.dart';
@@ -20,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _handleLoginScreenState extends State<LoginScreen> {
-  AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -37,8 +36,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
     return decodedToken['name'] as String;
   }
 
-  void navigateToHomeScreen(
-      BuildContext context,  String role) {
+  void navigateToHomeScreen(BuildContext context, String role) {
     LocalStorageUtil.setItem('token', role);
     Navigator.pushReplacementNamed(context, '/home');
   }
@@ -76,8 +74,8 @@ class _handleLoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ));
 
-         LocalStorageUtil.setItem('name-user', nameUser);
-         LocalStorageUtil.setItem('token', token);
+        LocalStorageUtil.setItem('name-user', nameUser);
+        LocalStorageUtil.setItem('token', token);
 
         navigateToHomeScreen(context, role);
       } else {
@@ -95,7 +93,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(txtTitle: 'หน้าเข้าสู่ระบบ'),
+      appBar: const AppBarWidget(txtTitle: 'หน้าเข้าสู่ระบบ'),
       body: Center(
         child: _isLoading
             ? const CircularProgressIndicator()
@@ -153,7 +151,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20.0),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green, // background
+                          backgroundColor: Colors.green, // background
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -168,7 +166,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
                 ),
               ),
       ),
-      drawer: DrawerMenuWidget(),
+      drawer: const DrawerMenuWidget(),
     );
   }
 }

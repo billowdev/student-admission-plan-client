@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import '../models/admission_plan_exists_year_model.dart';
 
 class AdmissionPlanService {
   static String baseUrl = dotenv.env['API_URL'].toString();

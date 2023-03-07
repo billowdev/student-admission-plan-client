@@ -10,7 +10,7 @@ class LocalStorageUtil {
       prefs.setString(key, value);
     } else if (io.Platform.isIOS) {
       // iOS implementation using Flutter Secure Storage or Keychain
-      final storage = new FlutterSecureStorage();
+      const storage = FlutterSecureStorage();
       await storage.write(key: key, value: value);
     } else {
       throw Exception("Platform not supported");
@@ -23,8 +23,8 @@ class LocalStorageUtil {
       return prefs.getString(key);
     } else if (io.Platform.isIOS) {
       // iOS implementation using Flutter Secure Storage or Keychain
-      final _platform = const MethodChannel('com.example.keychain');
-      return await _platform.invokeMethod('getItem', {'key': key});
+      const platform = MethodChannel('com.example.keychain');
+      return await platform.invokeMethod('getItem', {'key': key});
     } else {
       throw Exception("Platform not supported");
     }
@@ -36,8 +36,8 @@ class LocalStorageUtil {
       prefs.remove(key);
     } else if (io.Platform.isIOS) {
       // iOS implementation using Flutter Secure Storage or Keychain
-      final _platform = const MethodChannel('com.example.keychain');
-      await _platform.invokeMethod('removeItem', {'key': key});
+      const platform = MethodChannel('com.example.keychain');
+      await platform.invokeMethod('removeItem', {'key': key});
     } else {
       throw Exception("Platform not supported");
     }
