@@ -45,7 +45,7 @@ class AdmissionPlanFacultyDetailState
   late int _cooperationQty;
   late String _cooperationDetail;
 
-  late int _year;
+  late String _year;
   late int _studyGroup;
 
   late String _major;

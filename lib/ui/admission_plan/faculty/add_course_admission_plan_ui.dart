@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
@@ -7,6 +8,7 @@ import '../../../common/widgets/drawer.widget.dart';
 import '../../../common/widgets/search_bar.widget.dart';
 import '../../course/models/course.model.dart';
 import '../models/admission_plan_faculty_model.dart';
+import 'all_faculty_admission_plan_ui.dart';
 
 class AddAdmissionPlanScreen extends StatefulWidget {
   final AdmissionPlanFacultyPayload? admssionPlanData;
@@ -31,7 +33,8 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
   late String _major = "";
   late String _degree = "";
   late String _faculty = "";
-  late int _year;
+
+  late String _year = "";
   late String _courseId = "";
   late bool _quotaStatus = false;
 
@@ -69,26 +72,28 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
 
-  final List<Map<String, String>> courses = [
-    {
-      "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d0",
-      "major": "สาขาวิชาเทคโนโลยีโยธา",
-      "degree": "ทล.บ. 4 ปี",
-      "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
-    },
-    {
-      "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d1",
-      "major": "สาขาวิชาสถาปัตยกรรม",
-      "degree": "ทล.บ. 4 ปี",
-      "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
-    },
-  ];
+  // final List<Map<String, String>> courses = [
+  //   {
+  //     "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d0",
+  //     "major": "สาขาวิชาเทคโนโลยีโยธา",
+  //     "degree": "ทล.บ. 4 ปี",
+  //     "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
+  //   },
+  //   {
+  //     "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d1",
+  //     "major": "สาขาวิชาสถาปัตยกรรม",
+  //     "degree": "ทล.บ. 4 ปี",
+  //     "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
+  //   },
+  // ];
 
   late List<CoursePayload> _courses = [];
 
-  _handleGetCourse(String courseId) async {
+  _handleGetCourseById(String courseId) async {
     _isNotSelectedCourse = false;
-
+    setState(() {
+      _courseId = courseId;
+    });
     final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-one/$courseId');
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -101,7 +106,7 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
   }
 
   _getCourses() async {
-    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
+    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-by-faculty/$_faculty');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
@@ -114,6 +119,7 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
   @override
   void initState() {
     super.initState();
+    _faculty = widget.facultyFilter;
     _getCourses();
 
     if (widget.courseId != null) {
@@ -123,11 +129,6 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
       _courseId = "";
       _isNotSelectedCourse = true;
     }
-
-    // _major = widget.major;
-    // _degree = widget.degree;
-    // _faculty = widget.faculty;
-    // _year = widget.year;
 
     if (widget.admssionPlanData != null) {
       final admissionData = widget.admssionPlanData!;
@@ -166,10 +167,9 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
       _cooperationDetail = admissionData.cooperationDetail?.isEmpty ?? true
           ? '-'
           : admissionData.cooperationDetail!;
-    }
 
-// Constants
-    const defaultQty = 0;
+      _year = admissionData.year!;
+    }
   }
 
   void _showSnackBar(String message, Color color) {
@@ -217,20 +217,37 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
           'cooperationDetail': _cooperationDetail,
           'studyGroup': _studyGroup,
           'year': _year,
+          'courseId': _courseId
         };
 
         final url = Uri.http(BASEURL, "$ENDPOINT/admission-plans/create");
         final header = {'Content-Type': 'application/json'};
         final response =
-            await client.patch(url, headers: header, body: jsonEncode(fdata));
-        if (response.statusCode == 200) {
-          _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
+            await client.post(url, headers: header, body: jsonEncode(fdata));
+        if (response.statusCode == 201) {
+          _showSnackBar('เพิ่มข้อมูลสำเร็จ', Colors.green);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AdmissionPlanFaculty(
+                      facultyFilter: _faculty,
+                      yearFilter: _year,
+                    )),
+          );
         } else {
-          print(response.statusCode);
-          _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
+          if (jsonDecode(response.body)['message'].toString().split(" ")[0] ==
+              'courseId') {
+            _showSnackBar(
+                'เพิ่มข้อมูลไม่สำเร็จ กรุณาเลือกหลักสูตร', Colors.red);
+          }
+
+          if (response.statusCode == 409) {
+            _showSnackBar(
+                'ปีการศึกษาซ้ำในระบบ กรุณากรอกปีการศึกษาใหม่', Colors.red);
+          }
         }
       } catch (e) {
-        _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
+        _showSnackBar('เพิ่มข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
       }
     }
   }
@@ -278,12 +295,14 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
                                 builder: (BuildContext context) {
                                   return MyCoursePopUp(
                                     courses: _courses,
-                                    onCourseSelected: (courseId) =>
-                                        {_handleGetCourse(courseId)},
+                                    facultyFilter: widget.facultyFilter,
+                                    onCourseSelected: (courseId) => {
+                                      _handleGetCourseById(courseId),
+                                      _courseId = courseId
+                                    },
                                   );
                                 },
                               );
-                              print(_courseId);
                             },
                           ),
                         ),
@@ -319,6 +338,27 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
                         //     _buildTableRow('คณะ', _faculty.toString()),
                         //   ],
                         // ),
+
+                        const SizedBox(height: 20),
+                        const Text(
+                          'ปีการศึกษา',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: _year.toString(),
+                          onChanged: (value) {
+                            _year = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกปีการศึกษา';
+                            }
+                            return null;
+                          },
+                        ),
 
                         // ====================================================================
                         // ====================================================================
@@ -650,9 +690,12 @@ class _AdmissionInputFieldsState extends State<AdmissionInputFields> {
 
 class MyCoursePopUp extends StatefulWidget {
   final List<CoursePayload> courses;
-
+  final String facultyFilter;
   final Function(String)? onCourseSelected;
-  MyCoursePopUp({required this.courses, this.onCourseSelected});
+  MyCoursePopUp(
+      {required this.courses,
+      this.onCourseSelected,
+      required this.facultyFilter});
 
   @override
   _MyCoursePopUpState createState() => _MyCoursePopUpState();
@@ -661,17 +704,32 @@ class MyCoursePopUp extends StatefulWidget {
 class _MyCoursePopUpState extends State<MyCoursePopUp> {
   String? _selectedItemId;
   late List<CoursePayload> _courses = [];
+  late String _faculty;
   @override
   void initState() {
     super.initState();
     setState(() {
       _courses = widget.courses;
+      _faculty = widget.facultyFilter;
     });
   }
 
-_getCoursesKeyword(String? keyword) async {
-    final queryParam = {"keyword": keyword};
-    Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
+  _getCourses() async {
+    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-by-faculty/$_faculty');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+
+      setState(() {
+        _courses = courseData.payload!;
+      });
+    } else {
+      _courses = [];
+    }
+  }
+
+  _getCoursesKeyword(String? keyword) async {
+    Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-by-faculty/$_faculty');
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -680,13 +738,15 @@ _getCoursesKeyword(String? keyword) async {
       setState(() {
         _courses = courseData.payload!;
       });
+    } else {
+      _courses = [];
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
+      title: const Text(
         'เลือกข้อมูลหลักสูตร',
         style: TextStyle(color: Colors.green),
       ),
@@ -701,7 +761,7 @@ _getCoursesKeyword(String? keyword) async {
                   });
                 } else {
                   setState(() {
-                    _courses = getCourses() as List<CoursePayload>;
+                    _courses = _getCourses() as List<CoursePayload>;
                   });
                 }
               },
@@ -709,7 +769,20 @@ _getCoursesKeyword(String? keyword) async {
             ListBody(
               children: _courses.map((course) {
                 return GestureDetector(
-                  child: Text(course.major!),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Divider(), // add a line before the Padding widget
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(
+                          "${course.major!} (${course.degree!})",
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      Divider(), // add a line after the Padding widget
+                    ],
+                  ),
                   onTap: () {
                     setState(() {
                       _selectedItemId = course.id;
@@ -732,30 +805,5 @@ _getCoursesKeyword(String? keyword) async {
         ),
       ],
     );
-  }
-}
-
-Future<List<CoursePayload>> getCourses() async {
-  final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
-    return courseData.payload!;
-  } else {
-    return [];
-  }
-}
-
-getCoursesKeyword(String? keyword) async {
-  final queryParam = {"keyword": keyword};
-  Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
-
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
-
-    return courseData.payload!;
-  } else {
-    return [];
   }
 }
