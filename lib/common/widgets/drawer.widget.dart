@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/main_menu/main_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../ui/authentication/login_ui.dart';
+import '../../ui/auth/login_ui.dart';
 
 class DrawerMenuWidget extends StatefulWidget {
   const DrawerMenuWidget({super.key});
@@ -39,16 +40,17 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
         }));
   }
 
-  void _onItemTap(int index) {
-    setState(() {});
-  }
+  // void _onItemTap(int index) {
+  //   setState(() {});
+  // }
 
-  _logout() async {
+  Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     await prefs.remove('name-user');
     await prefs.remove('role');
-    await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('ออกจากระบบเรียบร้อย'),
       backgroundColor: Colors.green,
     ));
@@ -63,11 +65,15 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
             ? const Text('ยังไม่ได้เข้าสู่ระบบ')
             : Text('สวัสดีคุณ$nameUser'),
       ),
-      DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
-      DrawerListTileButton(
-          textPage: 'คุณสมบัตินักศึกษาตามหลักสูตร', routeScreen: MainMenu()),
-      DrawerListTileButton(
-          textPage: 'แผนการรับนักศึกษา', routeScreen: AllCourseScreen()),
+      const DrawerListTileButton(textPage: 'หน้าหลัก', routeScreen: MainMenu()),
+      const DrawerListTileButton(
+          textPage: 'ข้อมูลหลักสูตรทั้งหมด', routeScreen: AllCourseScreen()),
+      // const DrawerListTileButton(
+      //     textPage: 'ข้อมูลหลักสูตรทั้งหมด', routeScreen: AllCourseScreen()),
+
+      const DrawerListTileButton(
+          textPage: 'ข้อมูลแผนการรับนักศึกษาคณะต่าง ๆ',
+          routeScreen: AdmissionPlanMenuScreen()),
 // Show Logout button if token is not empty
 
       if (token.isNotEmpty)
@@ -83,10 +89,10 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       if (token.isEmpty)
         DrawerListTileButton(
             textPage: 'เข้าสู่ระบบ',
-            routeScreen: MainMenu(),
+            routeScreen: const MainMenu(),
             onTap: () async {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             }),
     ]));
   }
@@ -105,7 +111,7 @@ class DrawerListTileButton extends StatelessWidget {
     this.onTap,
   });
 
-  set _selectedIndex(int _selectedIndex) {}
+  // set _selectedIndex(int selectedIndex) {}
 
   @override
   Widget build(BuildContext context) {

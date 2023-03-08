@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/ui/course/all_course_ui.dart';
-import 'package:project/ui/course/course_detail_ui.dart';
 import 'package:project/ui/course/models/course.model.dart';
+import '../../common/constants/constants.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
@@ -17,12 +15,13 @@ class EditCourseDetailScreen extends StatefulWidget {
 }
 
 class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
+  // final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+  //     GlobalKey<ScaffoldMessengerState>();
   final _formKey = GlobalKey<FormState>();
   late String _major;
   late String _degree;
   late String _faculty;
-  late String _qualification;
-  static String apiUrl = dotenv.env['API_URL'].toString();
+  late String _detail;
 
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
@@ -33,14 +32,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     _major = widget.detail.major!;
     _degree = widget.detail.degree!;
     _faculty = widget.detail.faculty!;
-    _qualification = widget.detail.qualification!;
-  }
-
-  void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: color,
-    ));
+    _detail = widget.detail.detail!;
   }
 
   void _navigateToAllCourse() {
@@ -50,30 +42,38 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   Future<void> _updateCourse() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+        final url =
+            Uri.http(BASEURL, "/api/v1/courses/update/${widget.detail.id}");
         final fdata = {
           'major': _major,
           'degree': _degree,
           'faculty': _faculty,
-          'qualification': _qualification,
+          'detail': _detail,
         };
         final header = {'Content-Type': 'application/json'};
         await client.patch(url, headers: header, body: jsonEncode(fdata));
-        _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('อัปเดตข้อมูลสำเร็จ'),
+          backgroundColor: Colors.green,
+        ));
+
         _navigateToAllCourse();
       } catch (e) {
-        _showSnackBar('Failed to update course.', Colors.red);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('อัปเดตข้อมูลไม่สำเร็จ ระบบขัดข้อง'),
+          backgroundColor: Colors.red,
+        ));
       }
     }
   }
   // Future<void> _updateCourse() async {
   //   if (_formKey.currentState!.validate()) {
-  //     final url = Uri.http(apiUrl, "/courses/update/${widget.detail.id}");
+  //     final url = Uri.http(BASEURL, "/courses/update/${widget.detail.id}");
   //     var data = {
   //       'major': _major,
   //       'degree': _degree,
   //       'faculty': _faculty,
-  //       'qualification': _qualification,
+  //       'detail': _detail,
   //     };
   //     final header = {'Content-Type': 'application/json'};
   //     final response =
@@ -97,17 +97,20 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   // }
 
   Future<void> _deleteCourse() async {
-    final url = Uri.http(apiUrl, "/courses/delete/${widget.detail.id}");
+    final url = Uri.http(BASEURL, "/courses/delete/${widget.detail.id}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('ลบข้อมูลสำเร็จ'),
         backgroundColor: Colors.green,
       ));
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/all-course');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to delete course.'),
         backgroundColor: Colors.red,
       ));
@@ -128,9 +131,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
+                        const Text(
                           'ชื่อหลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -148,9 +151,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'หลักสูตร',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -168,9 +171,9 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'คณะ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -188,17 +191,17 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'รายละเอียด',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _qualification,
+                          initialValue: _detail,
                           onChanged: (value) {
-                            _qualification = value;
+                            _detail = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -214,27 +217,28 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                             TextButton(
                               onPressed: _deleteCourse,
                               style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 backgroundColor: Colors.red,
-                                primary: Colors.white,
                               ),
                               child: Row(
+                                // ignore: prefer_const_literals_to_create_immutables
                                 children: [
-                                  Icon(Icons.delete),
-                                  SizedBox(
+                                  const Icon(Icons.delete),
+                                  const SizedBox(
                                       width:
                                           5), // Add some space between icon and text
-                                  Text('ลบ'),
+                                  const Text('ลบ'),
                                 ],
                               ),
                             ),
                             TextButton(
                               onPressed: _updateCourse,
                               style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 backgroundColor: Colors.green,
-                                primary: Colors.white,
                               ),
                               child: Row(
-                                children: [
+                                children: const [
                                   Icon(Icons.edit),
                                   SizedBox(
                                       width:
@@ -248,11 +252,11 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                                 Navigator.of(context).pop();
                               },
                               style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
                                 backgroundColor: Colors.brown,
-                                primary: Colors.white,
                               ),
                               child: Row(
-                                children: [
+                                children: const [
                                   Icon(Icons.cancel),
                                   SizedBox(
                                       width:
@@ -264,7 +268,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                           ],
                         )
                       ])))),
-      drawer: DrawerMenuWidget(),
+      drawer: const DrawerMenuWidget(),
     ));
   }
 }
