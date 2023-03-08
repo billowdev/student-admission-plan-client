@@ -4,133 +4,172 @@ import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
+import '../../../common/widgets/search_bar.widget.dart';
+import '../../course/models/course.model.dart';
 import '../models/admission_plan_faculty_model.dart';
-import 'all_faculty_admission_plan_ui.dart';
 
-class EditAdmissionPlanDetailScreen extends StatefulWidget {
-  final AdmissionPlanFacultyPayload detail;
-  final String admissionPlanId;
-  final String major;
-  final String degree;
-  final String faculty;
-  final int year;
+class AddAdmissionPlanScreen extends StatefulWidget {
+  final AdmissionPlanFacultyPayload? admssionPlanData;
+  final String? courseId;
   final String facultyFilter;
-  final String yearFilter;
-  const EditAdmissionPlanDetailScreen(
+
+  const AddAdmissionPlanScreen(
       {super.key,
-      required this.detail,
-      required this.major,
-      required this.degree,
-      required this.faculty,
-      required this.year,
-      required this.admissionPlanId,
       required this.facultyFilter,
-      required this.yearFilter});
+      this.admssionPlanData,
+      this.courseId});
 
   @override
-  _EditAdmissionPlanDetailScreenState createState() =>
-      _EditAdmissionPlanDetailScreenState();
+  _AddAdmissionPlanDetainState createState() => _AddAdmissionPlanDetainState();
 }
 
-class _EditAdmissionPlanDetailScreenState
-    extends State<EditAdmissionPlanDetailScreen> {
+class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  late String _major;
-  late String _degree;
-  late String _faculty;
+  late bool _isNotSelectedCourse = true;
+
+  // final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  late String _major = "";
+  late String _degree = "";
+  late String _faculty = "";
   late int _year;
+  late String _courseId = "";
+  late bool _quotaStatus = false;
 
-  late bool _quotaStatus;
+  late String _quotaSpecificSubject = "";
+  late int _quotaQty = 0;
+  late String _quotaDetail = "";
+  // late int _sumQty;
 
-  late String _quotaSpecificSubject;
-  late int _quotaQty;
-  late String _quotaDetail;
-  late int _sumQty;
+  late bool _directStatus = false;
+  late String _directSpecificSubject = "";
+  late int _directQty = 0;
+  late String _directDetail = "";
 
-  late bool _directStatus;
-  late String _directSpecificSubject;
-  late int _directQty;
-  late String _directDetail;
+  late bool _cooperationStatus = false;
+  late String _cooperationSpecificSubject = "";
+  late int _cooperationQty = 0;
+  late String _cooperationDetail = "";
 
-  late bool _cooperationStatus;
-  late String _cooperationSpecificSubject;
-  late int _cooperationQty;
-  late String _cooperationDetail;
-
-  late int _studyGroup;
+  late int _studyGroup = 1;
 
   // late bool _quotaStatus;
+
+  Map<String, String> courseData = {
+    "major": "",
+    "degree": "",
+    "detail": "",
+    "faculty": "",
+  };
+  late CourseDataPayload _course = CourseDataPayload(
+      major: courseData['major'],
+      degree: courseData['degree'],
+      detail: courseData['detail'],
+      faculty: courseData['faculty']);
 
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
 
+  final List<Map<String, String>> courses = [
+    {
+      "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d0",
+      "major": "สาขาวิชาเทคโนโลยีโยธา",
+      "degree": "ทล.บ. 4 ปี",
+      "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
+    },
+    {
+      "id": "2d28da7c-bb8f-4e41-bfe1-c6957641c1d1",
+      "major": "สาขาวิชาสถาปัตยกรรม",
+      "degree": "ทล.บ. 4 ปี",
+      "faculty": "คณะเทคโนโลยีอุตสาหกรรม",
+    },
+  ];
+
+  late List<CoursePayload> _courses = [];
+
+  _handleGetCourse(String courseId) async {
+    _isNotSelectedCourse = false;
+
+    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-one/$courseId');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseDataModel courseData =
+          CourseDataModel.fromJson(jsonDecode(response.body));
+      setState(() {
+        _course = courseData.payload!;
+      });
+    }
+  }
+
+  _getCourses() async {
+    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+      setState(() {
+        _courses = courseData.payload!;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _major = widget.major;
-    _degree = widget.degree;
-    _faculty = widget.faculty;
-    _year = widget.year;
+    _getCourses();
 
-    _quotaStatus = widget.detail.quotaStatus!;
-    _studyGroup = widget.detail.studyGroup!;
-
-    // ========================== quota ==========================
-
-    if (widget.detail.quotaSpecificSubject == "") {
-      _quotaSpecificSubject = "-";
+    if (widget.courseId != null) {
+      _isNotSelectedCourse = false;
+      _courseId = _courseId = widget.courseId!;
     } else {
-      _quotaSpecificSubject = widget.detail.quotaSpecificSubject!;
+      _courseId = "";
+      _isNotSelectedCourse = true;
     }
 
-    _quotaQty = widget.detail.quotaQty!;
+    // _major = widget.major;
+    // _degree = widget.degree;
+    // _faculty = widget.faculty;
+    // _year = widget.year;
 
-    if (widget.detail.quotaDetail != "") {
-      _quotaDetail = widget.detail.quotaDetail!;
-    } else {
-      _quotaDetail = "-";
+    if (widget.admssionPlanData != null) {
+      final admissionData = widget.admssionPlanData!;
+
+      // Quota
+      _quotaStatus = admissionData.quotaStatus ?? false;
+      _studyGroup = admissionData.studyGroup ?? 1;
+
+      _quotaSpecificSubject =
+          admissionData.quotaSpecificSubject?.isEmpty ?? true
+              ? '-'
+              : admissionData.quotaSpecificSubject!;
+      _quotaQty = admissionData.quotaQty ?? 0;
+      _quotaDetail = admissionData.quotaDetail?.isEmpty ?? true
+          ? '-'
+          : admissionData.quotaDetail!;
+
+      // Direct
+      _directStatus = admissionData.directStatus ?? false;
+      _directSpecificSubject =
+          admissionData.directSpecificSubject?.isEmpty ?? true
+              ? '-'
+              : admissionData.directSpecificSubject!;
+      _directQty = admissionData.directQty ?? 0;
+      _directDetail = admissionData.directDetail?.isEmpty ?? true
+          ? '-'
+          : admissionData.directDetail!;
+
+      // Cooperation
+      _cooperationStatus = admissionData.cooperationStatus ?? false;
+      _cooperationSpecificSubject =
+          admissionData.cooperationSpecificSubject?.isEmpty ?? true
+              ? '-'
+              : admissionData.cooperationSpecificSubject!;
+      _cooperationQty = admissionData.cooperationQty ?? 0;
+      _cooperationDetail = admissionData.cooperationDetail?.isEmpty ?? true
+          ? '-'
+          : admissionData.cooperationDetail!;
     }
 
-    // ========================== direct ==========================
-    _directStatus = widget.detail.directStatus!;
-
-    if (widget.detail.directSpecificSubject == "") {
-      _directSpecificSubject = "-";
-    } else {
-      _directSpecificSubject = widget.detail.directSpecificSubject!;
-    }
-
-    if (widget.detail.directQty != 0) {
-      _directQty = widget.detail.directQty!;
-    } else {
-      _directQty = 0;
-    }
-    if (widget.detail.directDetail != "") {
-      _directDetail = widget.detail.directDetail!;
-    } else {
-      _directDetail = "-";
-    }
-
-    // ========================== cooperation ==========================
-    _cooperationStatus = widget.detail.cooperationStatus!;
-
-    if (widget.detail.cooperationSpecificSubject == "") {
-      _cooperationSpecificSubject = "-";
-    } else {
-      _cooperationSpecificSubject = widget.detail.cooperationSpecificSubject!;
-    }
-
-    if (widget.detail.cooperationQty != 0) {
-      _cooperationQty = widget.detail.cooperationQty!;
-    } else {
-      _cooperationQty = 0;
-    }
-    if (widget.detail.cooperationDetail != "") {
-      _cooperationDetail = widget.detail.cooperationDetail!;
-    } else {
-      _cooperationDetail = "-";
-    }
+// Constants
+    const defaultQty = 0;
   }
 
   void _showSnackBar(String message, Color color) {
@@ -140,17 +179,7 @@ class _EditAdmissionPlanDetailScreenState
     ));
   }
 
-  void _navigateToAllAdmssionPlan() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AdmissionPlanFaculty(
-                  facultyFilter: widget.faculty,
-                  yearFilter: widget.yearFilter,
-                )));
-  }
-
-  Future<void> _updateAdmissionPlan() async {
+  Future<void> _addAdmissionPlan() async {
     if (_formKey.currentState!.validate()) {
       try {
         late int qs; // _quotaStatus
@@ -190,17 +219,12 @@ class _EditAdmissionPlanDetailScreenState
           'year': _year,
         };
 
-        final url = Uri.http(BASEURL,
-            "$ENDPOINT/admission-plans/update/${widget.admissionPlanId}");
-        print("=============================");
-        print(url);
-        print("=============================");
+        final url = Uri.http(BASEURL, "$ENDPOINT/admission-plans/create");
         final header = {'Content-Type': 'application/json'};
         final response =
             await client.patch(url, headers: header, body: jsonEncode(fdata));
         if (response.statusCode == 200) {
           _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
-          _navigateToAllAdmssionPlan();
         } else {
           print(response.statusCode);
           _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
@@ -211,25 +235,11 @@ class _EditAdmissionPlanDetailScreenState
     }
   }
 
-  Future<void> _deleteAdmissionPlan() async {
-    final url =
-        Uri.http(BASEURL, "$ENDPOINT/admission-plans/delete/${widget.admissionPlanId}");
-    final header = {'Content-Type': 'application/json'};
-    final response = await client.delete(url, headers: header);
-    if (response.statusCode == 200) {
-      _showSnackBar('ลบข้อมูลสำเร็จ', Colors.green);
-
-     
-    } else {
-      _showSnackBar('ลบข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'แก้ไขข้อมูลแผนการรับนักศึกษา'),
+      appBar: const AppBarWidget(txtTitle: 'เพิ่มข้อมูลแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: Container(
@@ -239,22 +249,76 @@ class _EditAdmissionPlanDetailScreenState
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Center(
+                        const Center(
                             child: Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8),
                           child: Text(
-                            "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
-                            style: const TextStyle(
+                            "สำหรับหลักสูตร",
+                            style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                         )),
-                        Table(
-                          children: [
-                            _buildTableRow('ชื่อหลักสูตร', _major.toString()),
-                            _buildTableRow('หลักสูตร', _degree.toString()),
-                            _buildTableRow('คณะ', _faculty.toString()),
-                          ],
+                        // is not selected course then show pop up
+                        // Visibility(
+                        //     visible: _isNotSelectedCourse,
+                        //     child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+
+                        //         ])),
+                        Center(
+                          child: ElevatedButton(
+                            child: const Text('เลือกข้อมูลหลักสูตร'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                            ),
+                            onPressed: () async {
+                              final result = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return MyCoursePopUp(
+                                    courses: _courses,
+                                    onCourseSelected: (courseId) =>
+                                        {_handleGetCourse(courseId)},
+                                  );
+                                },
+                              );
+                              print(_courseId);
+                            },
+                          ),
                         ),
+                        Visibility(
+                            visible: !_isNotSelectedCourse,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Table(
+                                    children: [
+                                      _buildTableRow('ชื่อหลักสูตร',
+                                          _course.major.toString()),
+                                      _buildTableRow('หลักสูตร',
+                                          _course.degree.toString()),
+                                      _buildTableRow(
+                                          'คณะ', _course.faculty.toString()),
+                                    ],
+                                  ),
+                                ])),
+                        // Center(
+                        //     child: Padding(
+                        //   padding: const EdgeInsets.all(8),
+                        //   child: Text(
+                        //     "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
+                        //     style: const TextStyle(
+                        //         fontWeight: FontWeight.bold, fontSize: 18),
+                        //   ),
+                        // )),
+                        // Table(
+                        //   children: [
+                        //     _buildTableRow('ชื่อหลักสูตร', _major.toString()),
+                        //     _buildTableRow('หลักสูตร', _degree.toString()),
+                        //     _buildTableRow('คณะ', _faculty.toString()),
+                        //   ],
+                        // ),
 
                         // ====================================================================
                         // ====================================================================
@@ -269,112 +333,25 @@ class _EditAdmissionPlanDetailScreenState
                           ),
                         )),
 
-                        // ====================================================================
-                        // ====================================================================
-                        // ====================================================================
-                        Container(
-                          child: Table(
-                            children: [
-                              TableRow(
-                                children: [
-                                  const TableCell(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 4.0, horizontal: 8.0),
-                                      child: Text(
-                                        "สถานะ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                    ),
-                                  ),
-                                  TableCell(
-                                    child: Switch(
-                                      value: _quotaStatus,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          _quotaStatus = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: _quotaStatus,
-                          child: SizedBox(
-                              // width: 80, // adjust the width to your desired size
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'วิชาเฉพาะ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _quotaSpecificSubject,
-                                onChanged: (value) {
-                                  _quotaSpecificSubject = value;
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    _quotaSpecificSubject = "-";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                'จำนวนที่รับ',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue:
-                                    _quotaQty.toString(), // convert to string
-                                onChanged: (value) {
-                                  _quotaQty =
-                                      int.tryParse(value)!; // convert to int
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'กรุณากรอกจำนวนที่รับ';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                'รายละเอียดโควตา',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextFormField(
-                                initialValue: _quotaDetail,
-                                onChanged: (value) {
-                                  _quotaDetail = value;
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'กรุณากรอกรายละเอียดโควตา';
-                                  }
-                                  return null;
-                                },
-                                maxLines: 5,
-                              ),
-                            ],
-                          )),
+                        AdmissionInputFields(
+                          specificSubject: _quotaSpecificSubject,
+                          qty: _quotaQty,
+                          detail: _quotaDetail,
+                          status: _quotaStatus,
+                          onStatusChanged: (value) {
+                            setState(() {
+                              _quotaStatus = value;
+                            });
+                          },
+                          onSpecificSubjectChanged: (value) {
+                            _quotaSpecificSubject = value;
+                          },
+                          onQtyChanged: (value) {
+                            _quotaQty = value;
+                          },
+                          onDetailChanged: (value) {
+                            _quotaDetail = value;
+                          },
                         ),
 
                         // ====================================================================
@@ -478,23 +455,7 @@ class _EditAdmissionPlanDetailScreenState
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             TextButton(
-                              onPressed: _deleteAdmissionPlan,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.delete),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('ลบ'),
-                                ],
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: _updateAdmissionPlan,
+                              onPressed: _addAdmissionPlan,
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.green,
@@ -505,7 +466,7 @@ class _EditAdmissionPlanDetailScreenState
                                   SizedBox(
                                       width:
                                           5), // Add some space between icon and text
-                                  Text('แก้ไข'),
+                                  Text('เพิ่ม'),
                                 ],
                               ),
                             ),
@@ -684,5 +645,117 @@ class _AdmissionInputFieldsState extends State<AdmissionInputFields> {
         ),
       ],
     );
+  }
+}
+
+class MyCoursePopUp extends StatefulWidget {
+  final List<CoursePayload> courses;
+
+  final Function(String)? onCourseSelected;
+  MyCoursePopUp({required this.courses, this.onCourseSelected});
+
+  @override
+  _MyCoursePopUpState createState() => _MyCoursePopUpState();
+}
+
+class _MyCoursePopUpState extends State<MyCoursePopUp> {
+  String? _selectedItemId;
+  late List<CoursePayload> _courses = [];
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _courses = widget.courses;
+    });
+  }
+
+_getCoursesKeyword(String? keyword) async {
+    final queryParam = {"keyword": keyword};
+    Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+
+      setState(() {
+        _courses = courseData.payload!;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        'เลือกข้อมูลหลักสูตร',
+        style: TextStyle(color: Colors.green),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            SearchBar(
+              onTextChanged: (String value) {
+                if (value != "") {
+                  setState(() {
+                    _courses = _getCoursesKeyword(value);
+                  });
+                } else {
+                  setState(() {
+                    _courses = getCourses() as List<CoursePayload>;
+                  });
+                }
+              },
+            ),
+            ListBody(
+              children: _courses.map((course) {
+                return GestureDetector(
+                  child: Text(course.major!),
+                  onTap: () {
+                    setState(() {
+                      _selectedItemId = course.id;
+                    });
+                    widget.onCourseSelected?.call(course.id!);
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text('ยกเลิก'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+Future<List<CoursePayload>> getCourses() async {
+  final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
+  final response = await http.get(url);
+  if (response.statusCode == 200) {
+    CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+    return courseData.payload!;
+  } else {
+    return [];
+  }
+}
+
+getCoursesKeyword(String? keyword) async {
+  final queryParam = {"keyword": keyword};
+  Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
+
+  final response = await http.get(url);
+  if (response.statusCode == 200) {
+    CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+
+    return courseData.payload!;
+  } else {
+    return [];
   }
 }
