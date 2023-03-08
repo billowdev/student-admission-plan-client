@@ -37,7 +37,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
   }
 
   void navigateToHomeScreen(BuildContext context, String role) {
-    LocalStorageUtil.setItem('token', role);
+    LocalStorageUtil.setItem('role', role);
     Navigator.pushReplacementNamed(context, '/home');
   }
 
