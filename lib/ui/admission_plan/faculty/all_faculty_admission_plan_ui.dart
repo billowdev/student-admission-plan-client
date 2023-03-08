@@ -65,20 +65,6 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
     }
   }
 
-  // _searchAdmissionPlan(String keyword) async {
-  //   var queryParam = {"year": widget.yearFilter.toString(), "keyword": keyword};
-  //   var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
-  //   final url = Uri.http(apiUrl,
-  //       '/ap/get-by-faculty/${widget.facultyFilter.toString()}', queryParam);
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     AdmssionPlanFacultyModel resp =
-  //         AdmssionPlanFacultyModel.fromJson(jsonDecode(response.body));
-  //     setState(() {
-  //       admssionPlanData = resp.payload!;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

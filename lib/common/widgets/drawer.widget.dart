@@ -73,7 +73,9 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
 
       const DrawerListTileButton(
           textPage: 'ข้อมูลแผนการรับนักศึกษาคณะต่าง ๆ',
-          routeScreen: AdmissionPlanMenuScreen()),
+          routeScreen: AdmissionPlanMenuScreen(
+            educationYearList: ["2565"],
+          )),
 // Show Logout button if token is not empty
 
       if (token.isNotEmpty)

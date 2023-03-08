@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
+import 'package:project/common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
@@ -36,6 +37,7 @@ class _EditAdmissionPlanDetailScreenState
     extends State<EditAdmissionPlanDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  late String _token;
   late String _major;
   late String _degree;
   late String _faculty;
@@ -68,6 +70,9 @@ class _EditAdmissionPlanDetailScreenState
   @override
   void initState() {
     super.initState();
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          _token = value ?? "";
+        }));
     _major = widget.major;
     _degree = widget.degree;
     _faculty = widget.faculty;
@@ -192,9 +197,6 @@ class _EditAdmissionPlanDetailScreenState
 
         final url = Uri.http(BASEURL,
             "$ENDPOINT/admission-plans/update/${widget.admissionPlanId}");
-        print("=============================");
-        print(url);
-        print("=============================");
         final header = {'Content-Type': 'application/json'};
         final response =
             await client.patch(url, headers: header, body: jsonEncode(fdata));
@@ -202,7 +204,6 @@ class _EditAdmissionPlanDetailScreenState
           _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
           _navigateToAllAdmssionPlan();
         } else {
-          print(response.statusCode);
           _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
         }
       } catch (e) {
@@ -214,10 +215,14 @@ class _EditAdmissionPlanDetailScreenState
   Future<void> _deleteAdmissionPlan() async {
     final url = Uri.http(
         BASEURL, "$ENDPOINT/admission-plans/delete/${widget.admissionPlanId}");
-    final header = {'Content-Type': 'application/json'};
+    final header = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $_token'
+    };
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {
       _showSnackBar('ลบข้อมูลสำเร็จ', Colors.green);
+      _navigateToAllAdmssionPlan();
     } else {
       _showSnackBar('ลบข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
     }
