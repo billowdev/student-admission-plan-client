@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/admission_plan/faculty/add_course_admission_plan_ui.dart';
 import 'package:project/ui/course/add_course_ui.dart';
 import '../../../common/constants/constants.dart';
 import '../../../common/utils/local_storage_util.dart';
@@ -23,15 +24,15 @@ class AdmissionPlanFaculty extends StatefulWidget {
 class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
   List<AdmissionPlanFacultyPayload> admssionPlanData = [];
 
-  late String _facultyName;
-  late String _yearEducation;
+  late String _facultyFilter = widget.facultyFilter;
+  late String _yearFilter;
   late String token = "";
 
   @override
   void initState() {
     super.initState();
-    _facultyName = widget.facultyFilter.toString();
-    _yearEducation = widget.yearFilter.toString();
+    _facultyFilter = widget.facultyFilter.toString();
+    _yearFilter = widget.yearFilter.toString();
     _getAdmissionPlan();
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
@@ -99,8 +100,9 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
                   child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
-                  "$_facultyName\n ประจำปีการศึกษา $_yearEducation",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  "$_facultyFilter\n ประจำปีการศึกษา $_yearFilter",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               )),
               SingleChildScrollView(
@@ -179,12 +181,15 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const AddCourseScreen(),
+                              builder: (context) => AddAdmissionPlanScreen(
+                                facultyFilter: _facultyFilter,
+                              ),
                             ),
                           );
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green,
                         ),
                         child: Row(
                           children: const [
@@ -203,7 +208,8 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
                       Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.brown,
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.brown,
                     ),
                     child: Row(
                       children: const [

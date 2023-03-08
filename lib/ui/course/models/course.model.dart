@@ -64,3 +64,66 @@ class CoursePayload {
     return data;
   }
 }
+
+class CourseDataModel {
+  String? message;
+  CourseDataPayload? payload;
+
+  CourseDataModel({this.message, this.payload});
+
+  CourseDataModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    payload =
+        json['payload'] != null ? CourseDataPayload.fromJson(json['payload']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (payload != null) {
+      data['payload'] = payload!.toJson();
+    }
+    return data;
+  }
+}
+
+class CourseDataPayload {
+  String? id;
+  String? major;
+  String? degree;
+  String? detail;
+  String? faculty;
+  String? createdAt;
+  String? updatedAt;
+
+  CourseDataPayload(
+      {this.id,
+      this.major,
+      this.degree,
+      this.detail,
+      this.faculty,
+      this.createdAt,
+      this.updatedAt});
+
+  CourseDataPayload.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    major = json['major'];
+    degree = json['degree'];
+    detail = json['detail'];
+    faculty = json['faculty'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['major'] = major;
+    data['degree'] = degree;
+    data['detail'] = detail;
+    data['faculty'] = faculty;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    return data;
+  }
+}
