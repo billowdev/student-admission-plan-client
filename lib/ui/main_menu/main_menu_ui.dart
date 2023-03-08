@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/admission_plan/admission_plan_menu_ui.dart';
+import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:project/ui/auth/login_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

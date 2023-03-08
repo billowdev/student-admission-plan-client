@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/admission_plan/admission_plan_menu_ui.dart';
+import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/main_menu/main_menu_ui.dart';

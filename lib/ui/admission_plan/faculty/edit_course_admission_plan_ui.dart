@@ -5,7 +5,7 @@ import 'package:project/common/constants/constants.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
-import 'admission_plan_faculty_ui.dart';
+import 'all_faculty_admission_plan_ui.dart';
 
 class EditAdmissionPlanDetailScreen extends StatefulWidget {
   final AdmissionPlanFacultyPayload detail;

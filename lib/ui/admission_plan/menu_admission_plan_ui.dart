@@ -4,9 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/admission_plan/faculty/admission_plan_faculty_ui.dart';
 import 'package:project/ui/admission_plan/services/admission_plan_service.dart';
-
+import './faculty/all_faculty_admission_plan_ui.dart';
 import 'dart:core';
 
 import '../../common/constants/constants.dart';
@@ -143,13 +142,13 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.brown,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.brown,
               ),
               child: Row(
                 children: const [
                   Icon(Icons.arrow_back_ios_new),
-                  SizedBox(
-                      width: 5), // Add some space between icon and text
+                  SizedBox(width: 5), // Add some space between icon and text
                   Text('กลับ'),
                 ],
               ),

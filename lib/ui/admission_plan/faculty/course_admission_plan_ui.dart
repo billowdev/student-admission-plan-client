@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/ui/admission_plan/faculty/admission_plan_edit_detail_ui.dart';
+import 'package:project/ui/admission_plan/faculty/edit_course_admission_plan_ui.dart';
 
 import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';

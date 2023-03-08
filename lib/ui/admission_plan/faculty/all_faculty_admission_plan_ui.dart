@@ -9,7 +9,7 @@ import '../../../common/utils/local_storage_util.dart';
 import '../models/admission_plan_faculty_model.dart';
 import 'package:http/http.dart' as http;
 
-import 'admission_plan_course_ui.dart';
+import 'course_admission_plan_ui.dart';
 
 class AdmissionPlanFaculty extends StatefulWidget {
   final String facultyFilter;
