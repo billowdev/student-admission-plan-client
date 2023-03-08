@@ -13,7 +13,7 @@ class EditAdmissionPlanDetailScreen extends StatefulWidget {
   final String major;
   final String degree;
   final String faculty;
-  final int year;
+  final String year;
   final String facultyFilter;
   final String yearFilter;
   const EditAdmissionPlanDetailScreen(
@@ -39,7 +39,7 @@ class _EditAdmissionPlanDetailScreenState
   late String _major;
   late String _degree;
   late String _faculty;
-  late int _year;
+  late String _year;
 
   late bool _quotaStatus;
 
@@ -212,14 +212,12 @@ class _EditAdmissionPlanDetailScreenState
   }
 
   Future<void> _deleteAdmissionPlan() async {
-    final url =
-        Uri.http(BASEURL, "$ENDPOINT/admission-plans/delete/${widget.admissionPlanId}");
+    final url = Uri.http(
+        BASEURL, "$ENDPOINT/admission-plans/delete/${widget.admissionPlanId}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {
       _showSnackBar('ลบข้อมูลสำเร็จ', Colors.green);
-
-     
     } else {
       _showSnackBar('ลบข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
     }

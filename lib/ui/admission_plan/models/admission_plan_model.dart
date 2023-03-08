@@ -38,7 +38,7 @@ class AdmissionPlanPayload {
   String? cooperationSpecificSubject;
   String? cooperationDetail;
   int? cooperationQty;
-  int? year;
+  String? year;
   int? studyGroup;
   String? createdAt;
   String? updatedAt;

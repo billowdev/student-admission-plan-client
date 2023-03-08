@@ -28,7 +28,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
   late List<String> _yearList = List.generate(
       (currentYear + 543) - 2565, (index) => (2565 + index).toString());
 
-  Future<List<String>> _getExistsYear() async {
+  _getExistsYear() async {
     final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
 
     final response = await http.get(url);
@@ -39,27 +39,20 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
           yearList.map((year) => year.toString()).toList();
       _yearList.sort((a, b) => b.compareTo(a));
       _selectedYear = stringList[0];
-      return stringList;
-    } else {
-      return [];
+      _yearList = stringList;
     }
-  }
-
-  void _loadYearList() async {
-    _yearList = await _getExistsYear();
   }
 
   @override
   void dispose() {
     _yearList.clear();
-
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _loadYearList();
+    _getExistsYear();
   }
 
   @override
