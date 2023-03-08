@@ -9,16 +9,16 @@ class CourseModel {
     if (json['payload'] != null) {
       payload = <CoursePayload>[];
       json['payload'].forEach((v) {
-        payload!.add(new CoursePayload.fromJson(v));
+        payload!.add(CoursePayload.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.payload != null) {
-      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    if (payload != null) {
+      data['payload'] = payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -28,7 +28,7 @@ class CoursePayload {
   String? id;
   String? major;
   String? degree;
-  String? qualification;
+  String? detail;
   String? faculty;
   String? createdAt;
   String? updatedAt;
@@ -37,7 +37,7 @@ class CoursePayload {
       {this.id,
       this.major,
       this.degree,
-      this.qualification,
+      this.detail,
       this.faculty,
       this.createdAt,
       this.updatedAt});
@@ -46,21 +46,21 @@ class CoursePayload {
     id = json['id'];
     major = json['major'];
     degree = json['degree'];
-    qualification = json['qualification'];
+    detail = json['detail'];
     faculty = json['faculty'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['major'] = this.major;
-    data['degree'] = this.degree;
-    data['qualification'] = this.qualification;
-    data['faculty'] = this.faculty;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['major'] = major;
+    data['degree'] = degree;
+    data['detail'] = detail;
+    data['faculty'] = faculty;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }

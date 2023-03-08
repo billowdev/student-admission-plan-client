@@ -1,80 +1,108 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
-import '../../common/utils/local_storage_util.dart';
-import '../../common/widgets/search_bar.widget.dart';
-import './models/course.model.dart';
+import '../../../common/constants/constants.dart';
+import '../../../common/utils/local_storage_util.dart';
+import '../models/admission_plan_faculty_model.dart';
 import 'package:http/http.dart' as http;
-import 'course_detail_ui.dart';
 
-class AllCourseScreen extends StatefulWidget {
-  const AllCourseScreen({super.key});
+import 'course_admission_plan_ui.dart';
 
+class AdmissionPlanFaculty extends StatefulWidget {
+  final String facultyFilter;
+  final String yearFilter;
+  const AdmissionPlanFaculty(
+      {super.key, required this.facultyFilter, required this.yearFilter});
   @override
-  State<AllCourseScreen> createState() => _AllCourseScreenState();
+  State<AdmissionPlanFaculty> createState() => _AdmissionPlanFacultyState();
 }
 
-class _AllCourseScreenState extends State<AllCourseScreen> {
+class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
+  List<AdmissionPlanFacultyPayload> admssionPlanData = [];
 
+  late String _facultyName;
+  late String _yearEducation;
   late String token = "";
-  List<CoursePayload> course = [];
+
   @override
   void initState() {
     super.initState();
-
-    _getCourses();
+    _facultyName = widget.facultyFilter.toString();
+    _yearEducation = widget.yearFilter.toString();
+    _getAdmissionPlan();
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
   }
 
-  _getCourses() async {
-    final url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all');
+  @override
+  void dispose() {
+    admssionPlanData.clear();
+    super.dispose();
+  }
+
+  _getAdmissionPlan() async {
+    var queryParam = {"year": widget.yearFilter.toString()};
+    // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
+    final url = Uri.http(
+        BASEURL,
+        '$ENDPOINT/admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
+        queryParam);
+
+    // final url = Uri.http('localhost:5000', '/courses/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
+      AdmssionPlanFacultyModel resp =
+          AdmssionPlanFacultyModel.fromJson(jsonDecode(response.body));
+
       setState(() {
-        course = courseData.payload!;
+        admssionPlanData = resp.payload!;
       });
     }
   }
 
-  _getCoursesKeyword(String? keyword) async {
-    final queryParam = {"keyword": keyword};
-    Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
-
-      setState(() {
-        course = courseData.payload!;
-      });
-    }
-  }
+  // _searchAdmissionPlan(String keyword) async {
+  //   var queryParam = {"year": widget.yearFilter.toString(), "keyword": keyword};
+  //   var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
+  //   final url = Uri.http(apiUrl,
+  //       '/ap/get-by-faculty/${widget.facultyFilter.toString()}', queryParam);
+  //   final response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     AdmssionPlanFacultyModel resp =
+  //         AdmssionPlanFacultyModel.fromJson(jsonDecode(response.body));
+  //     setState(() {
+  //       admssionPlanData = resp.payload!;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const AppBarWidget(txtTitle: 'หน้าข้อมูลหลักสูตรทั้งหมด'),
+        appBar: const AppBarWidget(txtTitle: 'แผนการรับนักศึกษา'),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              SearchBar(
-                onTextChanged: (String value) {
-                  if (value != "") {
-                    _getCoursesKeyword(value);
-                  } else {
-                    _getCourses();
-                  }
-                },
-              ),
+              // SearchBar(onTextChanged: (value) {
+              //   if (value != "") {
+              //     _searchAdmissionPlan(value);
+              //   } else {
+              //     _getAdmissionPlan();
+              //   }
+              // }),
+              Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  "$_facultyName\n ประจำปีการศึกษา $_yearEducation",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              )),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
@@ -82,21 +110,8 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                   sortAscending: true,
                   columns: const <DataColumn>[
                     DataColumn(
-                      label: IgnorePointer(
-                        ignoring: true,
-                        child: Text(
-                          'สาขา',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
                         label: Text(
-                      'คณะ',
+                      'สาขาวิชา',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -112,21 +127,39 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                         color: Colors.green,
                       ),
                     )),
+                    DataColumn(
+                      label: IgnorePointer(
+                        ignoring: true,
+                        child: Text(
+                          'ปีการศึกษา',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
-                  rows: course.map((data) {
+                  rows: admssionPlanData.map((data) {
                     return DataRow(
                       cells: <DataCell>[
-                        DataCell(Text("${data.major}")),
-                        DataCell(Text("${data.faculty}")),
-                        DataCell(Text("${data.degree}")),
+                        DataCell(Text("${data.course?.major}")),
+                        DataCell(Text("${data.course?.degree}")),
+                        DataCell(Text("${data.year}")),
                       ],
                       selected: false, // Add this line to remove the borders
                       onSelectChanged: (isSelected) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CourseDetailScreen(
+                              builder: (context) => AdmissionPlanFacultyDetail(
                                     detail: data,
+                                    major: "${data.course?.major}",
+                                    degree: "${data.course?.degree}",
+                                    faculty: "${data.course?.faculty}",
+                                    facultyFilter: widget.facultyFilter,
+                                    yearFilter: widget.yearFilter,
                                   )),
                         );
                       },
@@ -151,8 +184,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                           );
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white, backgroundColor: Colors.green,
                         ),
                         child: Row(
                           children: const [
@@ -171,8 +203,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                       Navigator.of(context).pop();
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.brown,
+                      foregroundColor: Colors.white, backgroundColor: Colors.brown,
                     ),
                     child: Row(
                       children: const [

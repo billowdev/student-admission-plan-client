@@ -41,6 +41,9 @@ dependencies:
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.18
   jwt_decoder: ^2.0.1
+  equatable: ^2.0.5
+  bloc: ^8.1.1
+  flutter_secure_storage: ^8.0.0
   
 
 dev_dependencies:
