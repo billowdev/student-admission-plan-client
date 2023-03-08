@@ -158,6 +158,8 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
                                     major: "${data.course?.major}",
                                     degree: "${data.course?.degree}",
                                     faculty: "${data.course?.faculty}",
+                                    facultyFilter: widget.facultyFilter,
+                                    yearFilter: widget.yearFilter,
                                   )),
                         );
                       },

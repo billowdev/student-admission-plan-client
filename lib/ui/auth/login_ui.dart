@@ -69,7 +69,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
       });
 
       if (token.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('เข้าสู่ระบบสำเร็จ'),
           backgroundColor: Colors.green,
         ));

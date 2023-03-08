@@ -9,15 +9,20 @@ import '../models/admission_plan_faculty_model.dart';
 
 class AdmissionPlanFacultyDetail extends StatefulWidget {
   final AdmissionPlanFacultyPayload detail;
+  final String yearFilter;
+  final String facultyFilter;
   final String major;
   final String degree;
   final String faculty;
-  const AdmissionPlanFacultyDetail(
-      {super.key,
-      required this.detail,
-      required this.major,
-      required this.degree,
-      required this.faculty});
+  const AdmissionPlanFacultyDetail({
+    super.key,
+    required this.detail,
+    required this.major,
+    required this.degree,
+    required this.faculty,
+    required this.yearFilter,
+    required this.facultyFilter,
+  });
   @override
   State<AdmissionPlanFacultyDetail> createState() =>
       AdmissionPlanFacultyDetailState();
@@ -46,14 +51,17 @@ class AdmissionPlanFacultyDetailState
   late String _major;
   late String _degree;
   late String _faculty;
+  late AdmissionPlanFacultyPayload _allDetail;
+  late String _id;
 
-  static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
   // final AuthService _authService = AuthService();
   // final TokenBloc _tokenBloc = TokenBloc(); // create an instance of TokenBloc
   @override
   void initState() {
     super.initState();
+    _allDetail = widget.detail;
+    _id = widget.detail.id!;
     // _major = widget.detail.major!;
     // ========================== quota ==========================
     if (widget.detail.quotaStatus == true) {
@@ -212,8 +220,7 @@ class AdmissionPlanFacultyDetailState
                         _buildTableRow(
                             'วิชาเฉพาะ', _directSpecificSubject.toString()),
                         _buildTableRow('จำนวนที่รับ', _directQty.toString()),
-                        _buildTableRow(
-                            'รายละเอียด', _directDetail.toString()),
+                        _buildTableRow('รายละเอียด', _directDetail.toString()),
                       ],
                     ),
                     const Center(
@@ -227,8 +234,7 @@ class AdmissionPlanFacultyDetailState
                     )),
                     Table(
                       children: [
-                        _buildTableRow(
-                            'สถานะ', _cooperationStatus.toString()),
+                        _buildTableRow('สถานะ', _cooperationStatus.toString()),
                         _buildTableRow('วิชาเฉพาะ',
                             _cooperationSpecificSubject.toString()),
                         _buildTableRow(
@@ -244,8 +250,7 @@ class AdmissionPlanFacultyDetailState
                       children: [
                         _buildTableRow(
                             'จำนวนหมู่เรียน', _studyGroup.toString()),
-                        _buildTableRow(
-                            'จำนวนที่รับทั้งหมด', _sumQty.toString())
+                        _buildTableRow('จำนวนที่รับทั้งหมด', _sumQty.toString())
                       ],
                     ),
                     const Padding(
@@ -265,9 +270,16 @@ class AdmissionPlanFacultyDetailState
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditAdmissionPlanDetailScreen(
-                                    detail: widget.detail),
+                            builder: (context) => EditAdmissionPlanDetailScreen(
+                              detail: _allDetail,
+                              major: _major,
+                              degree: _degree,
+                              faculty: _faculty,
+                              year: _year,
+                              admissionPlanId: _id,
+                              facultyFilter: widget.facultyFilter,
+                              yearFilter: widget.yearFilter,
+                            ),
                           ),
                         );
                       },
@@ -279,8 +291,7 @@ class AdmissionPlanFacultyDetailState
                         children: const [
                           Icon(Icons.edit),
                           SizedBox(
-                              width:
-                                  5), // Add some space between icon and text
+                              width: 5), // Add some space between icon and text
                           Text('แก้ไข'),
                         ],
                       ),
@@ -323,14 +334,20 @@ class AdmissionPlanFacultyDetailState
           padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           child: Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
       ),
       TableCell(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-          child: Text(content),
+          padding: const EdgeInsets.symmetric(
+            vertical: 4.0,
+            horizontal: 8.0,
+          ),
+          child: Text(
+            content,
+            style: const TextStyle(fontSize: 18),
+          ),
         ),
       ),
     ]);

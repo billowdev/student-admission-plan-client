@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project/ui/admission_plan/faculty/admission_plan_faculty_ui.dart';
 import 'ui/auth/login_ui.dart';
 import 'ui/course/all_course_ui.dart';
 import 'ui/main_menu/main_menu_ui.dart';
@@ -30,7 +31,8 @@ class StudentAdmssionPlanAppication extends StatelessWidget {
         '/': (context) => MainMenu(), // The login page route
         // ignore: prefer_const_constructors
         '/home': (context) => MainMenu(), // The home page route
-        '/all-course': (context) => const AllCourseScreen(), // The home page route
+        '/all-course': (context) => const AllCourseScreen(),
+  
         '/login': (context) => const LoginScreen(), // The home page route
       },
     );

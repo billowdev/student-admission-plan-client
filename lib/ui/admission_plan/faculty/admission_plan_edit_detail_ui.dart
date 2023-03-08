@@ -5,10 +5,27 @@ import 'package:project/common/constants/constants.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
+import 'admission_plan_faculty_ui.dart';
 
 class EditAdmissionPlanDetailScreen extends StatefulWidget {
   final AdmissionPlanFacultyPayload detail;
-  const EditAdmissionPlanDetailScreen({super.key, required this.detail});
+  final String admissionPlanId;
+  final String major;
+  final String degree;
+  final String faculty;
+  final int year;
+  final String facultyFilter;
+  final String yearFilter;
+  const EditAdmissionPlanDetailScreen(
+      {super.key,
+      required this.detail,
+      required this.major,
+      required this.degree,
+      required this.faculty,
+      required this.year,
+      required this.admissionPlanId,
+      required this.facultyFilter,
+      required this.yearFilter});
 
   @override
   _EditAdmissionPlanDetailScreenState createState() =>
@@ -22,7 +39,28 @@ class _EditAdmissionPlanDetailScreenState
   late String _major;
   late String _degree;
   late String _faculty;
-  late String _detail;
+  late int _year;
+
+  late bool _quotaStatus;
+
+  late String _quotaSpecificSubject;
+  late int _quotaQty;
+  late String _quotaDetail;
+  late int _sumQty;
+
+  late bool _directStatus;
+  late String _directSpecificSubject;
+  late int _directQty;
+  late String _directDetail;
+
+  late bool _cooperationStatus;
+  late String _cooperationSpecificSubject;
+  late int _cooperationQty;
+  late String _cooperationDetail;
+
+  late int _studyGroup;
+
+  // late bool _quotaStatus;
 
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
@@ -30,10 +68,69 @@ class _EditAdmissionPlanDetailScreenState
   @override
   void initState() {
     super.initState();
-    // _major = widget.detail.major!;
-    // _degree = widget.detail.degree!;
-    // _faculty = widget.detail.faculty!;
-    // _detail = widget.detail.detail!;
+    _major = widget.major;
+    _degree = widget.degree;
+    _faculty = widget.faculty;
+    _year = widget.year;
+
+    _quotaStatus = widget.detail.quotaStatus!;
+    _studyGroup = widget.detail.studyGroup!;
+
+    // ========================== quota ==========================
+
+    if (widget.detail.quotaSpecificSubject == "") {
+      _quotaSpecificSubject = "-";
+    } else {
+      _quotaSpecificSubject = widget.detail.quotaSpecificSubject!;
+    }
+
+    _quotaQty = widget.detail.quotaQty!;
+
+    if (widget.detail.quotaDetail != "") {
+      _quotaDetail = widget.detail.quotaDetail!;
+    } else {
+      _quotaDetail = "-";
+    }
+
+    // ========================== direct ==========================
+    _directStatus = widget.detail.directStatus!;
+
+    if (widget.detail.directSpecificSubject == "") {
+      _directSpecificSubject = "-";
+    } else {
+      _directSpecificSubject = widget.detail.directSpecificSubject!;
+    }
+
+    if (widget.detail.directQty != 0) {
+      _directQty = widget.detail.directQty!;
+    } else {
+      _directQty = 0;
+    }
+    if (widget.detail.directDetail != "") {
+      _directDetail = widget.detail.directDetail!;
+    } else {
+      _directDetail = "-";
+    }
+
+    // ========================== cooperation ==========================
+    _cooperationStatus = widget.detail.cooperationStatus!;
+
+    if (widget.detail.cooperationSpecificSubject == "") {
+      _cooperationSpecificSubject = "-";
+    } else {
+      _cooperationSpecificSubject = widget.detail.cooperationSpecificSubject!;
+    }
+
+    if (widget.detail.cooperationQty != 0) {
+      _cooperationQty = widget.detail.cooperationQty!;
+    } else {
+      _cooperationQty = 0;
+    }
+    if (widget.detail.cooperationDetail != "") {
+      _cooperationDetail = widget.detail.cooperationDetail!;
+    } else {
+      _cooperationDetail = "-";
+    }
   }
 
   void _showSnackBar(String message, Color color) {
@@ -43,25 +140,71 @@ class _EditAdmissionPlanDetailScreenState
     ));
   }
 
-  void _navigateToAllCourse() {
-    Navigator.pushReplacementNamed(context, '/api/v1/all-course');
+  void _navigateToAllAdmssionPlan() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AdmissionPlanFaculty(
+                  facultyFilter: widget.faculty,
+                  yearFilter: widget.yearFilter,
+                )));
   }
 
-  Future<void> _updateCourse() async {
+  Future<void> _updateAdmissionPlan() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url =
-            Uri.http(BASEURL, "$ENDPOINT/courses/update/${widget.detail.id}");
+        late int qs; // _quotaStatus
+        late int ds; // _directStatus
+        late int cs; // _cooperationStatus
+        if (_quotaStatus) {
+          qs = 1;
+        } else {
+          qs = 0;
+        }
+        if (_directStatus) {
+          ds = 1;
+        } else {
+          ds = 0;
+        }
+
+        if (_cooperationStatus) {
+          cs = 1;
+        } else {
+          cs = 0;
+        }
+
         final fdata = {
-          'major': _major,
-          'degree': _degree,
-          'faculty': _faculty,
-          'detail': _detail,
+          'quotaStatus': qs,
+          'quotaSpecificSubject': _quotaSpecificSubject,
+          'quotaQty': _quotaQty,
+          'quotaDetail': _quotaDetail,
+          'directStatus': ds,
+          'directSpecificSubject': _directSpecificSubject,
+          'directQty': _directQty,
+          'directDetail': _directDetail,
+          'cooperationStatus': cs,
+          'cooperationSpecificSubject': _cooperationSpecificSubject,
+          'cooperationQty': _cooperationQty,
+          'cooperationDetail': _cooperationDetail,
+          'studyGroup': _studyGroup,
+          'year': _year,
         };
+
+        final url = Uri.http(BASEURL,
+            "$ENDPOINT/admission-plans/update/${widget.admissionPlanId}");
+        print("=============================");
+        print(url);
+        print("=============================");
         final header = {'Content-Type': 'application/json'};
-        await client.patch(url, headers: header, body: jsonEncode(fdata));
-        _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
-        _navigateToAllCourse();
+        final response =
+            await client.patch(url, headers: header, body: jsonEncode(fdata));
+        if (response.statusCode == 200) {
+          _showSnackBar('อัปเดตข้อมูลสำเร็จ', Colors.green);
+          _navigateToAllAdmssionPlan();
+        } else {
+          print(response.statusCode);
+          _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
+        }
       } catch (e) {
         _showSnackBar('แก้ไขข้อมูลไม่สำเร็จ ระบบขัดข้อง', Colors.red);
       }
@@ -96,86 +239,241 @@ class _EditAdmissionPlanDetailScreenState
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        )),
+                        Table(
+                          children: [
+                            _buildTableRow('ชื่อหลักสูตร', _major.toString()),
+                            _buildTableRow('หลักสูตร', _degree.toString()),
+                            _buildTableRow('คณะ', _faculty.toString()),
+                          ],
+                        ),
+
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+                        const Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            "รอบที่ 1 รอบโควตา",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        )),
+
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+                        Container(
+                          child: Table(
+                            children: [
+                              TableRow(
+                                children: [
+                                  const TableCell(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 8.0),
+                                      child: Text(
+                                        "สถานะ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                  TableCell(
+                                    child: Switch(
+                                      value: _quotaStatus,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          _quotaStatus = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                          visible: _quotaStatus,
+                          child: SizedBox(
+                              // width: 80, // adjust the width to your desired size
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'วิชาเฉพาะ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaSpecificSubject,
+                                onChanged: (value) {
+                                  _quotaSpecificSubject = value;
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    _quotaSpecificSubject = "-";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue:
+                                    _quotaQty.toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'รายละเอียดโควตา',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaDetail,
+                                onChanged: (value) {
+                                  _quotaDetail = value;
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกรายละเอียดโควตา';
+                                  }
+                                  return null;
+                                },
+                                maxLines: 5,
+                              ),
+                            ],
+                          )),
+                        ),
+
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+
+                        const Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            " รอบที่ 2 รอบรับตรง",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        )),
+                        AdmissionInputFields(
+                          specificSubject: _directSpecificSubject,
+                          qty: _directQty,
+                          detail: _directDetail,
+                          status: _directStatus,
+                          onStatusChanged: (value) {
+                            setState(() {
+                              _directStatus = value;
+                            });
+                          },
+                          onSpecificSubjectChanged: (value) {
+                            _directSpecificSubject = value;
+                          },
+                          onQtyChanged: (value) {
+                            _directQty = value;
+                          },
+                          onDetailChanged: (value) {
+                            _directDetail = value;
+                          },
+                        ),
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+
+                        const Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            " รอบที่ 3 รอบความร่วมมือกับโรงเรียน",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        )),
+                        AdmissionInputFields(
+                          specificSubject: _cooperationSpecificSubject,
+                          qty: _cooperationQty,
+                          detail: _cooperationDetail,
+                          status: _cooperationStatus,
+                          onStatusChanged: (value) {
+                            setState(() {
+                              _cooperationStatus = value;
+                            });
+                          },
+                          onSpecificSubjectChanged: (value) {
+                            _cooperationSpecificSubject = value;
+                          },
+                          onQtyChanged: (value) {
+                            _cooperationQty = value;
+                          },
+                          onDetailChanged: (value) {
+                            _cooperationDetail = value;
+                          },
+                        ),
+                        // ====================================================================
+                        // ====================================================================
+                        // ====================================================================
+
+                        const SizedBox(height: 20),
                         const Text(
-                          'ชื่อหลักสูตร',
+                          'จำนวนหมู่เรียน',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _major,
+                          initialValue:
+                              _studyGroup.toString(), // convert to string
                           onChanged: (value) {
-                            _major = value;
+                            _studyGroup =
+                                int.tryParse(value)!; // convert to int
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกชื่อหลักสูตร';
+                              return 'กรุณากรอกจำนวนหมู่เรียน';
                             }
                             return null;
                           },
                         ),
-                        // const SizedBox(height: 20),
-                        // const Text(
-                        //   'หลักสูตร',
-                        //   style: TextStyle(
-                        //     fontSize: 18,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        // TextFormField(
-                        //   initialValue: _degree,
-                        //   onChanged: (value) {
-                        //     _degree = value;
-                        //   },
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'กรุณากรอกชื่อหลักสูตร';
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
-                        // const SizedBox(height: 20),
-                        // const Text(
-                        //   'คณะ',
-                        //   style: TextStyle(
-                        //     fontSize: 18,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        // TextFormField(
-                        //   initialValue: _faculty,
-                        //   onChanged: (value) {
-                        //     _faculty = value;
-                        //   },
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'กรุณากรอกชื่อคณะ';
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
-                        // const SizedBox(height: 20),
-                        // const Text(
-                        //   'รายละเอียด',
-                        //   style: TextStyle(
-                        //     fontSize: 18,
-                        //     fontWeight: FontWeight.bold,
-                        //   ),
-                        // ),
-                        // TextFormField(
-                        //   initialValue: _detail,
-                        //   onChanged: (value) {
-                        //     _detail = value;
-                        //   },
-                        //   validator: (value) {
-                        //     if (value == null || value.isEmpty) {
-                        //       return 'กรุณากรอกรายละเอียด';
-                        //     }
-                        //     return null;
-                        //   },
-                        //   maxLines: 5,
-                        // ),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -196,7 +494,7 @@ class _EditAdmissionPlanDetailScreenState
                               ),
                             ),
                             TextButton(
-                              onPressed: _updateCourse,
+                              onPressed: _updateAdmissionPlan,
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.green,
@@ -234,5 +532,157 @@ class _EditAdmissionPlanDetailScreenState
                       ])))),
       drawer: const DrawerMenuWidget(),
     ));
+  }
+
+  TableRow _buildTableRow(String title, String content) {
+    return TableRow(children: [
+      TableCell(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+      ),
+      TableCell(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 4.0,
+            horizontal: 8.0,
+          ),
+          child: Text(
+            content,
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+      ),
+    ]);
+  }
+}
+
+class AdmissionInputFields extends StatefulWidget {
+  final String specificSubject;
+  final int qty;
+  final String detail;
+  final bool status;
+  final Function(bool) onStatusChanged;
+  final Function(String) onSpecificSubjectChanged;
+  final Function(int) onQtyChanged;
+  final Function(String) onDetailChanged;
+
+  AdmissionInputFields({
+    required this.specificSubject,
+    required this.qty,
+    required this.detail,
+    required this.status,
+    required this.onStatusChanged,
+    required this.onSpecificSubjectChanged,
+    required this.onQtyChanged,
+    required this.onDetailChanged,
+  });
+
+  @override
+  _AdmissionInputFieldsState createState() => _AdmissionInputFieldsState();
+}
+
+class _AdmissionInputFieldsState extends State<AdmissionInputFields> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: Table(
+            children: [
+              TableRow(
+                children: [
+                  const TableCell(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                      child: Text(
+                        "สถานะ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  TableCell(
+                    child: Switch(
+                      value: widget.status,
+                      onChanged: widget.onStatusChanged,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: widget.status,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'วิชาเฉพาะ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextFormField(
+                initialValue: widget.specificSubject,
+                onChanged: widget.onSpecificSubjectChanged,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    widget.onSpecificSubjectChanged("-");
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'จำนวนที่รับ',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextFormField(
+                initialValue: widget.qty.toString(),
+                onChanged: (value) {
+                  widget.onQtyChanged(int.tryParse(value) ?? 0);
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกจำนวนที่รับ';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'รายละเอียด',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextFormField(
+                initialValue: widget.detail,
+                onChanged: widget.onDetailChanged,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกรายละเอียด';
+                  }
+                  return null;
+                },
+                maxLines: 5,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

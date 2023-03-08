@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:project/common/constants/constants.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
@@ -18,7 +19,6 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   late String _degree;
   late String _faculty;
   late String _detail;
-  static String apiUrl = dotenv.env['API_URL'].toString();
 
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
@@ -33,7 +33,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
       return;
     }
 
-    final url = Uri.http(apiUrl, "/api/v1/courses/create");
+    final url = Uri.http(BASEURL, "$ENDPOINT/courses/create");
     final data = {
       'major': _major,
       'degree': _degree,
@@ -173,7 +173,8 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                             TextButton(
                               onPressed: _createCourse,
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.green,
                               ),
                               child: Row(
                                 children: const [
