@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:project/ui/auth/login_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
+import '../../common/constants/constants.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/infomation_button_widget.dart';
 import '../course/all_course_ui.dart';
@@ -25,10 +28,28 @@ class _MainMenuState extends State<MainMenu> {
     return prefs.getString('role');
   }
 
+  late List<String> _yearList = ["2565", "2566"];
+
+  _getExistsYear() async {
+    final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> resp = jsonDecode(response.body);
+      List<String> yearList = List<String>.from(resp['payload']);
+      yearList.sort((a, b) => b.compareTo(a));
+      setState(() {
+        // _selectedYear = yearList[0];
+        _yearList = yearList;
+      });
+    }
+  }
+
   late String token = "";
   @override
   void initState() {
     super.initState();
+    _getExistsYear();
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
@@ -53,29 +74,39 @@ class _MainMenuState extends State<MainMenu> {
               routeScreen: AllCourseScreen(),
               leadingIcon: Icon(Icons.edit_document),
             ),
-            const MainMenuWidget(
+            MainMenuWidget(
               menuName: 'แผนการรับนักศึกษาภาคปกติ',
-              routeScreen: AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(
+                educationYearList: _yearList,
+              ),
               leadingIcon: Icon(Icons.bookmark),
             ),
-            const MainMenuWidget(
+            MainMenuWidget(
               menuName: 'ภาคพิเศษ(กศ.ป.)',
-              routeScreen: AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(
+                educationYearList: _yearList,
+              ),
               leadingIcon: Icon(Icons.bookmark),
             ),
             MainMenuWidget(
               menuName: 'รอบโควตาปีการศึกษา $_latestYear',
-              routeScreen: const AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(
+                educationYearList: _yearList,
+              ),
               leadingIcon: const Icon(Icons.bookmark),
             ),
-            const MainMenuWidget(
+            MainMenuWidget(
               menuName: 'ผู้รับผิดชอบโควตา',
-              routeScreen: AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(
+                educationYearList: _yearList,
+              ),
               leadingIcon: Icon(Icons.supervisor_account),
             ),
-            const MainMenuWidget(
+            MainMenuWidget(
               menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
-              routeScreen: AdmissionPlanMenuScreen(),
+              routeScreen: AdmissionPlanMenuScreen(
+                educationYearList: _yearList,
+              ),
               leadingIcon: Icon(Icons.summarize),
             ),
           ],

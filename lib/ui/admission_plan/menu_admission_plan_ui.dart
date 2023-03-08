@@ -11,7 +11,8 @@ import 'dart:core';
 import '../../common/constants/constants.dart';
 
 class AdmissionPlanMenuScreen extends StatefulWidget {
-  const AdmissionPlanMenuScreen({super.key});
+  final List<String> educationYearList;
+  const AdmissionPlanMenuScreen({super.key, required this.educationYearList});
 
   @override
   State<AdmissionPlanMenuScreen> createState() =>
@@ -19,14 +20,13 @@ class AdmissionPlanMenuScreen extends StatefulWidget {
 }
 
 class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
-  late String role = "";
-  final AdmissionPlanService _admissionPlanService = AdmissionPlanService();
   final int currentYear = DateTime.now().year;
-  String _selectedYear = "2565";
+  late List<String> _yearList = ["2565", "2566"];
+  late String _selectedYear = "2565";
 
   // late List<String> _existsYear;
-  late List<String> _yearList = List.generate(
-      (currentYear + 543) - 2565, (index) => (2565 + index).toString());
+  // late List<String> _yearList = List.generate(
+  //     (currentYear + 543) - 2565, (index) => (2565 + index).toString());
 
   _getExistsYear() async {
     final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
@@ -34,12 +34,12 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       Map<String, dynamic> resp = jsonDecode(response.body);
-      List<int> yearList = List<int>.from(resp['payload']);
-      List<String> stringList =
-          yearList.map((year) => year.toString()).toList();
-      _yearList.sort((a, b) => b.compareTo(a));
-      _selectedYear = stringList[0];
-      _yearList = stringList;
+      List<String> yearList = List<String>.from(resp['payload']);
+      yearList.sort((a, b) => a.compareTo(b));
+      setState(() {
+        _selectedYear = "2565";
+        _yearList = yearList;
+      });
     }
   }
 
@@ -52,6 +52,8 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {});
+    _yearList = widget.educationYearList;
     _getExistsYear();
   }
 
