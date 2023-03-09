@@ -5,21 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/services/admission_plan_service.dart';
-import './faculty/all_faculty_admission_plan_ui.dart';
 import 'dart:core';
 
 import '../../common/constants/constants.dart';
+import 'extra_admission_plan_faculty_ui.dart';
 
-class AdmissionPlanMenuScreen extends StatefulWidget {
+class MenuExtraAdmissionPlanScreen extends StatefulWidget {
   final List<String> educationYearList;
-  const AdmissionPlanMenuScreen({super.key, required this.educationYearList});
+  const MenuExtraAdmissionPlanScreen(
+      {super.key, required this.educationYearList});
 
   @override
-  State<AdmissionPlanMenuScreen> createState() =>
-      _AdmissionPlanMenuScreenState();
+  State<MenuExtraAdmissionPlanScreen> createState() =>
+      _MenuExtraAdmissionPlanScreenState();
 }
 
-class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
+class _MenuExtraAdmissionPlanScreenState
+    extends State<MenuExtraAdmissionPlanScreen> {
   final int currentYear = DateTime.now().year;
   late List<String> _yearList = ["2565", "2566"];
   late String _selectedYear = "2565";
@@ -70,7 +72,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
               child: Padding(
             padding: EdgeInsets.all(2.0),
             child: Text(
-              "แผนการรับนักศึกษา ภาคปกติ",
+              "แผนการรับนักศึกษา ภาคพิเศษ(กศ.ป.)",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           )),
@@ -100,42 +102,42 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
           FacultyWidget(
               facultyName: 'คณะวิทยาศาสตร์และเทคโนโลยี',
               logoName: 'logo_sci.jpg',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะวิทยาศาสตร์และเทคโนโลยี',
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
               facultyName: 'คณะมนุษยศาสตร์และสังคมศาสตร์',
               logoName: 'logo_lumanities.png',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะมนุษยศาสตร์และสังคมศาสตร์',
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
               facultyName: 'คณะเทคโนโลยีอุตสาหกรรม',
               logoName: 'logo_industrial.png',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะเทคโนโลยีอุตสาหกรรม',
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
               facultyName: 'คณะครุศาสตร์',
               logoName: 'logo_edu.png',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะครุศาสตร์',
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
               facultyName: 'คณะเทคโนโลยีเกษตร ',
               logoName: 'logo_iacuc.jpg',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะเทคโนโลยีเกษตร ',
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
               facultyName: 'คณะวิทยาการจัดการ ',
               logoName: 'logo_fms.jpg',
-              routeScreen: AdmissionPlanFaculty(
+              routeScreen: ExtraAdmissionPlanFaculty(
                 facultyFilter: 'คณะวิทยาการจัดการ ',
                 yearFilter: _selectedYear,
               )),

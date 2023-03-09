@@ -5,6 +5,7 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:project/ui/auth/login_ui.dart';
+import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../common/constants/constants.dart';
@@ -83,7 +84,7 @@ class _MainMenuState extends State<MainMenu> {
             ),
             MainMenuWidget(
               menuName: 'ภาคพิเศษ(กศ.ป.)',
-              routeScreen: AdmissionPlanMenuScreen(
+              routeScreen: MenuExtraAdmissionPlanScreen(
                 educationYearList: _yearList,
               ),
               leadingIcon: Icon(Icons.bookmark),
