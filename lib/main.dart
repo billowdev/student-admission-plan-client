@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/ui/admission_plan/faculty/all_faculty_admission_plan_ui.dart';
 import 'ui/auth/login_ui.dart';
 import 'ui/course/all_course_ui.dart';
-import 'ui/main_menu/main_menu_ui.dart';
+import 'main_menu_ui.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
