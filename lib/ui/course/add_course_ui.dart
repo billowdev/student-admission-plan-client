@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/constants/constants.dart';
+import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
@@ -19,12 +20,15 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
   late String _degree;
   late String _faculty;
   late String _detail;
-
+  late String _token = "";
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
 
   @override
   void initState() {
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          _token = value ?? "";
+        }));
     super.initState();
   }
 
@@ -40,8 +44,10 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
       'faculty': _faculty,
       'detail': _detail,
     };
-    final header = {'Content-Type': 'application/json'};
-
+    final header = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $_token'
+    };
     try {
       final response =
           await client.post(url, headers: header, body: jsonEncode(data));

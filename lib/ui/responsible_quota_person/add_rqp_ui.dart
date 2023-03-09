@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
+import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
@@ -22,13 +23,16 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
   late String _agency = "";
   late String _phone = "";
   late String _quota = "GOOD_STUDY";
-
+  late String _token = "";
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
 
   @override
   void initState() {
     super.initState();
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          _token = value ?? "";
+        }));
   }
 
   Future<void> _createRQP() async {
@@ -46,8 +50,11 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
       'phone': _phone,
       'quota': _quota,
     };
-    final header = {'Content-Type': 'application/json'};
 
+    final header = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $_token'
+    };
     try {
       final response =
           await client.post(url, headers: header, body: jsonEncode(data));
@@ -84,14 +91,13 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
     }
   }
 
-  late String _selectedQuota = "GOOD_STUDY";
+  late String _selectedQuota = "good_study";
   List<List<String>> quota = [
-    ['เรียนดี', 'GOOD_STUDY'],
-    ['คนดี', 'GOOD_PERSON'],
-    ['กีฬาดี', 'GOOD_SPORT'],
-    ['กิจกรรมดี', 'GOOD_ACTIVITY']
+    ['เรียนดี', 'good_study'],
+    ['คนดี', 'good_person'],
+    ['กีฬาดี', 'good_sport'],
+    ['กิจกรรมดี', 'good_activity']
   ];
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -132,20 +138,6 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        // Column(
-                        //   children: quota.map((String value) {
-                        //     return RadioListTile(
-                        //       title: Text(value),
-                        //       value: value,
-                        //       groupValue: _selectedQuota,
-                        //       onChanged: (newValue) {
-                        //         setState(() {
-                        //           _selectedQuota = newValue!;
-                        //         });
-                        //       },
-                        //     );
-                        //   }).toList(),
-                        // ),
                         Column(
                           children: quota.map((List<String> value) {
                             return RadioListTile(

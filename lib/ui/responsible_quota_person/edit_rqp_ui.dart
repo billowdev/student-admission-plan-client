@@ -1,14 +1,31 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:project/ui/course/models/course.model.dart';
+import 'package:project/ui/responsible_quota_person/detail_rqp_ui.dart';
+import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
 import '../../common/constants/constants.dart';
+import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
+import 'models/rqp_model.dart';
 
 class EditRQPScreen extends StatefulWidget {
-  final CoursePayload detail;
-  const EditRQPScreen({super.key, required this.detail});
+  final String year;
+  final String id;
+  final String name;
+  final String surname;
+  final String agency;
+  final String phone;
+  final String quota;
+  const EditRQPScreen(
+      {super.key,
+      required this.year,
+      required this.name,
+      required this.surname,
+      required this.agency,
+      required this.phone,
+      required this.quota,
+      required this.id});
 
   @override
   _EditRQPScreenState createState() => _EditRQPScreenState();
@@ -18,37 +35,50 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
   // final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
   //     GlobalKey<ScaffoldMessengerState>();
   final _formKey = GlobalKey<FormState>();
-  late String _major;
-  late String _degree;
-  late String _faculty;
-  late String _detail;
-
+  late String _year = "";
+  late String _name = "";
+  late String _surname = "";
+  late String _agency = "";
+  late String _phone = "";
+  late String _quota = "";
+  late String token = "";
   // get http => null;
   http.Client client = http.Client(); // create an instance of http client
 
+  late String _selectedQuota = "good_study";
+
+  List<List<String>> quota = [
+    ['เรียนดี', 'good_study'],
+    ['คนดี', 'good_person'],
+    ['กีฬาดี', 'good_sport'],
+    ['กิจกรรมดี', 'good_activity']
+  ];
   @override
   void initState() {
     super.initState();
-    _major = widget.detail.major!;
-    _degree = widget.detail.degree!;
-    _faculty = widget.detail.faculty!;
-    _detail = widget.detail.detail!;
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          token = value ?? "";
+        }));
+    _year = widget.year;
+    _name = widget.name;
+    _surname = widget.surname;
+    _agency = widget.agency;
+    _phone = widget.phone;
+    _quota = widget.quota;
   }
 
-  void _navigateToAllCourse() {
-    Navigator.pushReplacementNamed(context, '/all-course');
-  }
 
-  Future<void> _updateCourse() async {
+  Future<void> _updateRPQ() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url =
-            Uri.http(BASEURL, "/api/v1/courses/update/${widget.detail.id}");
+        final url = Uri.http(BASEURL, "/api/v1/rqp/update/${widget.id}");
         final fdata = {
-          'major': _major,
-          'degree': _degree,
-          'faculty': _faculty,
-          'detail': _detail,
+          'year': _year,
+          'name': _name,
+          'surname': _surname,
+          'agency': _agency,
+          'phone': _phone,
+          'quota': _quota,
         };
         final header = {'Content-Type': 'application/json'};
         await client.patch(url, headers: header, body: jsonEncode(fdata));
@@ -57,7 +87,20 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
           backgroundColor: Colors.green,
         ));
 
-        _navigateToAllCourse();
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DetailRQPScreen(
+                    id: widget.id,
+                    agency: _agency,
+                    name: _name,
+                    surname: _surname,
+                    phone: _phone,
+                    quota: _quota,
+                    year: _year,
+                  )),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('อัปเดตข้อมูลไม่สำเร็จ ระบบขัดข้อง'),
@@ -66,38 +109,9 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
       }
     }
   }
-  // Future<void> _updateCourse() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final url = Uri.http(BASEURL, "/courses/update/${widget.detail.id}");
-  //     var data = {
-  //       'major': _major,
-  //       'degree': _degree,
-  //       'faculty': _faculty,
-  //       'detail': _detail,
-  //     };
-  //     final header = {'Content-Type': 'application/json'};
-  //     final response =
-  //         await client.patch(url, headers: header, body: jsonEncode(data));
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
 
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text('อัปเดตข้อมูลสำเร็จ'),
-  //         backgroundColor: Colors.green,
-  //       ));
-  //       // Navigator.pop(context);
-  //       Navigator.pushReplacementNamed(context, '/all-course');
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text('Failed to update course.'),
-  //         backgroundColor: Colors.red,
-  //       ));
-  //     }
-  //   }
-  // }
-
-  Future<void> _deleteCourse() async {
-    final url = Uri.http(BASEURL, "/courses/delete/${widget.detail.id}");
+  Future<void> _deleteRQP() async {
+    final url = Uri.http(BASEURL, "/rqp/delete/${widget.id}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {
@@ -107,7 +121,10 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
         backgroundColor: Colors.green,
       ));
       // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/all-course');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const AllResponseibleQuotaPersonScreen()));
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -132,90 +149,113 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const Text(
-                          'ชื่อหลักสูตร',
+                          'ประเภทโควตา',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Column(
+                          children: quota.map((List<String> value) {
+                            return RadioListTile(
+                              title: Text(value[0]),
+                              value: value[1],
+                              groupValue: _quota,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _quota = newValue!;
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'ชื่อผู้รับผิดชอบโควตา',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _major,
+                          initialValue: _name,
                           onChanged: (value) {
-                            _major = value;
+                            _name = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกชื่อหลักสูตร';
+                              return 'กรุณากรอกชื่อผู้รับผิดชอบโควตา';
                             }
                             return null;
                           },
                         ),
                         const SizedBox(height: 20),
                         const Text(
-                          'หลักสูตร',
+                          'นามสกุลผู้รับผิดชอบโควตา',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _degree,
+                          initialValue: _surname,
                           onChanged: (value) {
-                            _degree = value;
+                            _surname = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกชื่อหลักสูตร';
+                              return 'กรุณากรอกนามสกุลผู้รับผิดชอบโควตา';
                             }
                             return null;
                           },
                         ),
                         const SizedBox(height: 20),
                         const Text(
-                          'คณะ',
+                          'หน่วยงาน',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _faculty,
+                          initialValue: _agency,
                           onChanged: (value) {
-                            _faculty = value;
+                            _agency = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกชื่อคณะ';
+                              return 'กรุณากรอกชื่อหน่วยงาน';
                             }
                             return null;
                           },
+                          maxLines: 1,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         const Text(
-                          'รายละเอียด',
+                          'เบอร์โทร',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextFormField(
-                          initialValue: _detail,
+                          initialValue: _phone,
                           onChanged: (value) {
-                            _detail = value;
+                            _phone = value;
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกรายละเอียด';
+                              return 'กรุณากรอกเบอร์โทร';
                             }
                             return null;
                           },
-                          maxLines: 5,
+                          maxLines: 1,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             TextButton(
-                              onPressed: _deleteCourse,
+                              onPressed: _deleteRQP,
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.red,
@@ -232,7 +272,7 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
                               ),
                             ),
                             TextButton(
-                              onPressed: _updateCourse,
+                              onPressed: _updateRPQ,
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.green,
