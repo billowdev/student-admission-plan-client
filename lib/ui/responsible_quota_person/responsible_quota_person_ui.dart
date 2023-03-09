@@ -5,6 +5,7 @@ import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
+import 'package:project/ui/responsible_quota_person/add_rqp_ui.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/search_bar.widget.dart';
 import 'package:http/http.dart' as http;
@@ -87,7 +88,7 @@ class _AllResponseibleQuotaPersonScreenState
                       label: IgnorePointer(
                         ignoring: true,
                         child: Text(
-                          'สาขา',
+                          'ปีการศึกษา',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -98,7 +99,7 @@ class _AllResponseibleQuotaPersonScreenState
                     ),
                     DataColumn(
                         label: Text(
-                      'คณะ',
+                      'ชื่อ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -107,7 +108,16 @@ class _AllResponseibleQuotaPersonScreenState
                     )),
                     DataColumn(
                         label: Text(
-                      'หลักสูตร',
+                      'นามสกุล',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.green,
+                      ),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      'ประเภทโควตา',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -121,6 +131,7 @@ class _AllResponseibleQuotaPersonScreenState
                         DataCell(Text("${data.year}")),
                         DataCell(Text("${data.name}")),
                         DataCell(Text("${data.surname}")),
+                        DataCell(Text("${data.quota}")),
                       ],
                       selected: false, // Add this line to remove the borders
                       onSelectChanged: (isSelected) {
@@ -145,13 +156,12 @@ class _AllResponseibleQuotaPersonScreenState
                       width: 80, // adjust the width to your desired size
                       child: TextButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         const AddResponseibleQuotaPersoncreen(),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddRQPScreen(),
+                            ),
+                          );
                         },
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.white,
