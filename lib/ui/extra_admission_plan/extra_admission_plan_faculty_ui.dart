@@ -10,6 +10,7 @@ import '../../../common/constants/constants.dart';
 import '../../../common/utils/local_storage_util.dart';
 import 'package:http/http.dart' as http;
 
+import 'add_extra_admission_plan_ui.dart';
 import 'extra_admission_plan_course_ui.dart';
 
 class ExtraAdmissionPlanFaculty extends StatefulWidget {
@@ -165,7 +166,7 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddAdmissionPlanScreen(
+                              builder: (context) => AddExtraAdmissionPlanScreen(
                                 facultyFilter: _facultyFilter,
                               ),
                             ),
