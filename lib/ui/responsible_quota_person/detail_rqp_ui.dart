@@ -1,34 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/course/models/course.model.dart';
+import 'package:project/ui/responsible_quota_person/models/rqp_model.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 import 'edit_rqp_ui.dart';
 
-
 class DetailRQPScreen extends StatefulWidget {
-  final CoursePayload detail;
-  const DetailRQPScreen({super.key, required this.detail});
+  final String id;
+  final String year;
+  final String name;
+  final String surname;
+  final String agency;
+  final String phone;
+  final String quota;
+  const DetailRQPScreen(
+      {super.key,
+      required this.year,
+      required this.name,
+      required this.surname,
+      required this.agency,
+      required this.phone,
+      required this.quota,
+      required this.id});
   @override
   State<DetailRQPScreen> createState() => _DetailRQPScreenState();
 }
 
 class _DetailRQPScreenState extends State<DetailRQPScreen> {
-  late String _major;
-  late String _degree;
-  late String _faculty;
-  late String _detail;
-  // static String apiUrl = dotenv.env['API_URL'].toString();
   late String token = "";
-  // final AuthService _authService = AuthService();
-  // final TokenBloc _tokenBloc = TokenBloc(); // create an instance of TokenBloc
+  late String _year;
+  late String _name;
+  late String _id;
+  late String _surname;
+  late String _agency;
+  late String _phone;
+  late String _quota;
+  late String _quotaDisplay;
   @override
   void initState() {
     super.initState();
-    _major = widget.detail.major!;
-    _degree = widget.detail.degree!;
-    _faculty = widget.detail.faculty!;
-    _detail = widget.detail.detail!;
+    LocalStorageUtil.getItem('token').then((value) => setState(() {
+          token = value ?? "";
+        }));
+    setState(() {
+      _year = widget.year;
+      _id = widget.id;
+      _name = widget.name;
+      _surname = widget.surname;
+      _agency = widget.agency;
+      _phone = widget.phone;
+      _quota = widget.quota;
+      if (_quota == "good_study") {
+        _quotaDisplay = "เรียนดี";
+      } else if (_quota == "good_person") {
+        _quotaDisplay = "คนดี";
+      } else if (_quota == "good_sport") {
+        _quotaDisplay = "กีฬาดี";
+      } else {
+        _quotaDisplay = "กิจกรรมดี";
+      }
+    });
+
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
@@ -59,10 +92,12 @@ class _DetailRQPScreenState extends State<DetailRQPScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Table(
                 children: [
-                  _buildTableRow('ชื่อหลักสูตร', _major.toString()),
-                  _buildTableRow('หลักสูตร', _degree.toString()),
-                  _buildTableRow('คณะ', _faculty.toString()),
-                  _buildTableRow('รายละเอียด', _detail.toString()),
+                  _buildTableRow('ปีการศึกษา', _year.toString()),
+                  _buildTableRow('ชื่อ', _name.toString()),
+                  _buildTableRow('นามสกุล', _surname.toString()),
+                  _buildTableRow('ประเภทโควตา', _quotaDisplay.toString()),
+                  _buildTableRow('เบอร์โทร', _phone.toString()),
+                  _buildTableRow('หน่วยงาน', _agency.toString()),
                 ],
               ),
             ),
@@ -78,8 +113,15 @@ class _DetailRQPScreenState extends State<DetailRQPScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditRQPScreen(detail: widget.detail),
+                            builder: (context) => EditRQPScreen(
+                              id: _id,
+                              agency: _agency,
+                              name: _name,
+                              surname: _surname,
+                              phone: _phone,
+                              quota: _quota,
+                              year: _year,
+                            ),
                           ),
                         );
                       },

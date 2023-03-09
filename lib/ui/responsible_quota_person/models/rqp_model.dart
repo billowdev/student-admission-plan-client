@@ -1,30 +1,27 @@
-class RQPArrayModel {
+class RQPModel {
   String? message;
-  List<RQPArrayPayload>? payload;
+  RQPPayload? payload;
 
-  RQPArrayModel({this.message, this.payload});
+  RQPModel({this.message, this.payload});
 
-  RQPArrayModel.fromJson(Map<String, dynamic> json) {
+  RQPModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    if (json['payload'] != null) {
-      payload = <RQPArrayPayload>[];
-      json['payload'].forEach((v) {
-        payload!.add(RQPArrayPayload.fromJson(v));
-      });
-    }
+    payload = json['payload'] != null
+        ? RQPPayload.fromJson(json['payload'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['message'] = message;
     if (payload != null) {
-      data['payload'] = payload!.map((v) => v.toJson()).toList();
+      data['payload'] = payload!.toJson();
     }
     return data;
   }
 }
 
-class RQPArrayPayload {
+class RQPPayload {
   String? id;
   String? year;
   String? name;
@@ -35,7 +32,7 @@ class RQPArrayPayload {
   String? createdAt;
   String? updatedAt;
 
-  RQPArrayPayload(
+  RQPPayload(
       {this.id,
       this.year,
       this.name,
@@ -46,7 +43,7 @@ class RQPArrayPayload {
       this.createdAt,
       this.updatedAt});
 
-  RQPArrayPayload.fromJson(Map<String, dynamic> json) {
+  RQPPayload.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     year = json['year'];
     name = json['name'];
@@ -59,7 +56,7 @@ class RQPArrayPayload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['year'] = year;
     data['name'] = name;
