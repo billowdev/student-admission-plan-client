@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/admission_plan/services/admission_plan_service.dart';
+
 import 'dart:core';
 
 import '../../common/constants/constants.dart';
@@ -31,7 +31,7 @@ class _MenuExtraAdmissionPlanScreenState
   //     (currentYear + 543) - 2565, (index) => (2565 + index).toString());
 
   _getExistsYear() async {
-    final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
+    final url = Uri.http(BASEURL, '$ENDPOINT/eap/get-exists-year');
 
     final response = await http.get(url);
     if (response.statusCode == 200) {

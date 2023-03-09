@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:project/ui/course/all_course_ui.dart';
+import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
 import 'package:project/ui/main_menu/main_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ui/auth/login_ui.dart';
+import '../constants/constants.dart';
 
 class DrawerMenuWidget extends StatefulWidget {
   const DrawerMenuWidget({super.key});
@@ -19,6 +23,9 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
   String token = "";
   String nameUser = "";
 
+  late List<String> _eapYearList = ["2565", "2566"];
+  late List<String> _apYearList = ["2565", "2566"];
+
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -29,9 +36,39 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
     return prefs.getString('name-user');
   }
 
+  _getEapExistsYear() async {
+    final url = Uri.http(BASEURL, '$ENDPOINT/eap/get-exists-year');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> resp = jsonDecode(response.body);
+      List<String> yearList = List<String>.from(resp['payload']);
+      yearList.sort((a, b) => a.compareTo(b));
+      setState(() {
+        _eapYearList = yearList;
+      });
+    }
+  }
+
+  _getapExistsYear() async {
+    final url = Uri.http(BASEURL, '$ENDPOINT/ap/get-exists-year');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> resp = jsonDecode(response.body);
+      List<String> yearList = List<String>.from(resp['payload']);
+      yearList.sort((a, b) => a.compareTo(b));
+      setState(() {
+        _apYearList = yearList;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _getEapExistsYear();
+    _getapExistsYear();
     _getToken().then((value) => setState(() {
           token = value ?? "";
         }));
@@ -71,10 +108,16 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
       // const DrawerListTileButton(
       //     textPage: 'ข้อมูลหลักสูตรทั้งหมด', routeScreen: AllCourseScreen()),
 
-      const DrawerListTileButton(
-          textPage: 'ข้อมูลแผนการรับนักศึกษาคณะต่าง ๆ',
-          routeScreen: AdmissionPlanMenuScreen(
-            educationYearList: ["2565"],
+      DrawerListTileButton(
+        textPage: 'ข้อมูลแผนการรับนักศึกษาภาคปกติ',
+        routeScreen: AdmissionPlanMenuScreen(
+          educationYearList: _apYearList,
+        ),
+      ),
+      DrawerListTileButton(
+          textPage: 'ข้อมูลแผนการรับนักศึกษาภาคพิเศษ (กศ.ป.)',
+          routeScreen: MenuExtraAdmissionPlanScreen(
+            educationYearList: _eapYearList,
           )),
 // Show Logout button if token is not empty
 
