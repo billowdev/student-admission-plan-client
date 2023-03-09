@@ -6,9 +6,10 @@ import 'package:project/ui/extra_admission_plan/models/extra_admission_plan_arra
 import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
+import 'edit_extra_admission_plan_course_ui.dart';
 
 class ExtraAdmissionPlanCourse extends StatefulWidget {
-  final ExtraAdmissionPlanArray detail;
+  final ExtraAdmissionPlanArrayPayload detail;
   final String yearFilter;
   final String facultyFilter;
   final String major;
@@ -29,29 +30,12 @@ class ExtraAdmissionPlanCourse extends StatefulWidget {
 }
 
 class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
-  late String _quotaStatus;
-  late String _quotaSpecificSubject;
-  late int _quotaQty;
-  late String _quotaDetail;
-  late int _sumQty;
-  late String _directStatus;
-  late String _directSpecificSubject;
-  late int _directQty;
-  late String _directDetail;
-
-  late String _cooperationStatus;
-  late String _cooperationSpecificSubject;
-  late int _cooperationQty;
-  late String _cooperationDetail;
-
-  late String _year;
-  late int _studyGroup;
-
   late String _major;
   late String _degree;
   late String _faculty;
-  late ExtraAdmissionPlanArray _allDetail;
-  late String _id;
+  late int _qty;
+  late String _year;
+  late ExtraAdmissionPlanArrayPayload _allDetail;
 
   late String token = "";
   // final AuthService _authService = AuthService();
@@ -59,18 +43,14 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
   @override
   void initState() {
     super.initState();
-    _allDetail = widget.detail;
-
-    _major = widget.major;
-
-    // if (widget.major != null) {
-    // } else {
-    //   _major = "";
-    // }
-    _degree = widget.degree;
-    _faculty = widget.faculty;
-
-    _sumQty = _quotaQty + _cooperationQty + _directQty;
+    setState(() {
+      _allDetail = widget.detail;
+      _year = widget.yearFilter;
+      _qty = widget.detail.qty!;
+      _major = widget.major;
+      _degree = widget.degree;
+      _faculty = widget.faculty;
+    });
 
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
@@ -94,7 +74,7 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
                         child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Text(
-                        "แผนการรับนักศึกษาประจำปีการศึกษา ${_year.toString()}",
+                        "แผนการรับนักศึกษา ภาคพิเศษ (กศ.ป.) \n ประจำปีการศึกษา ${_year.toString()}",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
@@ -110,70 +90,16 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
                         child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Text(
-                        "รอบที่ 1 รอบโควตา",
+                        "รายละเอียด",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     )),
                     Table(
                       children: [
-                        _buildTableRow('สถานะ', _quotaStatus.toString()),
-                        _buildTableRow(
-                            'วิชาเฉพาะ', _quotaSpecificSubject.toString()),
-                        _buildTableRow('จำนวนที่รับ', _quotaQty.toString()),
-                        _buildTableRow('รายละเอียด', _quotaDetail.toString()),
+                        _buildTableRow('ปีการศึกษา', _year.toString()),
+                        _buildTableRow('จำนวน', _qty.toString()),
                       ],
-                    ),
-                    const Center(
-                        child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        "รอบที่ 2 รอบรับตรง",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    )),
-                    Table(
-                      children: [
-                        _buildTableRow('สถานะ', _directStatus.toString()),
-                        _buildTableRow(
-                            'วิชาเฉพาะ', _directSpecificSubject.toString()),
-                        _buildTableRow('จำนวนที่รับ', _directQty.toString()),
-                        _buildTableRow('รายละเอียด', _directDetail.toString()),
-                      ],
-                    ),
-                    const Center(
-                        child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        "รอบที่ 3 ความร่วมมือกับ รร.",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    )),
-                    Table(
-                      children: [
-                        _buildTableRow('สถานะ', _cooperationStatus.toString()),
-                        _buildTableRow('วิชาเฉพาะ',
-                            _cooperationSpecificSubject.toString()),
-                        _buildTableRow(
-                            'จำนวนที่รับ', _cooperationQty.toString()),
-                        _buildTableRow(
-                            'รายละเอียด', _cooperationDetail.toString()),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                    ),
-                    Table(
-                      children: [
-                        _buildTableRow(
-                            'จำนวนหมู่เรียน', _studyGroup.toString()),
-                        _buildTableRow('จำนวนที่รับทั้งหมด', _sumQty.toString())
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8),
                     ),
                   ],
                 )),
@@ -186,20 +112,20 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
                     width: 80, // adjust the width to your desired size
                     child: TextButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => EditAdmissionPlanDetailScreen(
-                        //       major: _major,
-                        //       degree: _degree,
-                        //       faculty: _faculty,
-                        //       year: _year,
-                        //       admissionPlanId: _id,
-                        //       facultyFilter: widget.facultyFilter,
-                        //       yearFilter: widget.yearFilter,
-                        //     ),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditExtraAdmissionPlanCourseScreen(
+                              major: _major,
+                              degree: _degree,
+                              faculty: _faculty,
+                              detail: _allDetail,
+                              facultyFilter: widget.facultyFilter,
+                              yearFilter: widget.yearFilter,
+                            ),
+                          ),
+                        );
                       },
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.white,

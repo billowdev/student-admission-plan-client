@@ -65,7 +65,6 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -75,13 +74,14 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              // SearchBar(onTextChanged: (value) {
-              //   if (value != "") {
-              //     _searchAdmissionPlan(value);
-              //   } else {
-              //     _getAdmissionPlan();
-              //   }
-              // }),
+              const Center(
+                  child: Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text(
+                  "แผนการรับนักศึกษา ภาคปกติ",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              )),
               Center(
                   child: Padding(
                 padding: const EdgeInsets.all(8),

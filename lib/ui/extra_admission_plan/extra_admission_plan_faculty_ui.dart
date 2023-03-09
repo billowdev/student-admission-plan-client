@@ -10,6 +10,8 @@ import '../../../common/constants/constants.dart';
 import '../../../common/utils/local_storage_util.dart';
 import 'package:http/http.dart' as http;
 
+import 'extra_admission_plan_course_ui.dart';
+
 class ExtraAdmissionPlanFaculty extends StatefulWidget {
   final String facultyFilter;
   final String yearFilter;
@@ -21,11 +23,28 @@ class ExtraAdmissionPlanFaculty extends StatefulWidget {
 }
 
 class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
-  List<ExtraAdmissionPlanArrayPayload> admssionPlanData = [];
+  List<ExtraAdmissionPlanArrayPayload> _extraAdmssionPlanData = [];
 
   late String _facultyFilter = widget.facultyFilter;
   late String _yearFilter;
   late String token = "";
+
+  _getAdmissionPlan() async {
+    var queryParam = {"year": _yearFilter.toString()};
+    final url = Uri.http(
+        BASEURL,
+        '$ENDPOINT/extra-admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
+        queryParam);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      ExtraAdmissionPlanArray resp =
+          ExtraAdmissionPlanArray.fromJson(jsonDecode(response.body));
+
+      setState(() {
+        _extraAdmssionPlanData = resp.payload!;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -40,28 +59,8 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
 
   @override
   void dispose() {
-    admssionPlanData.clear();
+    _extraAdmssionPlanData.clear();
     super.dispose();
-  }
-
-  _getAdmissionPlan() async {
-    var queryParam = {"year": widget.yearFilter.toString()};
-    // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
-    final url = Uri.http(
-        BASEURL,
-        '$ENDPOINT/admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
-        queryParam);
-
-    // final url = Uri.http('localhost:5000', '/courses/get-all');
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      ExtraAdmissionPlanArray resp =
-          ExtraAdmissionPlanArray.fromJson(jsonDecode(response.body));
-
-      setState(() {
-        admssionPlanData = resp.payload!;
-      });
-    }
   }
 
   @override
@@ -73,13 +72,14 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              // SearchBar(onTextChanged: (value) {
-              //   if (value != "") {
-              //     _searchAdmissionPlan(value);
-              //   } else {
-              //     _getAdmissionPlan();
-              //   }
-              // }),
+              const Center(
+                  child: Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text(
+                  "แผนการรับนักศึกษา ภาคพิเศษ(กศ.ป.)",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              )),
               Center(
                   child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -127,7 +127,7 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
                       ),
                     ),
                   ],
-                  rows: admssionPlanData.map((data) {
+                  rows: _extraAdmssionPlanData.map((data) {
                     return DataRow(
                       cells: <DataCell>[
                         DataCell(Text("${data.course?.major}")),
@@ -136,19 +136,18 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
                       ],
                       selected: false, // Add this line to remove the borders
                       onSelectChanged: (isSelected) {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) =>
-                        //           ExtraAdmissionPlanFacultyDetail(
-                        //             detail: data,
-                        //             major: "${data.course?.major}",
-                        //             degree: "${data.course?.degree}",
-                        //             faculty: "${data.course?.faculty}",
-                        //             facultyFilter: widget.facultyFilter,
-                        //             yearFilter: widget.yearFilter,
-                        //           )),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ExtraAdmissionPlanCourse(
+                                    detail: data,
+                                    major: "${data.course?.major}",
+                                    degree: "${data.course?.degree}",
+                                    faculty: "${data.course?.faculty}",
+                                    facultyFilter: widget.facultyFilter,
+                                    yearFilter: widget.yearFilter,
+                                  )),
+                        );
                       },
                     );
                   }).toList(),

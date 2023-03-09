@@ -96,13 +96,13 @@ class Course {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['major'] = this.major;
-    data['degree'] = this.degree;
-    data['detail'] = this.detail;
-    data['faculty'] = this.faculty;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['major'] = major;
+    data['degree'] = degree;
+    data['detail'] = detail;
+    data['faculty'] = faculty;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
