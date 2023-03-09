@@ -5,7 +5,7 @@ import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
-import 'package:project/ui/main_menu/main_menu_ui.dart';
+import 'package:project/main_menu_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ui/auth/login_ui.dart';

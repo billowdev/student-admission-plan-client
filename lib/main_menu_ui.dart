@@ -5,11 +5,12 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
+import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../../common/constants/constants.dart';
-import '../../common/utils/local_storage_util.dart';
-import '../course/all_course_ui.dart';
+import 'common/constants/constants.dart';
+import 'common/utils/local_storage_util.dart';
+import 'ui/course/all_course_ui.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -96,9 +97,7 @@ class _MainMenuState extends State<MainMenu> {
             ),
             MainMenuWidget(
               menuName: 'ผู้รับผิดชอบโควตา',
-              routeScreen: AdmissionPlanMenuScreen(
-                educationYearList: _yearList,
-              ),
+              routeScreen: AllResponseibleQuotaPersonScreen(),
               leadingIcon: const Icon(Icons.supervisor_account),
             ),
             MainMenuWidget(
