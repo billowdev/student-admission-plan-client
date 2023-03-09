@@ -6,6 +6,8 @@ import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
 import 'package:project/ui/responsible_quota_person/add_rqp_ui.dart';
+import 'package:project/ui/responsible_quota_person/detail_rqp_ui.dart';
+import 'package:project/ui/responsible_quota_person/models/rqp_model.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/search_bar.widget.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +24,7 @@ class AllResponseibleQuotaPersonScreen extends StatefulWidget {
 class _AllResponseibleQuotaPersonScreenState
     extends State<AllResponseibleQuotaPersonScreen> {
   late String token = "";
-  List<ResponsibleQuotaPersonPayload> course = [];
+  List<RQPArrayPayload> course = [];
   @override
   void initState() {
     super.initState();
@@ -37,8 +39,8 @@ class _AllResponseibleQuotaPersonScreenState
     final url = Uri.http(BASEURL, '$ENDPOINT/rqp/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      ResponsibleQuotaPersonModel courseData =
-          ResponsibleQuotaPersonModel.fromJson(jsonDecode(response.body));
+      RQPArrayModel courseData =
+          RQPArrayModel.fromJson(jsonDecode(response.body));
       setState(() {
         course = courseData.payload!;
       });
@@ -51,8 +53,8 @@ class _AllResponseibleQuotaPersonScreenState
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      ResponsibleQuotaPersonModel courseData =
-          ResponsibleQuotaPersonModel.fromJson(jsonDecode(response.body));
+      RQPArrayModel courseData =
+          RQPArrayModel.fromJson(jsonDecode(response.body));
 
       setState(() {
         course = courseData.payload!;
@@ -135,13 +137,19 @@ class _AllResponseibleQuotaPersonScreenState
                       ],
                       selected: false, // Add this line to remove the borders
                       onSelectChanged: (isSelected) {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => CourseDetailScreen(
-                        //             detail: data,
-                        //           )),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailRQPScreen(
+                                    id: data.id!,
+                                    agency: data.agency!,
+                                    name: data.name!,
+                                    surname: data.surname!,
+                                    phone: data.phone!,
+                                    quota: data.quota!,
+                                    year: data.year!,
+                                  )),
+                        );
                       },
                     );
                   }).toList(),
