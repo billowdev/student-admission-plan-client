@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:project/ui/course/all_course_ui.dart';
 import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
 import 'package:project/main_menu_ui.dart';
+import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ui/auth/login_ui.dart';
@@ -119,6 +120,9 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
           routeScreen: MenuExtraAdmissionPlanScreen(
             educationYearList: _eapYearList,
           )),
+      const DrawerListTileButton(
+          textPage: 'ผู้รับผิดชอบโควตา',
+          routeScreen: AllResponseibleQuotaPersonScreen()),
 // Show Logout button if token is not empty
 
       if (token.isNotEmpty)

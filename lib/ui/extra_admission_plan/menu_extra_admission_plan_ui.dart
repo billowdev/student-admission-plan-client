@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/extra_admission_plan/summary_extra_admission_plan_ui.dart';
 
 import 'dart:core';
 
@@ -99,6 +100,12 @@ class _MenuExtraAdmissionPlanScreenState
               ),
             ),
           ),
+          FacultyWidget(
+              facultyName: 'สรุปแผนการรับภาคพิเศษ',
+              logoName: 'Logo.png',
+              routeScreen: SummaryExtraAdmissionPlan(
+                yearFilter: _selectedYear,
+              )),
           FacultyWidget(
               facultyName: 'คณะวิทยาศาสตร์และเทคโนโลยี',
               logoName: 'logo_sci.jpg',
