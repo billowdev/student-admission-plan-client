@@ -28,7 +28,13 @@ class AdmissionPlanFacultyPayload {
   String? id;
   bool? quotaStatus;
   String? quotaSpecificSubject;
-  int? quotaQty;
+  int? quotaGoodStudyQty;
+  int? quotaGoodPersonQty;
+  int? quotaGoodActivityIMQty;
+  int? quotaGoodActivityLIQty;
+  int? quotaGoodActivitySDDQty;
+  int? quotaGoodSportQty;
+
   String? quotaDetail;
   bool? directStatus;
   String? directSpecificSubject;
@@ -49,7 +55,12 @@ class AdmissionPlanFacultyPayload {
       {this.id,
       this.quotaStatus,
       this.quotaSpecificSubject,
-      this.quotaQty,
+      this.quotaGoodStudyQty,
+      this.quotaGoodPersonQty,
+      this.quotaGoodActivityIMQty,
+      this.quotaGoodActivityLIQty,
+      this.quotaGoodActivitySDDQty,
+      this.quotaGoodSportQty,
       this.quotaDetail,
       this.directStatus,
       this.directSpecificSubject,
@@ -70,7 +81,12 @@ class AdmissionPlanFacultyPayload {
     id = json['id'];
     quotaStatus = json['quotaStatus'];
     quotaSpecificSubject = json['quotaSpecificSubject'];
-    quotaQty = json['quotaQty'];
+    quotaGoodStudyQty = json['quotaGoodStudyQty'];
+    quotaGoodPersonQty = json['quotaGoodPersonQty'];
+    quotaGoodActivityIMQty = json['quotaGoodActivityIMQty'];
+    quotaGoodActivityLIQty = json['quotaGoodActivityLIQty'];
+    quotaGoodActivitySDDQty = json['quotaGoodActivitySDDQty'];
+    quotaGoodSportQty = json['quotaGoodSportQty'];
     quotaDetail = json['quotaDetail'];
     directStatus = json['directStatus'];
     directSpecificSubject = json['directSpecificSubject'];
@@ -95,7 +111,12 @@ class AdmissionPlanFacultyPayload {
     data['id'] = id;
     data['quotaStatus'] = quotaStatus;
     data['quotaSpecificSubject'] = quotaSpecificSubject;
-    data['quotaQty'] = quotaQty;
+    data['quotaGoodStudyQty'] = quotaGoodStudyQty;
+    data['quotaGoodPersonQty'] = quotaGoodPersonQty;
+    data['quotaGoodActivityIMQty'] = quotaGoodActivityIMQty;
+    data['quotaGoodActivityLIQty'] = quotaGoodActivityLIQty;
+    data['quotaGoodActivitySDDQty'] = quotaGoodActivitySDDQty;
+    data['quotaGoodSportQty'] = quotaGoodSportQty;
     data['quotaDetail'] = quotaDetail;
     data['directStatus'] = directStatus;
     data['directSpecificSubject'] = directSpecificSubject;

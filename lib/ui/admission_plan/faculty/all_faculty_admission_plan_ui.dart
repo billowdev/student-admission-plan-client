@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/faculty/add_course_admission_plan_ui.dart';
-import 'package:project/ui/course/add_course_ui.dart';
 import '../../../common/constants/constants.dart';
 import '../../../common/utils/local_storage_util.dart';
 import '../models/admission_plan_faculty_model.dart';

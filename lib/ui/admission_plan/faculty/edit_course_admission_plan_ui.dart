@@ -46,7 +46,13 @@ class _EditAdmissionPlanDetailScreenState
   late bool _quotaStatus;
 
   late String _quotaSpecificSubject;
-  late int _quotaQty;
+  late int _quotaGoodStudyQty;
+  late int _quotaGoodPersonQty;
+  late int _quotaGoodActivityIMQty;
+  late int _quotaGoodActivityLIQty;
+  late int _quotaGoodActivitySDDQty;
+  late int _quotaGoodSportQty;
+
   late String _quotaDetail;
   late int _sumQty;
 
@@ -89,7 +95,12 @@ class _EditAdmissionPlanDetailScreenState
       _quotaSpecificSubject = widget.detail.quotaSpecificSubject!;
     }
 
-    _quotaQty = widget.detail.quotaQty!;
+    _quotaGoodStudyQty = widget.detail.quotaGoodStudyQty ?? 0;
+    _quotaGoodPersonQty = widget.detail.quotaGoodPersonQty ?? 0;
+    _quotaGoodActivityIMQty = widget.detail.quotaGoodActivityIMQty ?? 0;
+    _quotaGoodActivityLIQty = widget.detail.quotaGoodActivityLIQty ?? 0;
+    _quotaGoodActivitySDDQty = widget.detail.quotaGoodActivitySDDQty ?? 0;
+    _quotaGoodSportQty = widget.detail.quotaGoodSportQty ?? 0;
 
     if (widget.detail.quotaDetail != "") {
       _quotaDetail = widget.detail.quotaDetail!;
@@ -181,7 +192,12 @@ class _EditAdmissionPlanDetailScreenState
         final fdata = {
           'quotaStatus': qs,
           'quotaSpecificSubject': _quotaSpecificSubject,
-          'quotaQty': _quotaQty,
+          'quotaGoodStudyQty': _quotaGoodStudyQty,
+          'quotaGoodPersonQty': _quotaGoodPersonQty,
+          'quotaGoodActivityIMQty': _quotaGoodActivityIMQty,
+          'quotaGoodActivityLIQty': _quotaGoodActivityLIQty,
+          'quotaGoodActivitySDDQty': _quotaGoodActivitySDDQty,
+          'quotaGoodSportQty': _quotaGoodSportQty,
           'quotaDetail': _quotaDetail,
           'directStatus': ds,
           'directSpecificSubject': _directSpecificSubject,
@@ -335,17 +351,127 @@ class _EditAdmissionPlanDetailScreenState
                               ),
                               const SizedBox(height: 20),
                               const Text(
-                                'จำนวนที่รับ',
+                                'จำนวนที่รับ ประเภทเรียนดี',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextFormField(
-                                initialValue:
-                                    _quotaQty.toString(), // convert to string
+                                initialValue: _quotaGoodStudyQty
+                                    .toString(), // convert to string
                                 onChanged: (value) {
-                                  _quotaQty =
+                                  _quotaGoodStudyQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ กิจกรรมดีกองพัฒฯ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaGoodActivitySDDQty
+                                    .toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaGoodActivitySDDQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ กิจกรรมดีสถาบันภาษา',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaGoodActivitySDDQty
+                                    .toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaGoodActivitySDDQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ กิจกรรมดี ดนตรีสากล',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaGoodActivityIMQty
+                                    .toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaGoodActivityIMQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ ประเภทคนดี',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaGoodPersonQty
+                                    .toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaGoodPersonQty =
+                                      int.tryParse(value)!; // convert to int
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'กรุณากรอกจำนวนที่รับ';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                'จำนวนที่รับ ประเภทกีฬาดี',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextFormField(
+                                initialValue: _quotaGoodSportQty
+                                    .toString(), // convert to string
+                                onChanged: (value) {
+                                  _quotaGoodSportQty =
                                       int.tryParse(value)!; // convert to int
                                 },
                                 validator: (value) {

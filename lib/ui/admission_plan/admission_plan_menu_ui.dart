@@ -68,10 +68,10 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
                 child: GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
-                  children: [
+                  children: const [
                     InformationButtonWidget(
                       buttonText: 'ข้อมูลหลักสูตรทั้งหมด',
-                      routeScreen: const AllCourseScreen(),
+                      routeScreen: AllCourseScreen(),
                     ),
                   ],
                 ),

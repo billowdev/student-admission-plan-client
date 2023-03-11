@@ -32,7 +32,13 @@ class AdmissionPlanFacultyDetailState
     extends State<AdmissionPlanFacultyDetail> {
   late String _quotaStatus;
   late String _quotaSpecificSubject;
-  late int _quotaQty;
+  late int _quotaGoodStudyQty;
+  late int _quotaGoodPersonQty;
+  late int _quotaGoodActivityIMQty;
+  late int _quotaGoodActivityLIQty;
+  late int _quotaGoodActivitySDDQty;
+  late int _quotaGoodSportQty;
+  late int _quotaSum;
   late String _quotaDetail;
   late int _sumQty;
   late String _directStatus;
@@ -75,11 +81,16 @@ class AdmissionPlanFacultyDetailState
       _quotaSpecificSubject = widget.detail.quotaSpecificSubject!;
     }
 
-    if (widget.detail.quotaQty != 0) {
-      _quotaQty = widget.detail.quotaQty!;
-    } else {
-      _quotaQty = 0;
-    }
+    _quotaGoodStudyQty = widget.detail.quotaGoodStudyQty ?? 0;
+    _quotaGoodPersonQty = widget.detail.quotaGoodPersonQty ?? 0;
+    _quotaGoodActivityIMQty = widget.detail.quotaGoodActivityIMQty ?? 0;
+    _quotaGoodActivityLIQty = widget.detail.quotaGoodActivityLIQty ?? 0;
+    _quotaGoodActivitySDDQty = widget.detail.quotaGoodActivitySDDQty ?? 0;
+    _quotaGoodSportQty = widget.detail.quotaGoodSportQty ?? 0;
+    // if (widget.detail.quotaQty != 0) {
+    // } else {
+    //   _quotaQty = 0;
+    // }
 
     if (widget.detail.quotaDetail != "") {
       _quotaDetail = widget.detail.quotaDetail!;
@@ -150,8 +161,13 @@ class AdmissionPlanFacultyDetailState
     // }
     _degree = widget.degree;
     _faculty = widget.faculty;
-
-    _sumQty = _quotaQty + _cooperationQty + _directQty;
+    _quotaSum = _quotaGoodStudyQty +
+        _quotaGoodPersonQty +
+        _quotaGoodActivityIMQty +
+        _quotaGoodActivityLIQty +
+        _quotaGoodActivitySDDQty +
+        _quotaGoodSportQty;
+    _sumQty = _quotaSum + _cooperationQty + _directQty;
 
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
@@ -201,7 +217,7 @@ class AdmissionPlanFacultyDetailState
                         _buildTableRow('สถานะ', _quotaStatus.toString()),
                         _buildTableRow(
                             'วิชาเฉพาะ', _quotaSpecificSubject.toString()),
-                        _buildTableRow('จำนวนที่รับ', _quotaQty.toString()),
+                        _buildTableRow('จำนวนที่รับ', _quotaSum.toString()),
                         _buildTableRow('รายละเอียด', _quotaDetail.toString()),
                       ],
                     ),
