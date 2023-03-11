@@ -94,7 +94,7 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              Padding(padding: EdgeInsets.all(8.0)),
+              const Padding(padding: EdgeInsets.all(8.0)),
               Center(
                 child: RichText(
                   text: const TextSpan(
@@ -112,7 +112,7 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
                 child: RichText(
                   text: TextSpan(
                     text: "ปีการศึกษา ${widget.yearFilter}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       color: Colors.black,
                       fontFamily: 'PrintAble4U',
@@ -143,6 +143,7 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
                       ),
                       ExtraAdmissionPlanTable(
                         data: facultyPlans[faculty] ?? [],
+                        yearFilter: widget.yearFilter,
                       ),
                       Center(
                         child: Padding(
@@ -225,8 +226,9 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
 
 class ExtraAdmissionPlanTable extends StatelessWidget {
   final List<ExtraAdmissionPlan> data;
+  final String yearFilter;
 
-  ExtraAdmissionPlanTable({required this.data});
+  ExtraAdmissionPlanTable({required this.data, required this.yearFilter});
 
   @override
   Widget build(BuildContext context) {
@@ -277,19 +279,20 @@ class ExtraAdmissionPlanTable extends StatelessWidget {
             ],
             selected: false,
             onSelectChanged: (isSelected) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => ExtraAdmissionPlanCourse(
-              //            yearFilter: widget.yearFilter,
-              //            degree: data.course.degree,
-              //           //  detail: data.course.detail,
-              //            faculty: data.course.faculty,
-              //            facultyFilter: data.course.faculty,
-              //            major: data.course.major,
-
-              //           )),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ExtraAdmissionPlanCourse(
+                          eapId: data.id,
+                          qty: data.qty,
+                          yearFilter: data.year,
+                          degree: data.course.degree,
+                          detail: data.course.detail,
+                          faculty: data.course.faculty,
+                          facultyFilter: data.course.faculty,
+                          major: data.course.major,
+                        )),
+              );
             },
           );
         }).toList(),

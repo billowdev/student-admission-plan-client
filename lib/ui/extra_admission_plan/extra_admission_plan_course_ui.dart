@@ -9,20 +9,24 @@ import '../../../common/widgets/drawer.widget.dart';
 import 'edit_extra_admission_plan_course_ui.dart';
 
 class ExtraAdmissionPlanCourse extends StatefulWidget {
-  final ExtraAdmissionPlanArrayPayload detail;
+  final String eapId;
+  final String detail;
   final String yearFilter;
   final String facultyFilter;
   final String major;
   final String degree;
   final String faculty;
+  final int qty;
   const ExtraAdmissionPlanCourse({
     super.key,
     required this.detail,
+    required this.qty,
     required this.major,
     required this.degree,
     required this.faculty,
     required this.yearFilter,
     required this.facultyFilter,
+    required this.eapId,
   });
   @override
   State<ExtraAdmissionPlanCourse> createState() =>
@@ -33,9 +37,11 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
   late String _major;
   late String _degree;
   late String _faculty;
+  late String _detail;
+  late String _eapId;
+
   late int _qty;
   late String _year;
-  late ExtraAdmissionPlanArrayPayload _allDetail;
 
   late String token = "";
   // final AuthService _authService = AuthService();
@@ -44,9 +50,10 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
   void initState() {
     super.initState();
     setState(() {
-      _allDetail = widget.detail;
+      _eapId = widget.eapId;
+      _detail = widget.detail;
       _year = widget.yearFilter;
-      _qty = widget.detail.qty!;
+      _qty = widget.qty;
       _major = widget.major;
       _degree = widget.degree;
       _faculty = widget.faculty;
@@ -117,10 +124,12 @@ class ExtraAdmissionPlanCourseState extends State<ExtraAdmissionPlanCourse> {
                           MaterialPageRoute(
                             builder: (context) =>
                                 EditExtraAdmissionPlanCourseScreen(
+                              eapId: _eapId,
                               major: _major,
                               degree: _degree,
                               faculty: _faculty,
-                              detail: _allDetail,
+                              detail: _detail,
+                              qty: _qty,
                               facultyFilter: widget.facultyFilter,
                               yearFilter: widget.yearFilter,
                             ),

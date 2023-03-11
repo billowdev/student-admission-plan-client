@@ -141,7 +141,9 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ExtraAdmissionPlanCourse(
-                                    detail: data,
+                                    eapId: "${data.id}",
+                                    detail: "${data.course?.detail}",
+                                    qty: data.qty!,
                                     major: "${data.course?.major}",
                                     degree: "${data.course?.degree}",
                                     faculty: "${data.course?.faculty}",

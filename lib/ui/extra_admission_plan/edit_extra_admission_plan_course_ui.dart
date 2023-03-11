@@ -9,8 +9,10 @@ import '../../common/widgets/drawer.widget.dart';
 import 'extra_admission_plan_faculty_ui.dart';
 
 class EditExtraAdmissionPlanCourseScreen extends StatefulWidget {
-  final ExtraAdmissionPlanArrayPayload detail;
+  final String eapId;
+  final String detail;
   final String major;
+  final int qty;
   final String degree;
   final String faculty;
   final String facultyFilter;
@@ -22,7 +24,9 @@ class EditExtraAdmissionPlanCourseScreen extends StatefulWidget {
       required this.degree,
       required this.faculty,
       required this.facultyFilter,
-      required this.yearFilter});
+      required this.yearFilter,
+      required this.qty,
+      required this.eapId});
 
   @override
   _EditExtraAdmissionPlanCourseScreenState createState() =>
@@ -34,6 +38,7 @@ class _EditExtraAdmissionPlanCourseScreenState
   final _formKey = GlobalKey<FormState>();
   late String _major;
   late String _degree;
+
   late String _faculty;
   late String _detail;
 
@@ -46,8 +51,8 @@ class _EditExtraAdmissionPlanCourseScreenState
   @override
   void initState() {
     super.initState();
-    _qty = widget.detail.qty!;
-    _year = widget.detail.year!;
+    _qty = widget.qty;
+    _year = widget.yearFilter;
 
     _faculty = widget.faculty;
     _degree = widget.degree;
@@ -67,8 +72,7 @@ class _EditExtraAdmissionPlanCourseScreenState
   Future<void> _updateExtraAdmissionPlan() async {
     if (_formKey.currentState!.validate()) {
       try {
-        print(widget.detail.id);
-        final url = Uri.http(BASEURL, "/api/v1/eap/update/${widget.detail.id}");
+        final url = Uri.http(BASEURL, "/api/v1/eap/update/${widget.eapId}");
         final fdata = {
           'qty': _qty,
           'year': _year,
@@ -91,7 +95,7 @@ class _EditExtraAdmissionPlanCourseScreenState
   }
 
   Future<void> _deleteExtraAdmissionPlan() async {
-    final url = Uri.http(BASEURL, "/eap/delete/${widget.detail.id}");
+    final url = Uri.http(BASEURL, "/eap/delete/${widget.eapId}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 204) {
