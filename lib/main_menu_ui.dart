@@ -75,7 +75,7 @@ class _MainMenuState extends State<MainMenu> {
               leadingIcon: Icon(Icons.edit_document),
             ),
             MainMenuWidget(
-              menuName: 'แผนการรับนักศึกษาภาคปกติ',
+              menuName: 'ภาคปกติ',
               routeScreen: AdmissionPlanMenuScreen(
                 educationYearList: _yearList,
               ),
@@ -88,17 +88,17 @@ class _MainMenuState extends State<MainMenu> {
               ),
               leadingIcon: const Icon(Icons.bookmark),
             ),
-            MainMenuWidget(
-              menuName: 'รอบโควตาปีการศึกษา $_latestYear',
-              routeScreen: AdmissionPlanMenuScreen(
-                educationYearList: _yearList,
-              ),
-              leadingIcon: const Icon(Icons.bookmark),
-            ),
-            MainMenuWidget(
+            // MainMenuWidget(
+            //   menuName: 'รอบโควตาปีการศึกษา $_latestYear',
+            //   routeScreen: AdmissionPlanMenuScreen(
+            //     educationYearList: _yearList,
+            //   ),
+            //   leadingIcon: const Icon(Icons.bookmark),
+            // ),
+            const MainMenuWidget(
               menuName: 'ผู้รับผิดชอบโควตา',
               routeScreen: AllResponseibleQuotaPersonScreen(),
-              leadingIcon: const Icon(Icons.supervisor_account),
+              leadingIcon: Icon(Icons.supervisor_account),
             ),
             MainMenuWidget(
               menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
