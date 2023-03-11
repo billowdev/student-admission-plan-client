@@ -98,6 +98,13 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
             ),
           ),
           FacultyWidget(
+              facultyName: 'สรุปแผนทุกรอบ',
+              logoName: 'Logo.png',
+              routeScreen: AdmissionPlanFaculty(
+                facultyFilter: 'คณะวิทยาศาสตร์และเทคโนโลยี',
+                yearFilter: _selectedYear,
+              )),
+          FacultyWidget(
               facultyName: 'คณะวิทยาศาสตร์และเทคโนโลยี',
               logoName: 'logo_sci.jpg',
               routeScreen: AdmissionPlanFaculty(
