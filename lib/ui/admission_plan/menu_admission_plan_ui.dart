@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/services/admission_plan_service.dart';
+import 'package:project/ui/admission_plan/summary_admission_plan_ui.dart';
 import './faculty/all_faculty_admission_plan_ui.dart';
 import 'dart:core';
 
@@ -100,8 +101,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
           FacultyWidget(
               facultyName: 'สรุปแผนทุกรอบ',
               logoName: 'Logo.png',
-              routeScreen: AdmissionPlanFaculty(
-                facultyFilter: 'คณะวิทยาศาสตร์และเทคโนโลยี',
+              routeScreen: SummaryAdmissionPlan(
                 yearFilter: _selectedYear,
               )),
           FacultyWidget(
