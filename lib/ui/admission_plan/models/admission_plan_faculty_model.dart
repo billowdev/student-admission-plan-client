@@ -1,10 +1,12 @@
-class AdmssionPlanFacultyModel {
+import 'package:project/ui/admission_plan/models/group_by_faculty_model.dart';
+
+class AdmissionPlanFacultyModel {
   String? message;
   List<AdmissionPlanFacultyPayload>? payload;
 
-  AdmssionPlanFacultyModel({this.message, this.payload});
+  AdmissionPlanFacultyModel({this.message, this.payload});
 
-  AdmssionPlanFacultyModel.fromJson(Map<String, dynamic> json) {
+  AdmissionPlanFacultyModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['payload'] != null) {
       payload = <AdmissionPlanFacultyPayload>[];

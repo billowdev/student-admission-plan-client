@@ -6,6 +6,7 @@ import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
+import '../models/group_by_faculty_model.dart';
 
 class AdmissionPlanFacultyDetail extends StatefulWidget {
   final AdmissionPlanFacultyPayload detail;

@@ -36,6 +36,8 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
   ];
   late Map<String, List<ExtraAdmissionPlan>> extraAdmissionPlanData = {};
 
+
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +81,14 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
   Map<String, int> facultySums = {};
   int allSums = 0;
 
+  @override
+  void dispose() {
+    extraAdmissionPlanData.clear();
+    facultyPlans.clear();
+    facultySums.clear();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     extraAdmissionPlanData.forEach((faculty, plans) {

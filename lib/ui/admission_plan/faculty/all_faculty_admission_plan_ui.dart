@@ -38,11 +38,7 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
         }));
   }
 
-  @override
-  void dispose() {
-    admssionPlanData.clear();
-    super.dispose();
-  }
+
 
   _getAdmissionPlan() async {
     var queryParam = {"year": widget.yearFilter.toString()};
@@ -55,13 +51,19 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
     // final url = Uri.http('localhost:5000', '/courses/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      AdmssionPlanFacultyModel resp =
-          AdmssionPlanFacultyModel.fromJson(jsonDecode(response.body));
+      AdmissionPlanFacultyModel resp =
+          AdmissionPlanFacultyModel.fromJson(jsonDecode(response.body));
 
       setState(() {
         admssionPlanData = resp.payload!;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    admssionPlanData.clear();
+    super.dispose();
   }
 
   @override

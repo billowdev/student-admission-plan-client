@@ -3,14 +3,15 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/common/utils/local_storage_util.dart';
+import 'package:project/ui/admission_plan/faculty/all_faculty_admission_plan_ui.dart';
 import 'package:project/ui/admission_plan/models/group_by_faculty_model.dart';
+import 'package:project/ui/admission_plan/summary_quota_admission_plan_ui.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
-import '../models/admission_plan_faculty_model.dart';
-import 'all_faculty_admission_plan_ui.dart';
+import 'faculty/edit_course_admission_plan_ui.dart';
 
-class EditAdmissionPlanDetailScreen extends StatefulWidget {
-  final AdmissionPlanFacultyPayload detail;
+class EditSummaryQuotaAdmissionPlanDetailScreen extends StatefulWidget {
+  final AdmissionPlan detail;
   final String admissionPlanId;
   final String major;
   final String degree;
@@ -18,8 +19,8 @@ class EditAdmissionPlanDetailScreen extends StatefulWidget {
   final String year;
   final String facultyFilter;
   final String yearFilter;
-  
-  const EditAdmissionPlanDetailScreen(
+
+  const EditSummaryQuotaAdmissionPlanDetailScreen(
       {super.key,
       required this.detail,
       required this.major,
@@ -31,12 +32,12 @@ class EditAdmissionPlanDetailScreen extends StatefulWidget {
       required this.yearFilter});
 
   @override
-  _EditAdmissionPlanDetailScreenState createState() =>
-      _EditAdmissionPlanDetailScreenState();
+  _EditSummaryQuotaAdmissionPlanDetailScreenState createState() =>
+      _EditSummaryQuotaAdmissionPlanDetailScreenState();
 }
 
-class _EditAdmissionPlanDetailScreenState
-    extends State<EditAdmissionPlanDetailScreen> {
+class _EditSummaryQuotaAdmissionPlanDetailScreenState
+    extends State<EditSummaryQuotaAdmissionPlanDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   late String _token;
@@ -86,66 +87,66 @@ class _EditAdmissionPlanDetailScreenState
     _faculty = widget.faculty;
     _year = widget.year;
 
-    _quotaStatus = widget.detail.quotaStatus!;
-    _studyGroup = widget.detail.studyGroup!;
+    _quotaStatus = widget.detail.quotaStatus;
+    _studyGroup = widget.detail.studyGroup;
 
     // ========================== quota ==========================
 
     if (widget.detail.quotaSpecificSubject == "") {
       _quotaSpecificSubject = "-";
     } else {
-      _quotaSpecificSubject = widget.detail.quotaSpecificSubject!;
+      _quotaSpecificSubject = widget.detail.quotaSpecificSubject;
     }
 
-    _quotaGoodStudyQty = widget.detail.quotaGoodStudyQty ?? 0;
-    _quotaGoodPersonQty = widget.detail.quotaGoodPersonQty ?? 0;
-    _quotaGoodActivityIMQty = widget.detail.quotaGoodActivityIMQty ?? 0;
-    _quotaGoodActivityLIQty = widget.detail.quotaGoodActivityLIQty ?? 0;
-    _quotaGoodActivitySDDQty = widget.detail.quotaGoodActivitySDDQty ?? 0;
-    _quotaGoodSportQty = widget.detail.quotaGoodSportQty ?? 0;
+    _quotaGoodStudyQty = widget.detail.quotaGoodStudyQty;
+    _quotaGoodPersonQty = widget.detail.quotaGoodPersonQty;
+    _quotaGoodActivityIMQty = widget.detail.quotaGoodActivityIMQty;
+    _quotaGoodActivityLIQty = widget.detail.quotaGoodActivityLIQty;
+    _quotaGoodActivitySDDQty = widget.detail.quotaGoodActivitySDDQty;
+    _quotaGoodSportQty = widget.detail.quotaGoodSportQty;
 
     if (widget.detail.quotaDetail != "") {
-      _quotaDetail = widget.detail.quotaDetail!;
+      _quotaDetail = widget.detail.quotaDetail;
     } else {
       _quotaDetail = "-";
     }
 
     // ========================== direct ==========================
-    _directStatus = widget.detail.directStatus!;
+    _directStatus = widget.detail.directStatus;
 
     if (widget.detail.directSpecificSubject == "") {
       _directSpecificSubject = "-";
     } else {
-      _directSpecificSubject = widget.detail.directSpecificSubject!;
+      _directSpecificSubject = widget.detail.directSpecificSubject;
     }
 
     if (widget.detail.directQty != 0) {
-      _directQty = widget.detail.directQty!;
+      _directQty = widget.detail.directQty;
     } else {
       _directQty = 0;
     }
     if (widget.detail.directDetail != "") {
-      _directDetail = widget.detail.directDetail!;
+      _directDetail = widget.detail.directDetail;
     } else {
       _directDetail = "-";
     }
 
     // ========================== cooperation ==========================
-    _cooperationStatus = widget.detail.cooperationStatus!;
+    _cooperationStatus = widget.detail.cooperationStatus;
 
     if (widget.detail.cooperationSpecificSubject == "") {
       _cooperationSpecificSubject = "-";
     } else {
-      _cooperationSpecificSubject = widget.detail.cooperationSpecificSubject!;
+      _cooperationSpecificSubject = widget.detail.cooperationSpecificSubject;
     }
 
     if (widget.detail.cooperationQty != 0) {
-      _cooperationQty = widget.detail.cooperationQty!;
+      _cooperationQty = widget.detail.cooperationQty;
     } else {
       _cooperationQty = 0;
     }
     if (widget.detail.cooperationDetail != "") {
-      _cooperationDetail = widget.detail.cooperationDetail!;
+      _cooperationDetail = widget.detail.cooperationDetail;
     } else {
       _cooperationDetail = "-";
     }
@@ -162,8 +163,7 @@ class _EditAdmissionPlanDetailScreenState
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AdmissionPlanFaculty(
-                  facultyFilter: widget.faculty,
+            builder: (context) => SummaryQuotaAdmissionPlan(
                   yearFilter: widget.yearFilter,
                 )));
   }
@@ -642,7 +642,14 @@ class _EditAdmissionPlanDetailScreenState
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SummaryQuotaAdmissionPlan(
+                                              yearFilter: widget.yearFilter,
+                                            )));
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
@@ -689,131 +696,5 @@ class _EditAdmissionPlanDetailScreenState
         ),
       ),
     ]);
-  }
-}
-
-class AdmissionInputFields extends StatefulWidget {
-  final String specificSubject;
-  final int qty;
-  final String detail;
-  final bool status;
-  final Function(bool) onStatusChanged;
-  final Function(String) onSpecificSubjectChanged;
-  final Function(int) onQtyChanged;
-  final Function(String) onDetailChanged;
-
-  AdmissionInputFields({
-    required this.specificSubject,
-    required this.qty,
-    required this.detail,
-    required this.status,
-    required this.onStatusChanged,
-    required this.onSpecificSubjectChanged,
-    required this.onQtyChanged,
-    required this.onDetailChanged,
-  });
-
-  @override
-  _AdmissionInputFieldsState createState() => _AdmissionInputFieldsState();
-}
-
-class _AdmissionInputFieldsState extends State<AdmissionInputFields> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: Table(
-            children: [
-              TableRow(
-                children: [
-                  const TableCell(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                      child: Text(
-                        "สถานะ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  TableCell(
-                    child: Switch(
-                      value: widget.status,
-                      onChanged: widget.onStatusChanged,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Visibility(
-          visible: widget.status,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'วิชาเฉพาะ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextFormField(
-                initialValue: widget.specificSubject,
-                onChanged: widget.onSpecificSubjectChanged,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    widget.onSpecificSubjectChanged("-");
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'จำนวนที่รับ',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextFormField(
-                initialValue: widget.qty.toString(),
-                onChanged: (value) {
-                  widget.onQtyChanged(int.tryParse(value) ?? 0);
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกจำนวนที่รับ';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'รายละเอียด',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextFormField(
-                initialValue: widget.detail,
-                onChanged: widget.onDetailChanged,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกรายละเอียด';
-                  }
-                  return null;
-                },
-                maxLines: 5,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }

@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
-import 'package:project/ui/course/add_course_ui.dart';
 import 'package:project/ui/responsible_quota_person/add_rqp_ui.dart';
 import 'package:project/ui/responsible_quota_person/detail_rqp_ui.dart';
-import 'package:project/ui/responsible_quota_person/models/rqp_model.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/search_bar.widget.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +22,7 @@ class AllResponseibleQuotaPersonScreen extends StatefulWidget {
 class _AllResponseibleQuotaPersonScreenState
     extends State<AllResponseibleQuotaPersonScreen> {
   late String token = "";
-  List<RQPArrayPayload> course = [];
+  List<RQPArrayPayload> rqp = [];
   @override
   void initState() {
     super.initState();
@@ -39,10 +37,9 @@ class _AllResponseibleQuotaPersonScreenState
     final url = Uri.http(BASEURL, '$ENDPOINT/rqp/get-all');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      RQPArrayModel courseData =
-          RQPArrayModel.fromJson(jsonDecode(response.body));
+      RQPArrayModel rqpData = RQPArrayModel.fromJson(jsonDecode(response.body));
       setState(() {
-        course = courseData.payload!;
+        rqp = rqpData.payload!;
       });
     }
   }
@@ -53,13 +50,18 @@ class _AllResponseibleQuotaPersonScreenState
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      RQPArrayModel courseData =
-          RQPArrayModel.fromJson(jsonDecode(response.body));
+      RQPArrayModel rqpData = RQPArrayModel.fromJson(jsonDecode(response.body));
 
       setState(() {
-        course = courseData.payload!;
+        rqp = rqpData.payload!;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    rqp.clear();
+    super.dispose();
   }
 
   @override
@@ -127,7 +129,7 @@ class _AllResponseibleQuotaPersonScreenState
                       ),
                     )),
                   ],
-                  rows: course.map((data) {
+                  rows: rqp.map((data) {
                     return DataRow(
                       cells: <DataCell>[
                         DataCell(Text("${data.year}")),

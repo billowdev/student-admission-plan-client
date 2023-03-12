@@ -79,6 +79,8 @@ class AdmissionPlan {
       course: Course.fromJson(json['Course']),
     );
   }
+
+  toJson() {}
 }
 
 class Course {

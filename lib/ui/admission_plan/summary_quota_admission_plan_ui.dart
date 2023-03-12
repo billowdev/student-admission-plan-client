@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/ui/admission_plan/widgets/group_by_faculty_ap_table.dart';
 import '../../common/utils/local_storage_util.dart';
 
 import 'package:http/http.dart' as http;
@@ -11,15 +12,16 @@ import 'package:http/http.dart' as http;
 import 'models/exists_faculty_admission_plan_model.dart';
 import 'models/group_by_faculty_model.dart';
 
-class SummaryAdmissionPlan extends StatefulWidget {
-  final yearFilter;
-  const SummaryAdmissionPlan({super.key, this.yearFilter});
+class SummaryQuotaAdmissionPlan extends StatefulWidget {
+  final String yearFilter;
+  const SummaryQuotaAdmissionPlan({super.key, required this.yearFilter});
 
   @override
-  State<SummaryAdmissionPlan> createState() => _SummaryAdmissionPlanState();
+  State<SummaryQuotaAdmissionPlan> createState() =>
+      _SummaryQuotaAdmissionPlanState();
 }
 
-class _SummaryAdmissionPlanState extends State<SummaryAdmissionPlan> {
+class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
   late String token = "";
   late List<String> existsFaculty = [
     "คณะวิทยาศาสตร์และเทคโนโลยี",
@@ -75,26 +77,16 @@ class _SummaryAdmissionPlanState extends State<SummaryAdmissionPlan> {
   int allSums = 0;
 
   @override
-  Widget build(BuildContext context) {
-    // gropByFacultyAdmissionPlanData.forEach((faculty, plans) {
-    //   facultyPlans[faculty] = plans;
+  void dispose() {
+    gropByFacultyAdmissionPlanData.clear();
+    facultyPlans.clear();
+    facultySums.clear();
+  
+    super.dispose();
+  }
 
-    //   int? facultySum = plans.fold<int?>(
-    //     null,
-    //     (sum, plan) =>
-    //         (sum ?? 0) +
-    //         plan.quotaGoodStudyQty! +
-    //         plan.quotaGoodPersonQty! +
-    //         plan.quotaGoodSportQty! +
-    //         plan.quotaGoodActivityIMQty! +
-    //         plan.quotaGoodActivityLIQty! +
-    //         plan.quotaGoodActivitySDDQty!,
-    //   );
-    //   if (facultySum != null) {
-    //     facultySums[faculty] = facultySum;
-    //     allSums += facultySum;
-    //   }
-    // });
+  @override
+  Widget build(BuildContext context) {
     gropByFacultyAdmissionPlanData.forEach((faculty, plans) {
       facultyPlans[faculty] = plans;
       facultySums[faculty] = plans.fold<int>(
@@ -119,9 +111,9 @@ class _SummaryAdmissionPlanState extends State<SummaryAdmissionPlan> {
               const Padding(padding: EdgeInsets.all(8.0)),
               Center(
                 child: RichText(
-                  text: const TextSpan(
-                    text: "จำนวนที่รับนักศึกษาภาคพิเศษ (กศ.ป.)",
-                    style: TextStyle(
+                  text: TextSpan(
+                    text: "สรุปรอบโควตา ปี${widget.yearFilter.toString()}",
+                    style: const TextStyle(
                       fontSize: 22,
                       color: Colors.black,
                       fontFamily: 'PrintAble4U',
@@ -238,88 +230,10 @@ class _SummaryAdmissionPlanState extends State<SummaryAdmissionPlan> {
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
           child: Text(
             content,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       ),
     ]);
-  }
-}
-
-class gropByFacultyAdmissionPlanTable extends StatelessWidget {
-  final List<AdmissionPlan> data;
-  final String yearFilter;
-
-  gropByFacultyAdmissionPlanTable(
-      {required this.data, required this.yearFilter});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        showCheckboxColumn: false,
-        sortAscending: true,
-        columns: const <DataColumn>[
-          DataColumn(
-            label: IgnorePointer(
-              ignoring: true,
-              child: Text(
-                'สาขา',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-              label: Text(
-            'หลักสูตร',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.green,
-            ),
-          )),
-          DataColumn(
-              label: Text(
-            'จำนวนที่รับ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.green,
-            ),
-          )),
-        ],
-        rows: data.map((data) {
-          return DataRow(
-            cells: <DataCell>[
-              DataCell(Text(data.course.major)),
-              DataCell(Text(data.course.degree)),
-              DataCell(Text("${data.quotaGoodStudyQty}")),
-            ],
-            selected: false,
-            onSelectChanged: (isSelected) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => gropByFacultyAdmissionPlanCourse(
-              //             eapId: data.id,
-              //             qty: data.qty,
-              //             yearFilter: data.year,
-              //             degree: data.course.degree,
-              //             detail: data.course.detail,
-              //             faculty: data.course.faculty,
-              //             facultyFilter: data.course.faculty,
-              //             major: data.course.major,
-              //           )),
-              // );
-            },
-          );
-        }).toList(),
-      ),
-    );
   }
 }
