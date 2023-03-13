@@ -67,11 +67,10 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
     _quota = widget.quota;
   }
 
-
   Future<void> _updateRPQ() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url = Uri.http(BASEURL, "/api/v1/rqp/update/${widget.id}");
+        final url = Uri.http(BASEURL, "$ENDPOINT/rqp/update/${widget.id}");
         final fdata = {
           'year': _year,
           'name': _name,
@@ -111,7 +110,7 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
   }
 
   Future<void> _deleteRQP() async {
-    final url = Uri.http(BASEURL, "/rqp/delete/${widget.id}");
+    final url = Uri.http(BASEURL, "$ENDPOINT/rqp/delete/${widget.id}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {

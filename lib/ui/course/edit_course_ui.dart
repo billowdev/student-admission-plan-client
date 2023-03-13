@@ -43,7 +43,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     if (_formKey.currentState!.validate()) {
       try {
         final url =
-            Uri.http(BASEURL, "/api/v1/courses/update/${widget.detail.id}");
+            Uri.http(BASEURL, "$ENDPOINT/courses/update/${widget.detail.id}");
         final fdata = {
           'major': _major,
           'degree': _degree,
@@ -97,7 +97,8 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
   // }
 
   Future<void> _deleteCourse() async {
-    final url = Uri.http(BASEURL, "/courses/delete/${widget.detail.id}");
+    final url =
+        Uri.http(BASEURL, "$ENDPOINT/courses/delete/${widget.detail.id}");
     final header = {'Content-Type': 'application/json'};
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 200) {

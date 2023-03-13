@@ -44,6 +44,8 @@ dependencies:
   equatable: ^2.0.5
   bloc: ^8.1.1
   flutter_secure_storage: ^8.0.0
+
+
   
 
 dev_dependencies:
@@ -56,6 +58,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: "^0.12.0"
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +78,10 @@ flutter:
     - .env
     - assets/images/
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/ico/ico.ico"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

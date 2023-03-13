@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/common/constants/constants.dart';
 
 class AdmissionPlanService {
-  static String baseUrl = dotenv.env['API_URL'].toString();
-
   void throwForStatus(int statusCode) {
     if (statusCode != 200) {
       throw Exception('Failed to load data, status code: $statusCode');
@@ -12,7 +11,7 @@ class AdmissionPlanService {
   }
 
   Future<List<String>> getExistsYear() async {
-    final url = Uri.http(baseUrl, '/admission-plans/get-exists-year');
+    final url = Uri.http(BASEURL, '$ENDPOINT/admission-plans/get-exists-year');
 
     final response = await http.get(url);
     throwForStatus(response.statusCode);
