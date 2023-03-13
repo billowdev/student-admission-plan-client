@@ -1,3 +1,25 @@
+# access the internet
+## add permission
+
+<uses-permission android:name="android.permission.INTERNET" />
+
+## path of AndroidManifest.xml
+<your_flutter_project>/android/app/src/main/AndroidManifest.xml
+
+## change icon
+flutter pub run flutter_launcher_icons:main
+
+
+# build
+flutter build apk --release
+or
+flutter build apk --release --build-name=1.0.0 --build-number=1
+
+
+
+### apk path
+<your_project>/build/app/outputs/flutter-apk-app-release.apk
+
 # project
 
 A new Flutter project.

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:project/ui/admission_plan/faculty/all_faculty_admission_plan_ui.dart';
 import 'ui/auth/login_ui.dart';
 import 'ui/course/all_course_ui.dart';
 import 'main_menu_ui.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
+
   runApp(const StudentAdmssionPlanAppication());
 }
 
@@ -24,6 +24,7 @@ class StudentAdmssionPlanAppication extends StatelessWidget {
     return MaterialApp(
       // home: MainMenu(),
       //
+      debugShowCheckedModeBanner: false, // Disable the debug banner
       title: "SAPMS",
       initialRoute: '/',
       routes: {
@@ -32,7 +33,7 @@ class StudentAdmssionPlanAppication extends StatelessWidget {
         // ignore: prefer_const_constructors
         '/home': (context) => MainMenu(), // The home page route
         '/all-course': (context) => const AllCourseScreen(),
-  
+
         '/login': (context) => const LoginScreen(), // The home page route
       },
     );

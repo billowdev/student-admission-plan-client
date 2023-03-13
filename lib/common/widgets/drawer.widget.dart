@@ -78,9 +78,13 @@ class _DrawerMenuWidgetState extends State<DrawerMenuWidget> {
         }));
   }
 
-  // void _onItemTap(int index) {
-  //   setState(() {});
-  // }
+  @override
+  void dispose() {
+    _apYearList.clear();
+    _eapYearList.clear();
+
+    super.dispose();
+  }
 
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();

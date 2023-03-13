@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/auth/models/user.model.dart';
@@ -23,7 +24,6 @@ class _handleLoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  static String apiUrl = dotenv.env['API_URL'].toString();
   bool _isLoading = false;
 
   String _getRoleFromToken(String token) {
@@ -49,7 +49,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
   }
 
   _handleLogin() async {
-    final urlLogin = Uri.http(apiUrl, '/users/login');
+    final urlLogin = Uri.http(BASEURL, '$ENDPOINT/users/login');
     final header = {'Content-Type': 'application/json'};
 
     setState(() {
@@ -82,6 +82,7 @@ class _handleLoginScreenState extends State<LoginScreen> {
         showErrorMessage(context, 'เข้าสู่ระบบไม่สำเร็จ ชื่อผู้ใช้ไม่ถูกต้อง');
       }
     } catch (e) {
+      print(e);
       setState(() {
         _isLoading = false;
       });

@@ -19,7 +19,6 @@ class AllCourseScreen extends StatefulWidget {
 }
 
 class _AllCourseScreenState extends State<AllCourseScreen> {
-
   late String token = "";
   List<CoursePayload> course = [];
   @override
@@ -45,6 +44,7 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
 
   _getCoursesKeyword(String? keyword) async {
     final queryParam = {"keyword": keyword};
+
     Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
 
     final response = await http.get(url);
