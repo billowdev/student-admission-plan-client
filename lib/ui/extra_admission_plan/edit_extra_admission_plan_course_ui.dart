@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/common/utils/local_storage_util.dart';
 import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/course/models/course.model.dart';
 import 'package:project/ui/extra_admission_plan/models/extra_admission_plan_array.dart';
@@ -73,12 +74,16 @@ class _EditExtraAdmissionPlanCourseScreenState
   Future<void> _updateExtraAdmissionPlan() async {
     if (_formKey.currentState!.validate()) {
       try {
+        final token = await LocalStorageUtil.getItem('token');
+        final header = {
+          'Authorization': 'Bearer ${token.toString()}',
+          'Content-Type': 'application/json',
+        };
         final url = Uri.http(BASEURL, "/api/v1/eap/update/${widget.eapId}");
         final fdata = {
           'qty': _qty,
           'year': _year,
         };
-        final header = {'Content-Type': 'application/json'};
         await client.patch(url, headers: header, body: jsonEncode(fdata));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('อัปเดตข้อมูลสำเร็จ'),
@@ -97,7 +102,11 @@ class _EditExtraAdmissionPlanCourseScreenState
 
   Future<void> _deleteExtraAdmissionPlan() async {
     final url = Uri.http(BASEURL, "/eap/delete/${widget.eapId}");
-    final header = {'Content-Type': 'application/json'};
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final response = await client.delete(url, headers: header);
     if (response.statusCode == 204) {
       // ignore: use_build_context_synchronously
