@@ -36,7 +36,12 @@ class _ExtraAdmissionPlanFacultyState extends State<ExtraAdmissionPlanFaculty> {
         BASEURL,
         '$ENDPOINT/extra-admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
         queryParam);
-    final response = await http.get(url);
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       ExtraAdmissionPlanArray resp =
           ExtraAdmissionPlanArray.fromJson(jsonDecode(response.body));
