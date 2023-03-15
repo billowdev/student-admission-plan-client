@@ -69,10 +69,15 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
     setState(() {
       _isLoading = true;
     });
-    var queryParams = {'year': widget.yearFilter};
+    final queryParams = {'year': widget.yearFilter};
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final url =
         Uri.http(BASEURL, '$ENDPOINT/ap/get-group-by-faculty', queryParams);
-    final response = await http.get(url);
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       AdmissionPlanGroupByFacultyPayload groupByFacultyAdmissionPlan =
           AdmissionPlanGroupByFacultyPayload.fromJson(
