@@ -45,10 +45,14 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
 
   _getCoursesKeyword(String? keyword) async {
     final queryParam = {"keyword": keyword};
-
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     Uri url = Uri.http(BASEURL, '$ENDPOINT/courses/get-all', queryParam);
 
-    final response = await http.get(url);
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       CourseModel courseData = CourseModel.fromJson(jsonDecode(response.body));
 
