@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/course/models/course.model.dart';
 import '../../common/constants/constants.dart';
 import '../../common/widgets/appbar.widget.dart';
@@ -66,7 +67,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
       }
     }
   }
-  
+
   Future<void> _deleteCourse() async {
     final url =
         Uri.http(BASEURL, "$ENDPOINT/courses/delete/${widget.detail.id}");
@@ -186,38 +187,24 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                              onPressed: _deleteCourse,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Row(
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  const Icon(Icons.delete),
-                                  const SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  const Text('ลบ'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'คุณต้องการลบหรือไม่ ?',
+                              description:
+                                  'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _deleteCourse,
+                              btnColor: Colors.red,
+                              btnText: 'ลบ',
+                              btnIcon: Icons.delete,
                             ),
-                            TextButton(
-                              onPressed: _updateCourse,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.edit),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('แก้ไข'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'แก้ไขข้อมูล ?',
+                              description: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _updateCourse,
+                              btnColor: Colors.green,
+                              btnText: 'แก้ไข',
+                              btnIcon: Icons.edit,
                             ),
                             TextButton(
                               onPressed: () {
