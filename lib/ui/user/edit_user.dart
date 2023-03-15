@@ -7,6 +7,7 @@ import 'package:project/ui/user/models/user_model.dart';
 import '../../common/constants/constants.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
+import '../../common/widgets/confirm_button_widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
 class EditUserDetailScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class EditUserDetailScreen extends StatefulWidget {
 }
 
 class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   late String _id;
   late String _username;
@@ -52,7 +54,7 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
     );
   }
 
-  Future<void> _updateUser() async {
+  _updateUser() async {
     if (_formKey.currentState!.validate()) {
       try {
         final token = await LocalStorageUtil.getItem('token');
@@ -87,7 +89,43 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
     }
   }
 
-  Future<void> _deleteCourse() async {
+  _handleUpdate() => {
+        AlertDialog(
+          title: Text("update"),
+          content: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Text("test"),
+          actions: [
+            TextButton(
+              child: Text('YES'),
+              onPressed:
+                  _isLoading ? null : () async => {Navigator.of(context).pop()},
+            ),
+            TextButton(
+                child: Text('NO'),
+                onPressed:
+                    _isLoading ? null : () => {Navigator.of(context).pop()}),
+          ],
+        )
+      };
+  //   showDialog(
+  //   context: context,
+  //   builder: (BuildContext context) {
+  //     return ConfirmationDialog(
+  //       title: 'Do you want to do something?',
+  //       message: 'This action cannot be undone.',
+  //       onYes: () {
+  //         Navigator.of(context).pop(); // Close the dialog
+  //       },
+  //       onNo: () {
+  //         // Do something when user selects NO
+  //         Navigator.of(context).pop(); // Close the dialog
+  //       },
+  //     );
+  //   },
+  // );
+
+  Future<void> _deleteUser() async {
     final token = await LocalStorageUtil.getItem('token');
     final url =
         Uri.http(BASEURL, "$ENDPOINT/users/delete/${widget.userPayload.id}");
@@ -112,6 +150,16 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
       ));
     }
   }
+
+  // final updateSnackBar = SnackBar(
+  //   content: Text('คุณต้องการแก้ไขข้อมูลใช่หรือไม่ ?'),
+  //   action: SnackBarAction(
+  //     label: 'YES',
+  //     onPressed: () {
+  //       print('update');
+  //     },
+  //   ),
+  // );
 
   @override
   Widget build(BuildContext context) {
@@ -232,8 +280,20 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            ConfirmDialog(
+                              title: 'คุณต้องการลบหรือไม่ ?',
+                              description: 'คุณต้องการลบหรือไม่',
+                              onNo: () => {
+                               Navigator.of(context).pop()
+                                },
+                              onYes: () => {
+                               Navigator.of(context).pop()
+                                },
+                              btnColor: Colors.red,
+                              btnText: 'ลบ',
+                            ),
                             TextButton(
-                              onPressed: _deleteCourse,
+                              onPressed: () {},
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.red,
@@ -249,11 +309,46 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                                 ],
                               ),
                             ),
+                            // TextButton(
+                            //   onPressed:(){} ,
+                            //   style: TextButton.styleFrom(
+                            //     foregroundColor: Colors.white,
+                            //     backgroundColor: Colors.green,
+                            //   ),
+                            //   child: Row(
+                            //     children: const [
+                            //       Icon(Icons.edit),
+                            //       SizedBox(
+                            //           width:
+                            //               5), // Add some space between icon and text
+                            //       Text('แก้ไข'),
+                            //     ],
+                            //   ),
+                            // ),
                             TextButton(
-                              onPressed: _updateUser,
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Colors.green,
+                              ),
+                              onPressed: () => showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('AlertDialog Title'),
+                                  content:
+                                      const Text('AlertDialog description'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Cancel'),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
                               ),
                               child: Row(
                                 children: const [
@@ -265,6 +360,7 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                                 ],
                               ),
                             ),
+
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
