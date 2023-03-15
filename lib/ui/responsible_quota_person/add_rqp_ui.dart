@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/common/constants/constants.dart';
+import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
@@ -237,21 +238,14 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                              onPressed: _createRQP,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.add),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('เพิ่ม'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'เพิ่มข้อมูล ?',
+                              description: 'คุณต้องการเพิ่มข้อมูลใช่หรือไม่',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _createRQP,
+                              btnColor: Colors.green,
+                              btnText: 'เพิ่ม',
+                              btnIcon: Icons.add,
                             ),
                             TextButton(
                               onPressed: () {
