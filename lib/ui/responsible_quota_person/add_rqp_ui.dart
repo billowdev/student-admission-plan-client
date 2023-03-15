@@ -52,11 +52,12 @@ class _AddRQPScreenState extends State<AddRQPScreen> {
       'quota': _quota,
     };
 
-    final header = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $_token'
-    };
     try {
+      final token = await LocalStorageUtil.getItem('token');
+      final header = {
+        'Authorization': 'Bearer ${token.toString()}',
+        'Content-Type': 'application/json',
+      };
       final response =
           await client.post(url, headers: header, body: jsonEncode(data));
 

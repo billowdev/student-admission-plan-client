@@ -78,7 +78,11 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
           'phone': _phone,
           'quota': _quota,
         };
-        final header = {'Content-Type': 'application/json'};
+        final token = await LocalStorageUtil.getItem('token');
+        final header = {
+          'Authorization': 'Bearer ${token.toString()}',
+          'Content-Type': 'application/json',
+        };
         await http.patch(url, headers: header, body: jsonEncode(fdata));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('อัปเดตข้อมูลสำเร็จ'),
@@ -110,7 +114,11 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
 
   Future<void> _deleteRQP() async {
     final url = Uri.http(BASEURL, "$ENDPOINT/rqp/delete/${widget.id}");
-    final header = {'Content-Type': 'application/json'};
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final response = await http.delete(url, headers: header);
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously

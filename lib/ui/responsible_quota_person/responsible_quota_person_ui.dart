@@ -47,8 +47,12 @@ class _AllResponseibleQuotaPersonScreenState
   _getResponseibleQuotaPersonKeyword(String? keyword) async {
     final queryParam = {"keyword": keyword};
     Uri url = Uri.http(BASEURL, '$ENDPOINT/rqp/get-all', queryParam);
-
-    final response = await http.get(url);
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       RQPArrayModel rqpData = RQPArrayModel.fromJson(jsonDecode(response.body));
 
