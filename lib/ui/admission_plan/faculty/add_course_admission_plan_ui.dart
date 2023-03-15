@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
+import 'package:project/common/widgets/confirm_button_widget.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../../../common/widgets/search_bar.widget.dart';
@@ -534,21 +535,14 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                              onPressed: _addAdmissionPlan,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.edit),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('เพิ่ม'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'เพิ่มข้อมูล ?',
+                              description: 'คุณต้องการเพิ่มข้อมูลใช่หรือไม่',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _addAdmissionPlan,
+                              btnColor: Colors.green,
+                              btnText: 'เพิ่ม',
+                              btnIcon: Icons.add,
                             ),
                             TextButton(
                               onPressed: () {
