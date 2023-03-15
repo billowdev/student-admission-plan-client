@@ -45,11 +45,12 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
       'faculty': _faculty,
       'detail': _detail,
     };
-    final header = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $_token'
-    };
     try {
+      final token = await LocalStorageUtil.getItem('token');
+      final header = {
+        'Authorization': 'Bearer ${token.toString()}',
+        'Content-Type': 'application/json',
+      };
       final response =
           await client.post(url, headers: header, body: jsonEncode(data));
 
@@ -177,8 +178,7 @@ class _AddCourseScreenState extends State<AddCourseScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                         
-                             ConfirmDialog(
+                            ConfirmDialog(
                               title: 'เพิ่มข้อมูล ?',
                               description: 'คุณต้องการเพิ่มข้อมูลใช่หรือไม่',
                               onNo: () => {Navigator.of(context).pop()},
