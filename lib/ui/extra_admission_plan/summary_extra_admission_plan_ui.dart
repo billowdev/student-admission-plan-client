@@ -35,8 +35,7 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
     "คณะวิทยาการจัดการ",
   ];
   late Map<String, List<ExtraAdmissionPlan>> extraAdmissionPlanData = {};
-
-
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -50,6 +49,9 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
   }
 
   _getExistsFacultyExtraAdmissionPlan() async {
+    setState(() {
+      _isLoading = true;
+    });
     final url = Uri.http(BASEURL, '$ENDPOINT/eap/get-exists-faculty');
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -59,9 +61,15 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
         existsFaculty = existFaculty.payload!;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   _getExtraAdmissionPlanGroupByFaculty() async {
+    setState(() {
+      _isLoading = true;
+    });
     var queryParams = {'year': widget.yearFilter};
     final url =
         Uri.http(BASEURL, '$ENDPOINT/eap/get-group-by-faculty', queryParams);
@@ -75,6 +83,9 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
         extraAdmissionPlanData = extraAdmissionPlan.payload;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Map<String, List<ExtraAdmissionPlan>> facultyPlans = {};
@@ -88,7 +99,7 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
     facultySums.clear();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     extraAdmissionPlanData.forEach((faculty, plans) {
@@ -102,48 +113,19 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
         appBar: const AppBarWidget(txtTitle: 'สรุปแผนการรับนักศึกษา'),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              const Padding(padding: EdgeInsets.all(8.0)),
-              Center(
-                child: RichText(
-                  text: const TextSpan(
-                    text: "จำนวนที่รับนักศึกษาภาคพิเศษ (กศ.ป.)",
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontFamily: 'PrintAble4U',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    text: "ปีการศึกษา ${widget.yearFilter}",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontFamily: 'PrintAble4U',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              //=============================
-              Column(
-                children: existsFaculty.map((faculty) {
-                  return Column(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: _isLoading
+                ? const CircularProgressIndicator()
+                : Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
+                      const Padding(padding: EdgeInsets.all(8.0)),
+                      Center(
                         child: RichText(
-                          text: TextSpan(
-                            text: faculty,
-                            style: const TextStyle(
-                              fontSize: 20,
+                          text: const TextSpan(
+                            text: "จำนวนที่รับนักศึกษาภาคพิเศษ (กศ.ป.)",
+                            style: TextStyle(
+                              fontSize: 22,
                               color: Colors.black,
                               fontFamily: 'PrintAble4U',
                               fontWeight: FontWeight.bold,
@@ -151,58 +133,94 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
                           ),
                         ),
                       ),
-                      ExtraAdmissionPlanTable(
-                        data: facultyPlans[faculty] ?? [],
-                        yearFilter: widget.yearFilter,
+                      Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "ปีการศึกษา ${widget.yearFilter}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontFamily: 'PrintAble4U',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      //=============================
+                      Column(
+                        children: existsFaculty.map((faculty) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: faculty,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontFamily: 'PrintAble4U',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ExtraAdmissionPlanTable(
+                                data: facultyPlans[faculty] ?? [],
+                                yearFilter: widget.yearFilter,
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Table(
+                                    children: [
+                                      _buildTableRow('$faculty รวม :',
+                                          facultySums[faculty].toString()),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
                       ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Table(
                             children: [
-                              _buildTableRow('$faculty รวม :',
-                                  facultySums[faculty].toString()),
+                              _buildTableRow(
+                                  'สรุปรวมทุกคณะ', allSums.toString()),
                             ],
                           ),
                         ),
                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Table(
-                    children: [
-                      _buildTableRow('สรุปรวมทุกคณะ', allSums.toString()),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.brown,
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(Icons.arrow_back_ios_new),
+                                SizedBox(
+                                    width:
+                                        5), // Add some space between icon and text
+                                Text('กลับ'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.brown,
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.arrow_back_ios_new),
-                        SizedBox(
-                            width: 5), // Add some space between icon and text
-                        Text('กลับ'),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            ],
           ),
         ),
         drawer: const DrawerMenuWidget(),
