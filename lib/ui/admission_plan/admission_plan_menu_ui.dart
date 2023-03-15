@@ -34,7 +34,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
+      appBar: const AppBarWidget(txtTitle: 'ระบบแผนการรับนักศึกษา'),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -80,7 +80,7 @@ class _AdmissionPlanMenuScreenState extends State<AdmissionPlanMenuScreen> {
           ],
         ),
       ),
-      drawer: DrawerMenuWidget(),
+      drawer: const DrawerMenuWidget(),
     ));
   }
 }

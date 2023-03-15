@@ -51,7 +51,7 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
           'detail': _detail,
         };
         final header = {'Content-Type': 'application/json'};
-        await client.patch(url, headers: header, body: jsonEncode(fdata));
+        await http.patch(url, headers: header, body: jsonEncode(fdata));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('อัปเดตข้อมูลสำเร็จ'),
           backgroundColor: Colors.green,
@@ -66,41 +66,12 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
       }
     }
   }
-  // Future<void> _updateCourse() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final url = Uri.http(BASEURL, "/courses/update/${widget.detail.id}");
-  //     var data = {
-  //       'major': _major,
-  //       'degree': _degree,
-  //       'faculty': _faculty,
-  //       'detail': _detail,
-  //     };
-  //     final header = {'Content-Type': 'application/json'};
-  //     final response =
-  //         await client.patch(url, headers: header, body: jsonEncode(data));
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text('อัปเดตข้อมูลสำเร็จ'),
-  //         backgroundColor: Colors.green,
-  //       ));
-  //       // Navigator.pop(context);
-  //       Navigator.pushReplacementNamed(context, '/all-course');
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //         content: Text('Failed to update course.'),
-  //         backgroundColor: Colors.red,
-  //       ));
-  //     }
-  //   }
-  // }
-
+  
   Future<void> _deleteCourse() async {
     final url =
         Uri.http(BASEURL, "$ENDPOINT/courses/delete/${widget.detail.id}");
     final header = {'Content-Type': 'application/json'};
-    final response = await client.delete(url, headers: header);
+    final response = await http.delete(url, headers: header);
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
+import 'package:project/main_menu_ui.dart';
 import 'package:project/ui/course/add_course_ui.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/search_bar.widget.dart';
@@ -168,7 +169,10 @@ class _AllCourseScreenState extends State<AllCourseScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainMenu()));
                     },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/course/models/course.model.dart';
+import 'package:project/ui/user/models/user_model.dart';
 import 'package:project/ui/user/models/user_model.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/appbar.widget.dart';
@@ -54,7 +54,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'รายละเอียดข้อมูลหลักสูตร'),
+      appBar: AppBarWidget(txtTitle: '$_name'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(

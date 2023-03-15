@@ -42,8 +42,6 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
   late String _phone = "";
   late String _quota = "";
   late String token = "";
-  // get http => null;
-  http.Client client = http.Client(); // create an instance of http client
 
   late String _selectedQuota = "good_study";
 
@@ -80,7 +78,7 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
           'quota': _quota,
         };
         final header = {'Content-Type': 'application/json'};
-        await client.patch(url, headers: header, body: jsonEncode(fdata));
+        await http.patch(url, headers: header, body: jsonEncode(fdata));
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('อัปเดตข้อมูลสำเร็จ'),
           backgroundColor: Colors.green,
@@ -112,7 +110,7 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
   Future<void> _deleteRQP() async {
     final url = Uri.http(BASEURL, "$ENDPOINT/rqp/delete/${widget.id}");
     final header = {'Content-Type': 'application/json'};
-    final response = await client.delete(url, headers: header);
+    final response = await http.delete(url, headers: header);
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

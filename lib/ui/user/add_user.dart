@@ -12,49 +12,42 @@ import '../../common/widgets/appbar.widget.dart';
 import '../../common/widgets/confirm_button_widget.dart';
 import '../../common/widgets/drawer.widget.dart';
 
-class EditUserDetailScreen extends StatefulWidget {
-  final UserPayload userPayload;
-  const EditUserDetailScreen({super.key, required this.userPayload});
+class AddUserScreen extends StatefulWidget {
+  const AddUserScreen({super.key});
 
   @override
-  _EditUserDetailScreenState createState() => _EditUserDetailScreenState();
+  _AddUserScreenState createState() => _AddUserScreenState();
 }
 
-class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
+class _AddUserScreenState extends State<AddUserScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _selectedRole;
   List<String> roleEnum = ['user', 'admin'];
-  late String _id;
-  late String _username;
-  late String _email;
-  late String _name;
-  late String _surname;
-  late String _phone;
-  late String _role;
-  late String _faculty;
+  late String _username = "";
+  late String _email = "";
+  late String _name = "-";
+  late String _surname = "-";
+  late String _phone = "-";
+  late String _role = "user";
+  late String _faculty = "";
+  late String _password_confirmed = "";
+  late String _password = "";
 
   @override
   void initState() {
     super.initState();
-
-    _id = widget.userPayload.id ?? "";
-    _username = widget.userPayload.username ?? "";
-    _email = widget.userPayload.email ?? "";
-    if (widget.userPayload.name != null) {
-      _name = widget.userPayload.name!;
-    } else {
-      _name = "";
-    }
-    if (widget.userPayload.surname != null) {
-      _surname = widget.userPayload.surname!;
-    } else {
-      _name = "";
-    }
-
-    _phone = widget.userPayload.phone ?? "";
-    _role = widget.userPayload.role ?? "";
-    _faculty = widget.userPayload.faculty ?? "";
-    _selectedRole = widget.userPayload.role ?? "";
+    setState(() {
+      _username = "";
+      _email = "";
+      _name = "-";
+      _surname = "-";
+      _phone = "-";
+      _role = "user";
+      _faculty = "-";
+      _selectedRole = "user";
+      _password_confirmed = "";
+      _password = "";
+    });
   }
 
   void _navigateToAllUser() {
@@ -64,11 +57,10 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
     );
   }
 
-  _updateUser() async {
+  _addUser() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final url =
-            Uri.http(BASEURL, "$ENDPOINT/users/update/${_id.toString()}");
+        final url = Uri.http(BASEURL, "$ENDPOINT/users/create");
         final fdata = {
           'username': _username,
           'email': _email,
@@ -76,59 +68,34 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
           'surname': _surname,
           'phone': _phone,
           'role': _role,
+          'password': _password,
           'faculty': _faculty,
         };
         final token = await LocalStorageUtil.getItem('token');
-
-        final update = await http.patch(url, body: jsonEncode(fdata), headers: {
+        print(fdata);
+        final response =
+            await http.post(url, body: jsonEncode(fdata), headers: {
           'Authorization': 'Bearer ${token.toString()}',
           'Content-Type': 'application/json',
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('อัปเดตข้อมูลสำเร็จ'),
-          backgroundColor: Colors.green,
-        ));
-        UserModel data = UserModel.fromJson(jsonDecode(update.body));
-        UserPayload payload = data.payload!;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserDetailScreen(userPayload: payload),
-          ),
-        );
+        if (response.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('เพิ่มข้อมูลสำเร็จ'),
+            backgroundColor: Colors.green,
+          ));
+          _navigateToAllUser();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('เพิ่มข้อมูลไม่สำเร็จ ระบบขัดข้อง'),
+            backgroundColor: Colors.red,
+          ));
+        }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('อัปเดตข้อมูลไม่สำเร็จ ระบบขัดข้อง'),
+          content: Text('เพิ่มข้อมูลไม่สำเร็จ ระบบขัดข้อง'),
           backgroundColor: Colors.red,
         ));
       }
-    }
-  }
-
-  Future<void> _deleteUser() async {
-    final token = await LocalStorageUtil.getItem('token');
-    final url =
-        Uri.http(BASEURL, "$ENDPOINT/users/delete/${widget.userPayload.id}");
-    final header = {
-      'Authorization': 'Bearer ${token.toString()}',
-      'Content-Type': 'application/json'
-    };
-    final response = await http.delete(url, headers: header);
-    if (response.statusCode == 200) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('ลบข้อมูลสำเร็จ'),
-        backgroundColor: Colors.green,
-      ));
-      // ignore: use_build_context_synchronously
-      _navigateToAllUser();
-    } else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Failed to delete course.'),
-        backgroundColor: Colors.red,
-      ));
     }
   }
 
@@ -136,7 +103,7 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: const AppBarWidget(txtTitle: 'แก้ไขข้อมูลหลักสูตร'),
+      appBar: const AppBarWidget(txtTitle: 'เพิ่มข้อมูลสมาชิก'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: Container(
@@ -188,6 +155,52 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                         ),
                         const SizedBox(height: 20),
                         const Text(
+                          'รหัสผ่าน',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: _password,
+                          onChanged: (value) {
+                            _password = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกรหัสผ่าน';
+                            }
+                            if (_password != _password_confirmed) {
+                              return 'กรุณากรอกรหัสผ่านให้ตรงกัน';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'รหัสผ่านอีกครั้ง',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextFormField(
+                          initialValue: _password_confirmed,
+                          onChanged: (value) {
+                            _password_confirmed = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกรหัสผ่านอีกครั้ง';
+                            }
+                            if (_password != _password_confirmed) {
+                              return 'กรุณากรอกรหัสผ่านให้ตรงกัน';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
                           'ชื่อ',
                           style: TextStyle(
                             fontSize: 18,
@@ -200,10 +213,9 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                             _name = value;
                           },
                           validator: (value) {
-                            // if (value == null || value.isEmpty) {
-                            //   return 'กรุณากรอกชื่อ';
-                            // }
-                            // return null;
+                            if (value == null || value.isEmpty) {
+                              _name = "-";
+                            }
                           },
                           maxLines: 1,
                         ),
@@ -216,15 +228,15 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                           ),
                         ),
                         TextFormField(
-                          initialValue: _name,
+                          initialValue: _surname,
                           onChanged: (value) {
-                            _name = value;
+                            _surname = value;
                           },
                           validator: (value) {
-                            // if (value == null || value.isEmpty) {
-                            //   return 'กรุณากรอกนามสกุล';
-                            // }
-                            // return null;
+                            if (value == null || value.isEmpty) {
+                              _surname = "-";
+                            }
+                            return null;
                           },
                           maxLines: 1,
                         ),
@@ -264,6 +276,8 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'กรุณากรอกเบอร์โทร';
+                            } else {
+                              _phone = "-";
                             }
                             return null;
                           },
@@ -293,23 +307,13 @@ class _EditUserDetailScreenState extends State<EditUserDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ConfirmDialog(
-                              title: 'คุณต้องการลบหรือไม่ ?',
-                              description:
-                                  'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
+                              title: 'คุณต้องการเพิ่มสมาชิก ?',
+                              description: 'คุณต้องการเพิ่มสมาชิกใช่หรือไม่',
                               onNo: () => {Navigator.of(context).pop()},
-                              onYes: _deleteUser,
-                              btnColor: Colors.red,
-                              btnText: 'ลบ',
-                              btnIcon: Icons.delete,
-                            ),
-                            ConfirmDialog(
-                              title: 'คุณต้องการแก้ไขข้อมูล ?',
-                              description: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
-                              onNo: () => {Navigator.of(context).pop()},
-                              onYes: _updateUser,
+                              onYes: _addUser,
                               btnColor: Colors.green,
-                              btnText: 'แก้ไข',
-                              btnIcon: Icons.edit,
+                              btnText: 'เพิ่ม',
+                              btnIcon: Icons.add,
                             ),
                             TextButton(
                               onPressed: () {
