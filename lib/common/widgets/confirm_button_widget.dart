@@ -6,6 +6,7 @@ class ConfirmDialog extends StatelessWidget {
   final Function onYes;
   final Function onNo;
   final Color btnColor;
+  final IconData btnIcon;
   final String btnText;
 
   const ConfirmDialog({
@@ -16,6 +17,7 @@ class ConfirmDialog extends StatelessWidget {
     required this.onNo,
     required this.btnColor,
     required this.btnText,
+    required this.btnIcon,
   }) : super(key: key);
 
   @override
@@ -47,7 +49,14 @@ class ConfirmDialog extends StatelessWidget {
           ],
         ),
       ),
-      child: Text(btnText),
+      child: Row(
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          Icon(btnIcon),
+          const SizedBox(width: 5), // Add some space between icon and text
+          Text(btnText),
+        ],
+      ),
     );
   }
 }
