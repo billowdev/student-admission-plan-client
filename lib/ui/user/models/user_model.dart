@@ -1,10 +1,10 @@
-class UserModel {
+class UserArrayModel {
   String? message;
   List<UserPayload>? payload;
 
-  UserModel({this.message, this.payload});
+  UserArrayModel({this.message, this.payload});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UserArrayModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['payload'] != null) {
       payload = <UserPayload>[];
@@ -73,6 +73,29 @@ class UserPayload {
     data['faculty'] = faculty;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    return data;
+  }
+}
+
+class UserModel {
+  String? message;
+  UserPayload? payload;
+
+  UserModel({this.message, this.payload});
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    payload = json['payload'] != null
+        ? new UserPayload.fromJson(json['payload'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    if (this.payload != null) {
+      data['payload'] = this.payload!.toJson();
+    }
     return data;
   }
 }

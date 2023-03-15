@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:project/ui/admission_plan/faculty/edit_course_admission_plan_ui.dart';
 
 import '../../../common/utils/local_storage_util.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
 import '../models/admission_plan_faculty_model.dart';
-import '../models/group_by_faculty_model.dart';
 
 class AdmissionPlanFacultyDetail extends StatefulWidget {
   final AdmissionPlanFacultyPayload detail;

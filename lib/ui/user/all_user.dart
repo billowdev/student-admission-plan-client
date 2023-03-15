@@ -5,13 +5,13 @@ import 'package:project/common/constants/constants.dart';
 import 'package:project/common/widgets/appbar.widget.dart';
 import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/course/add_course_ui.dart';
+import 'package:project/ui/user/add_user.dart';
 import 'package:project/ui/user/detail_user.dart';
+import 'package:project/ui/user/models/user_model.dart';
 import '../../common/utils/decoded_token_util.dart';
 import '../../common/utils/local_storage_util.dart';
 import '../../common/widgets/search_bar.widget.dart';
 import 'package:http/http.dart' as http;
-
-import 'models/user_model.dart';
 
 class AllUserScreen extends StatefulWidget {
   const AllUserScreen({super.key});
@@ -69,7 +69,8 @@ class _AllUserScreenState extends State<AllUserScreen> {
     );
 
     if (response.statusCode == 200) {
-      UserModel userResponse = UserModel.fromJson(jsonDecode(response.body));
+      UserArrayModel userResponse =
+          UserArrayModel.fromJson(jsonDecode(response.body));
 
       setState(() {
         usersData = userResponse.payload!;
@@ -90,7 +91,7 @@ class _AllUserScreenState extends State<AllUserScreen> {
       },
     );
     if (response.statusCode == 200) {
-      UserModel data = UserModel.fromJson(jsonDecode(response.body));
+      UserArrayModel data = UserArrayModel.fromJson(jsonDecode(response.body));
 
       setState(() {
         usersData = data.payload!;
@@ -215,7 +216,7 @@ class _AllUserScreenState extends State<AllUserScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const AddCourseScreen(),
+                              builder: (context) => const AddUserScreen(),
                             ),
                           );
                         },
