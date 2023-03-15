@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/common/utils/local_storage_util.dart';
 import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/course/models/course.model.dart';
 import '../../common/constants/constants.dart';
@@ -67,11 +68,17 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
       }
     }
   }
+
   Future<void> _deleteCourse() async {
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final url =
         Uri.http(BASEURL, "$ENDPOINT/courses/delete/${widget.detail.id}");
-    final header = {'Content-Type': 'application/json'};
     final response = await http.delete(url, headers: header);
+    print(response.body);
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
