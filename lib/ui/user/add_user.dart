@@ -72,12 +72,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
           'faculty': _faculty,
         };
         final token = await LocalStorageUtil.getItem('token');
-        print(fdata);
-        final response =
-            await http.post(url, body: jsonEncode(fdata), headers: {
+        final header = {
           'Authorization': 'Bearer ${token.toString()}',
           'Content-Type': 'application/json',
-        });
+        };
+        final response =
+            await http.post(url, body: jsonEncode(fdata), headers: header);
         if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('เพิ่มข้อมูลสำเร็จ'),
