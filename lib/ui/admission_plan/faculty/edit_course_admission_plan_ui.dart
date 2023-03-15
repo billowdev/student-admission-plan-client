@@ -216,7 +216,11 @@ class _EditAdmissionPlanDetailScreenState
 
         final url = Uri.http(BASEURL,
             "$ENDPOINT/admission-plans/update/${widget.admissionPlanId}");
-        final header = {'Content-Type': 'application/json'};
+        final token = await LocalStorageUtil.getItem('token');
+        final header = {
+          'Authorization': 'Bearer ${token.toString()}',
+          'Content-Type': 'application/json',
+        };
         final response =
             await client.patch(url, headers: header, body: jsonEncode(fdata));
         if (response.statusCode == 200) {
@@ -232,6 +236,7 @@ class _EditAdmissionPlanDetailScreenState
   }
 
   Future<void> _deleteAdmissionPlan() async {
+    
     final url = Uri.http(
         BASEURL, "$ENDPOINT/admission-plans/delete/${widget.admissionPlanId}");
     final header = {
