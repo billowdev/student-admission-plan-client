@@ -6,9 +6,11 @@ import 'package:project/common/widgets/drawer.widget.dart';
 import 'package:project/ui/admission_plan/menu_admission_plan_ui.dart';
 import 'package:project/ui/extra_admission_plan/menu_extra_admission_plan_ui.dart';
 import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
+import 'package:project/ui/user/all_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'common/constants/constants.dart';
+import 'common/utils/decoded_token_util.dart';
 import 'common/utils/local_storage_util.dart';
 import 'ui/course/all_course_ui.dart';
 
@@ -21,11 +23,14 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   late String role = "";
+  late String _decodedRole = "";
   late final String _latestYear = "2566";
 
-  Future<String?> _getRole() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('role');
+  _getRole() async {
+    final String role = await decodeRoleTokenUtil();
+    setState(() {
+      _decodedRole = role;
+    });
   }
 
   late List<String> _yearList = ["2565", "2566"];
@@ -53,10 +58,10 @@ class _MainMenuState extends State<MainMenu> {
     LocalStorageUtil.getItem('token').then((value) => setState(() {
           token = value ?? "";
         }));
-
-    _getRole().then((value) => setState(() {
-          role = value ?? 'user';
-        }));
+    _getRole();
+    // _getRole().then((value) => setState(() {
+    //       role = value ?? 'user';
+    //     }));
   }
 
   @override
@@ -107,6 +112,16 @@ class _MainMenuState extends State<MainMenu> {
               ),
               leadingIcon: const Icon(Icons.summarize),
             ),
+
+            Visibility(
+                visible: _decodedRole == "admin",
+                child: const SizedBox(
+                  child: MainMenuWidget(
+                    menuName: 'จัดการข้อมูลบัญชีผู้ใช้',
+                    routeScreen: AllUserScreen(),
+                    leadingIcon: Icon(Icons.summarize),
+                  ),
+                )),
           ],
         ),
       ),
