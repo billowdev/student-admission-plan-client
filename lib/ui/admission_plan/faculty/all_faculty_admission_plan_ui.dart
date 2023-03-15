@@ -38,18 +38,21 @@ class _AdmissionPlanFacultyState extends State<AdmissionPlanFaculty> {
         }));
   }
 
-
-
   _getAdmissionPlan() async {
     var queryParam = {"year": widget.yearFilter.toString()};
     // var urlNews = Uri.http('localhost:5000', '/c/get-all', queryParam);
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final url = Uri.http(
         BASEURL,
         '$ENDPOINT/admission-plans/get-by-faculty/${widget.facultyFilter.toString()}',
         queryParam);
 
     // final url = Uri.http('localhost:5000', '/courses/get-all');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       AdmissionPlanFacultyModel resp =
           AdmissionPlanFacultyModel.fromJson(jsonDecode(response.body));
