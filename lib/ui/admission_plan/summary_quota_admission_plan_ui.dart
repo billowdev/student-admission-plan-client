@@ -23,6 +23,8 @@ class SummaryQuotaAdmissionPlan extends StatefulWidget {
 
 class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
   late String token = "";
+  bool _isLoading = false;
+
   late List<String> existsFaculty = [
     "คณะวิทยาศาสตร์และเทคโนโลยี",
     "คณะมนุษยศาสตร์และสังคมศาสตร์",
@@ -44,6 +46,9 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
   }
 
   _getExistsFacultyAdmissionPlan() async {
+    setState(() {
+      _isLoading = true;
+    });
     final url = Uri.http(BASEURL, '$ENDPOINT/ap/get-exists-faculty');
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -53,11 +58,17 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
         existsFaculty = existFaculty.payload!;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   late Map<String, List<AdmissionPlan>> gropByFacultyAdmissionPlanData = {};
 
   _getAdmissionPlanGroupByFaculty() async {
+    setState(() {
+      _isLoading = true;
+    });
     var queryParams = {'year': widget.yearFilter};
     final url =
         Uri.http(BASEURL, '$ENDPOINT/ap/get-group-by-faculty', queryParams);
@@ -70,6 +81,9 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
         gropByFacultyAdmissionPlanData = groupByFacultyAdmissionPlan.payload;
       });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Map<String, List<AdmissionPlan>> facultyPlans = {};
@@ -81,7 +95,7 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
     gropByFacultyAdmissionPlanData.clear();
     facultyPlans.clear();
     facultySums.clear();
-  
+
     super.dispose();
   }
 
@@ -106,108 +120,112 @@ class _SummaryQuotaAdmissionPlanState extends State<SummaryQuotaAdmissionPlan> {
         appBar: const AppBarWidget(txtTitle: 'สรุปแผนการรับนักศึกษา'),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              const Padding(padding: EdgeInsets.all(8.0)),
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    text: "สรุปรอบโควตา ปี${widget.yearFilter.toString()}",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontFamily: 'PrintAble4U',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: RichText(
-                  text: TextSpan(
-                    text: "ปีการศึกษา ${widget.yearFilter}",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontFamily: 'PrintAble4U',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              //=============================
-              Column(
-                children: existsFaculty.map((faculty) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: RichText(
-                          text: TextSpan(
-                            text: faculty,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontFamily: 'PrintAble4U',
-                              fontWeight: FontWeight.bold,
-                            ),
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : Column(
+                  children: [
+                    const Padding(padding: EdgeInsets.all(8.0)),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          text:
+                              "สรุปรอบโควตา ปี${widget.yearFilter.toString()}",
+                          style: const TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
+                            fontFamily: 'PrintAble4U',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      gropByFacultyAdmissionPlanTable(
-                        data: facultyPlans[faculty] ?? [],
-                        yearFilter: widget.yearFilter,
+                    ),
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          text: "ปีการศึกษา ${widget.yearFilter}",
+                          style: const TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
+                            fontFamily: 'PrintAble4U',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Table(
-                            children: [
-                              _buildTableRow('$faculty รวม :',
-                                  facultySums[faculty].toString()),
+                    ),
+
+                    //=============================
+                    Column(
+                      children: existsFaculty.map((faculty) {
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: faculty,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontFamily: 'PrintAble4U',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            gropByFacultyAdmissionPlanTable(
+                              data: facultyPlans[faculty] ?? [],
+                              yearFilter: widget.yearFilter,
+                            ),
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Table(
+                                  children: [
+                                    _buildTableRow('$faculty รวม :',
+                                        facultySums[faculty].toString()),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Table(
+                          children: [
+                            _buildTableRow('สรุปรวมทุกคณะ', allSums.toString()),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.brown,
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.arrow_back_ios_new),
+                              SizedBox(
+                                  width:
+                                      5), // Add some space between icon and text
+                              Text('กลับ'),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Table(
-                    children: [
-                      _buildTableRow('สรุปรวมทุกคณะ', allSums.toString()),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.brown,
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.arrow_back_ios_new),
-                        SizedBox(
-                            width: 5), // Add some space between icon and text
-                        Text('กลับ'),
                       ],
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                    )
+                  ],
+                ),
         ),
         drawer: const DrawerMenuWidget(),
       ),
