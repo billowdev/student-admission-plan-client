@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
 import 'package:project/common/utils/local_storage_util.dart';
+import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/admission_plan/faculty/all_faculty_admission_plan_ui.dart';
 import 'package:project/ui/admission_plan/models/group_by_faculty_model.dart';
 import 'package:project/ui/admission_plan/summary_quota_admission_plan_ui.dart';
@@ -608,37 +609,24 @@ class _EditSummaryQuotaAdmissionPlanDetailScreenState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                              onPressed: _deleteAdmissionPlan,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.delete),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('ลบ'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'คุณต้องการลบหรือไม่ ?',
+                              description:
+                                  'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _deleteAdmissionPlan,
+                              btnColor: Colors.red,
+                              btnText: 'ลบ',
+                              btnIcon: Icons.delete,
                             ),
-                            TextButton(
-                              onPressed: _updateAdmissionPlan,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.edit),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('แก้ไข'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'แก้ไขข้อมูล ?',
+                              description: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _updateAdmissionPlan,
+                              btnColor: Colors.green,
+                              btnText: 'แก้ไข',
+                              btnIcon: Icons.edit,
                             ),
                             TextButton(
                               onPressed: () {
