@@ -100,6 +100,12 @@ class _AllUserScreenState extends State<AllUserScreen> {
   }
 
   @override
+  void dispose() {
+    usersData.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
