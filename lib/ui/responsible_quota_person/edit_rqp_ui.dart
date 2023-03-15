@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/responsible_quota_person/detail_rqp_ui.dart';
 import 'package:project/ui/responsible_quota_person/responsible_quota_person_ui.dart';
 import '../../common/constants/constants.dart';
@@ -251,38 +252,24 @@ class _EditRQPScreenState extends State<EditRQPScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            TextButton(
-                              onPressed: _deleteRQP,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Row(
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  const Icon(Icons.delete),
-                                  const SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  const Text('ลบ'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'คุณต้องการลบหรือไม่ ?',
+                              description:
+                                  'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _deleteRQP,
+                              btnColor: Colors.red,
+                              btnText: 'ลบ',
+                              btnIcon: Icons.delete,
                             ),
-                            TextButton(
-                              onPressed: _updateRPQ,
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.edit),
-                                  SizedBox(
-                                      width:
-                                          5), // Add some space between icon and text
-                                  Text('แก้ไข'),
-                                ],
-                              ),
+                            ConfirmDialog(
+                              title: 'คุณต้องการแก้ไขข้อมูล ?',
+                              description: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
+                              onNo: () => {Navigator.of(context).pop()},
+                              onYes: _updateRPQ,
+                              btnColor: Colors.green,
+                              btnText: 'แก้ไข',
+                              btnIcon: Icons.edit,
                             ),
                             TextButton(
                               onPressed: () {
