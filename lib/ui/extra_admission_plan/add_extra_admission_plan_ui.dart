@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
+import 'package:project/common/utils/local_storage_util.dart';
 import 'package:project/common/widgets/confirm_button_widget.dart';
 import 'package:project/ui/extra_admission_plan/extra_admission_plan_faculty_ui.dart';
 import 'package:project/ui/extra_admission_plan/models/extra_admission_plan_array.dart';
@@ -123,9 +124,12 @@ class _AddAdmissionPlanDetainState extends State<AddExtraAdmissionPlanScreen> {
     if (_formKey.currentState!.validate()) {
       try {
         final fdata = {'qty': _qty, 'year': _year, 'courseId': _courseId};
-
+        final token = await LocalStorageUtil.getItem('token');
+        final header = {
+          'Authorization': 'Bearer ${token.toString()}',
+          'Content-Type': 'application/json',
+        };
         final url = Uri.http(BASEURL, "$ENDPOINT/eap/create");
-        final header = {'Content-Type': 'application/json'};
         final response =
             await client.post(url, headers: header, body: jsonEncode(fdata));
         if (response.statusCode == 201) {
@@ -268,7 +272,7 @@ class _AddAdmissionPlanDetainState extends State<AddExtraAdmissionPlanScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                             ConfirmDialog(
+                            ConfirmDialog(
                               title: 'เพิ่มข้อมูล ?',
                               description: 'คุณต้องการเพิ่มข้อมูลใช่หรือไม่',
                               onNo: () => {Navigator.of(context).pop()},

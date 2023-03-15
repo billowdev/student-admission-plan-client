@@ -78,7 +78,6 @@ class _EditCourseDetailScreenState extends State<EditCourseDetailScreen> {
     final url =
         Uri.http(BASEURL, "$ENDPOINT/courses/delete/${widget.detail.id}");
     final response = await http.delete(url, headers: header);
-    print(response.body);
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

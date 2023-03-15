@@ -71,9 +71,14 @@ class _SummaryExtraAdmissionPlanState extends State<SummaryExtraAdmissionPlan> {
       _isLoading = true;
     });
     var queryParams = {'year': widget.yearFilter};
+    final token = await LocalStorageUtil.getItem('token');
+    final header = {
+      'Authorization': 'Bearer ${token.toString()}',
+      'Content-Type': 'application/json',
+    };
     final url =
         Uri.http(BASEURL, '$ENDPOINT/eap/get-group-by-faculty', queryParams);
-    final response = await http.get(url);
+    final response = await http.get(url, headers: header);
     if (response.statusCode == 200) {
       ExtraAdmissionPlanGroupByFacultyPayload extraAdmissionPlan =
           ExtraAdmissionPlanGroupByFacultyPayload.fromJson(
