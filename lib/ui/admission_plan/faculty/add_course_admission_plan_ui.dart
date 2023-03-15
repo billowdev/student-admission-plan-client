@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/common/constants/constants.dart';
+import 'package:project/common/utils/local_storage_util.dart';
 import 'package:project/common/widgets/confirm_button_widget.dart';
 import '../../../common/widgets/appbar.widget.dart';
 import '../../../common/widgets/drawer.widget.dart';
@@ -242,7 +243,12 @@ class _AddAdmissionPlanDetainState extends State<AddAdmissionPlanScreen> {
         };
 
         final url = Uri.http(BASEURL, "$ENDPOINT/admission-plans/create");
-        final header = {'Content-Type': 'application/json'};
+          final token = await LocalStorageUtil.getItem('token');
+        final header = {
+          'Authorization': 'Bearer ${token.toString()}',
+          'Content-Type': 'application/json',
+        };
+
         final response =
             await client.post(url, headers: header, body: jsonEncode(fdata));
         if (response.statusCode == 201) {
