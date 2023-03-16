@@ -609,25 +609,32 @@ class _EditSummaryQuotaAdmissionPlanDetailScreenState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ConfirmDialog(
-                              title: 'คุณต้องการลบหรือไม่ ?',
-                              description:
-                                  'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
-                              onNo: () => {Navigator.of(context).pop()},
-                              onYes: _deleteAdmissionPlan,
-                              btnColor: Colors.red,
-                              btnText: 'ลบ',
-                              btnIcon: Icons.delete,
-                            ),
-                            ConfirmDialog(
-                              title: 'แก้ไขข้อมูล ?',
-                              description: 'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
-                              onNo: () => {Navigator.of(context).pop()},
-                              onYes: _updateAdmissionPlan,
-                              btnColor: Colors.green,
-                              btnText: 'แก้ไข',
-                              btnIcon: Icons.edit,
-                            ),
+                            Visibility(
+                                visible: _token.isNotEmpty,
+                                child: Column(
+                                  children: [
+                                    ConfirmDialog(
+                                      title: 'คุณต้องการลบหรือไม่ ?',
+                                      description:
+                                          'หากคุณลบข้อมูลสำเร็จแล้วจะไม่สามารถกู้คืนได้',
+                                      onNo: () => {Navigator.of(context).pop()},
+                                      onYes: _deleteAdmissionPlan,
+                                      btnColor: Colors.red,
+                                      btnText: 'ลบ',
+                                      btnIcon: Icons.delete,
+                                    ),
+                                    ConfirmDialog(
+                                      title: 'แก้ไขข้อมูล ?',
+                                      description:
+                                          'คุณต้องการแก้ไขข้อมูลใช่หรือไม่',
+                                      onNo: () => {Navigator.of(context).pop()},
+                                      onYes: _updateAdmissionPlan,
+                                      btnColor: Colors.green,
+                                      btnText: 'แก้ไข',
+                                      btnIcon: Icons.edit,
+                                    ),
+                                  ],
+                                )),
                             TextButton(
                               onPressed: () {
                                 // Navigator.of(context).pop();

@@ -105,13 +105,13 @@ class _MainMenuState extends State<MainMenu> {
               routeScreen: AllResponseibleQuotaPersonScreen(),
               leadingIcon: Icon(Icons.supervisor_account),
             ),
-            MainMenuWidget(
-              menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
-              routeScreen: AdmissionPlanMenuScreen(
-                educationYearList: _yearList,
-              ),
-              leadingIcon: const Icon(Icons.summarize),
-            ),
+            // MainMenuWidget(
+            //   menuName: 'สรุปจำนวนทุกรอบภาคปกติ',
+            //   routeScreen: AdmissionPlanMenuScreen(
+            //     educationYearList: _yearList,
+            //   ),
+            //   leadingIcon: const Icon(Icons.summarize),
+            // ),
 
             Visibility(
                 visible: _decodedRole == "admin",
